@@ -2,7 +2,6 @@ package com.example.travel_buddy.classes_res
 
 import android.util.Log
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Calendar
 import java.util.Locale
 
