@@ -1,49 +1,28 @@
 package com.example.travel_buddy.classes_res
 
+import Date
 import android.util.Log
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import android.location.Location
 
-class Date(dateString: String? = null) {
-    var day: Int
-    var month: Int
-    var year: Int
-    var hour: Int
-    var minute: Int
-    var calendar: Calendar
 
+open class Travel_point(
+    val name: String = "No name point",
+    val date: Date  = Date(), //in Helper_class
+    var location: Location? = null
+){
     init {
-        val format = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        if (location == null) {
 
+            //location = get_current_location
 
-        calendar = Calendar.getInstance()
-
-        if (dateString != null) {
-            try {
-                val date = format.parse(dateString)
-                calendar.time = date // Set parsed date to calendar
-            } catch (e: Exception) {
-                throw IllegalArgumentException("Invalid date format. Should be DD/MM/YYYY HH:MM")
+            location = Location("default").apply { // placeholder waiting for Mikłaj's function
+                latitude = 0.0
+                longitude = 0.0
             }
         }
-
-        day = calendar.get(Calendar.DAY_OF_MONTH)
-        month = calendar.get(Calendar.MONTH) + 1
-        year = calendar.get(Calendar.YEAR)
-        hour = calendar.get(Calendar.HOUR_OF_DAY)
-        minute = calendar.get(Calendar.MINUTE)
     }
-
 
     override fun toString(): String {
-        return "$day/$month/$year $hour:$minute"
+        return "Name: $name, Date: $date, $location"
     }
-}
-
-class Travel_point(
-    val name: String = "No name point",
-    val date: Date  = Date()
-){
-    fun test(){ Log.d("mes","works $date")}
 }
