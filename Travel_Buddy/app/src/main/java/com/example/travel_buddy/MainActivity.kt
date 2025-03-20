@@ -20,7 +20,7 @@ import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
 import com.example.travel_buddy.classes_res.heritage_points.Trip_point
 
-import com.example.travel_buddy.classes_res.exportToPdf
+import com.example.travel_buddy.functions.exportToPdf
 
 import com.example.travel_buddy.ui.theme.Travel_BuddyTheme
 
