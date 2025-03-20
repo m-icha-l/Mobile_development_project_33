@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.danlew.android.joda)
     ksp(libs.room.compiler)
     annotationProcessor(libs.room.compiler)
     testImplementation(libs.junit)
