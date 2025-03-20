@@ -1,5 +1,6 @@
 package com.example.travel_buddy
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,11 +11,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.travel_buddy.classes_res.Travel_point
+
+
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
 import com.example.travel_buddy.classes_res.heritage_points.Trip_point
+
+import com.example.travel_buddy.classes_res.exportToPdf
+
 import com.example.travel_buddy.ui.theme.Travel_BuddyTheme
 
 class MainActivity : ComponentActivity() {
@@ -36,10 +43,20 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
+
     val test_travel = Travel_point("travel class")
     val test_attraction = Attraction_point("attraction class")
     val test_hotel = Hotel_point("hotel class")
     val test_trip = Trip_point("trip class")
+
+    val test = Travel_point()
+    val test2 = Travel_point()
+    val test3 = Travel_point()
+    val travel_points = arrayOf(test,test2,test3)
+    val context = LocalContext.current
+    exportToPdf(context,"testpdf",travel_points)
+  
+
     Text(
         text = "Hello $name! \n $test_travel \n $test_attraction \n $test_hotel \n $test_trip",
         modifier = modifier
