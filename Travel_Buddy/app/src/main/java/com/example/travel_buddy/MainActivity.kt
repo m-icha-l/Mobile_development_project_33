@@ -1,10 +1,12 @@
 package com.example.travel_buddy
 
+import Travel_Point_Manager
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -55,12 +57,21 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     val travel_points = arrayOf(test,test2,test3)
     val context = LocalContext.current
     exportToPdf(context,"testpdf",travel_points)
-  
 
-    Text(
-        text = "Hello $name! \n $test_travel \n $test_attraction \n $test_hotel \n $test_trip",
-        modifier = modifier
-    )
+    Travel_Point_Manager.add_Point("Vacation", Hotel_point(name = "Hotel_1"))
+    Travel_Point_Manager.add_Point("Vacation", Travel_point(name = "Mountain"))
+    Travel_Point_Manager.add_Point("Business", Attraction_point(name = "Conference"))
+    Column {
+        Text(
+            text = "Hello $name! \n $test_travel \n $test_attraction \n $test_hotel \n $test_trip",
+            modifier = modifier
+        )
+        Text(
+            text = "$Travel_Point_Manager",
+            modifier = modifier
+        )
+    }
+
 }
 
 @Preview(showBackground = true)
