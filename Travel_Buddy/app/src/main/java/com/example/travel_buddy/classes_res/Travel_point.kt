@@ -20,9 +20,15 @@ import java.util.Calendar
 import java.util.Locale
 
 @Entity(tableName = "travel_points")
-open class Travel_point(
+data class dbTravel_point(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val name: String = "No name point",
+    val date: String = "day/month/year hour:minute",
+    var location: String = ""
+)
+
+open class Travel_point(
     val name: String = "No name point",
     val date: Date  = Date(), //in Helper_class
     var location: Location? = null

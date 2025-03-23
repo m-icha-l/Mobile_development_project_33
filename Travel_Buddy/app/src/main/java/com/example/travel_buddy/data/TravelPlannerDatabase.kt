@@ -5,10 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.travel_buddy.classes_res.Travel_point
+import com.example.travel_buddy.classes_res.dbTravel_point
 
-@Database(entities = [Travel_point::class], version = 1, exportSchema = false)
+@Database(entities = [dbTravel_point::class], version = 1, exportSchema = false)
 abstract class TravelPlannerDatabase : RoomDatabase() {
-    abstract fun itemDao(): TravelPointDao
+    abstract fun travelPointDao(): TravelPointDao
     companion object {
         @Volatile //The value of a volatile variable is never cached, and all reads and writes are to and from the main memory.
         // These features help ensure the value of Instance is always up to date and is the same for all execution threads.
