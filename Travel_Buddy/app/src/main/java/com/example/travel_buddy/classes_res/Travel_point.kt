@@ -19,6 +19,7 @@ import java.time.LocalDate
 import java.util.Calendar
 import java.util.Locale
 
+
 @Entity(tableName = "travel_points")
 data class dbTravel_point(
     @PrimaryKey(autoGenerate = true)
@@ -33,6 +34,7 @@ open class Travel_point(
     val date: Date  = Date(), //in Helper_class
     var location: Location? = null
 ){
+    private var dbRef: dbTravel_point
     init {
         if (location == null) {
 
@@ -43,6 +45,11 @@ open class Travel_point(
                 longitude = 0.0
             }
         }
+        dbRef = dbTravel_point(name = name, date = date.toString(), location = location.toString())
+    }
+
+    fun getDb(): dbTravel_point {
+        return dbRef
     }
 
     override fun toString(): String {

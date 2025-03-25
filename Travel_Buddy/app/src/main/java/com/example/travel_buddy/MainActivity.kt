@@ -59,8 +59,8 @@ class MainActivity : ComponentActivity() {
             // Update UI with list of travel points
         })
 
-        val newTravelPoint = dbTravel_point(name = "Santa Claus Village", date = "23/03/2025 15:30", location = "Rovaniemi")
-        travelPointViewModel.insert(newTravelPoint)
+        val newTravelPoint = Travel_point(name = "Santa Claus Village")
+        travelPointViewModel.insertTravelPoint(newTravelPoint)
     }
 }
 
@@ -69,7 +69,7 @@ fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(),
 
     val travelPoints by dataEntryViewModel.allTravelPoints.observeAsState(initial = emptyList())
 
-    dataEntryViewModel.insert(dbTravel_point(name = "New Place", location = "New York"))
+    dataEntryViewModel.insertTravelPoint(Travel_point(name = "New Place"))
 
     val test_travel = Travel_point("travel class")
     val test_attraction = Attraction_point("attraction class")

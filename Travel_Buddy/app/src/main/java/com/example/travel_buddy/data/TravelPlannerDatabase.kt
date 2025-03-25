@@ -4,10 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.travel_buddy.classes_res.Travel_point
 import com.example.travel_buddy.classes_res.dbTravel_point
+import com.example.travel_buddy.classes_res.heritage_points.dbAttraction_point
+import com.example.travel_buddy.classes_res.heritage_points.dbHotel_point
+import com.example.travel_buddy.classes_res.heritage_points.dbTrip_point
 
-@Database(entities = [dbTravel_point::class], version = 1, exportSchema = false)
+@Database(entities = [dbTravel_point::class, dbTrip_point::class,dbHotel_point::class,dbAttraction_point::class], version = 1, exportSchema = false)
 abstract class TravelPlannerDatabase : RoomDatabase() {
     abstract fun travelPointDao(): TravelPointDao
     companion object {
@@ -18,7 +20,7 @@ abstract class TravelPlannerDatabase : RoomDatabase() {
         fun getDatabase(context: Context): TravelPlannerDatabase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, TravelPlannerDatabase::class.java, "travel_planner_database")
-                    .fallbackToDestructiveMigration() //delete and re-initialize the database on parameter changes in the class
+                    //.fallbackToDestructiveMigration() //delete and re-initialize the database on parameter changes in the class
                     .build()
                     .also { Instance = it }
             }
