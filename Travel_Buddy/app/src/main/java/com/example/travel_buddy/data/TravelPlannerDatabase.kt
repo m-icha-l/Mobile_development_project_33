@@ -1,4 +1,3 @@
-package com.example.travel_buddy.data
 
 import android.content.Context
 import androidx.room.Database

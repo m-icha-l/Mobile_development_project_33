@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.danlew.android.joda)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.room.common)
     ksp(libs.room.compiler)
     annotationProcessor(libs.room.compiler)
     testImplementation(libs.junit)

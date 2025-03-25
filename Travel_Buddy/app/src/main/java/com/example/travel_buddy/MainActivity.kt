@@ -1,5 +1,6 @@
 package com.example.travel_buddy
 
+import Travel_Point_Manager
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -99,9 +100,18 @@ fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(),
     val context = LocalContext.current
     exportToPdf(context,"testpdf",travel_points)
 
+    Travel_Point_Manager.add_Point("Vacation", Hotel_point(name = "Hotel_1"))
+    Travel_Point_Manager.add_Point("Vacation", Travel_point(name = "Mountain"))
+    Travel_Point_Manager.add_Point("Business", Attraction_point(name = "Conference"))
+    Column {
+        Text(
+            text = "Hello $name! \n $test_travel \n $test_attraction \n $test_hotel \n $test_trip",
+            modifier = modifier
+        )
+        Text(
+            text = "$Travel_Point_Manager",
+            modifier = modifier
+        )
+    }
 
-    Text(
-        text = "Hello $name! \n $test_travel \n $test_attraction \n $test_hotel \n $test_trip",
-        modifier = modifier
-    )
 }
