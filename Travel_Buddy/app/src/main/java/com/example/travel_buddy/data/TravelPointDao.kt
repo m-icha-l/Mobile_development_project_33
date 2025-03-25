@@ -6,7 +6,11 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.example.travel_buddy.classes_res.dbTravel_point
+import com.example.travel_buddy.classes_res.heritage_points.TravelPointWithAttractions
+import com.example.travel_buddy.classes_res.heritage_points.TravelPointWithHotels
+import com.example.travel_buddy.classes_res.heritage_points.TravelPointWithTrips
 import com.example.travel_buddy.classes_res.heritage_points.dbAttraction_point
 import com.example.travel_buddy.classes_res.heritage_points.dbHotel_point
 import com.example.travel_buddy.classes_res.heritage_points.dbTrip_point
@@ -16,7 +20,7 @@ import kotlinx.coroutines.flow.Flow
 interface TravelPointDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(item: dbTravel_point)
+    suspend fun insert(item: dbTravel_point): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTrip(item: dbTrip_point)
@@ -36,6 +40,8 @@ interface TravelPointDao {
     @Query("DELETE FROM travel_points WHERE id = :travelPointId")
     suspend fun deleteItem(travelPointId: Int)
 
+    /*
+
     @Query("SELECT * from trip_points WHERE id = :travelPointId ORDER BY date ASC")
     fun getAllTripsForId(travelPointId: Int): LiveData<List<dbTrip_point>>
 
@@ -44,6 +50,20 @@ interface TravelPointDao {
 
     @Query("SELECT * from attraction_points WHERE id = :travelPointId ORDER BY date ASC")
     fun getAllAttractionForId(travelPointId: Int): LiveData<List<dbAttraction_point>>
+
+     */
+
+    @Transaction
+    @Query("SELECT * FROM travel_points WHERE id = :travelPointId")
+    fun getTravelPointWithTrips(travelPointId: Int): LiveData<TravelPointWithTrips>
+
+    @Transaction
+    @Query("SELECT * FROM travel_points WHERE id = :travelPointId")
+    fun getTravelPointWithHotels(travelPointId: Int): LiveData<TravelPointWithHotels>
+
+    @Transaction
+    @Query("SELECT * FROM travel_points WHERE id = :travelPointId")
+    fun getTravelPointWithAttractions(travelPointId: Int): LiveData<TravelPointWithAttractions>
 
 
 
