@@ -37,25 +37,50 @@ import com.example.travel_buddy.functions.exportToPdf
 import com.example.travel_buddy.ui.theme.Travel_BuddyTheme
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import android.util.Log
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.travel_buddy.ui.DrawerApp
+import com.example.travel_buddy.ui.MainApp
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var travelPointViewModel: DataEntryViewModel
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         travelPointViewModel = ViewModelProvider(this).get(DataEntryViewModel::class.java)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             Travel_BuddyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                    ) { innerPadding ->
+                    DrawerApp(
+                        travelPointViewModel,
+                        navController,
+                        Modifier.padding(innerPadding)
+                    )
+                    /*TestDisplay(
                         name = "Travel buddy",
                         dataEntryViewModel = travelPointViewModel,
                         modifier = Modifier.padding(innerPadding)
-                    )
+                    )*/
                 }
             }
         }
@@ -71,7 +96,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(), modifier: Modifier = Modifier) {
+fun TestDisplay(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(), modifier: Modifier = Modifier) {
 
     val travelPoints by dataEntryViewModel.allTravelPoints.observeAsState(initial = emptyList())
     val travelPointWithTrips by dataEntryViewModel.getTravelPointWithTrips(1).observeAsState()
