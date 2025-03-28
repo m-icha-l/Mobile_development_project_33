@@ -1,3 +1,4 @@
+package com.example.travel_buddy.data
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

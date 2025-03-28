@@ -37,6 +37,13 @@ import com.example.travel_buddy.functions.exportToPdf
 import com.example.travel_buddy.ui.theme.Travel_BuddyTheme
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import android.util.Log
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.res.stringResource
+import com.example.travel_buddy.viewmodel.NavigationUiState
+import com.example.travel_buddy.viewmodel.NavigationViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -71,7 +78,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(), modifier: Modifier = Modifier) {
+fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(), navigationViewModel: NavigationViewModel = viewModel(), modifier: Modifier = Modifier) {
 
     val travelPoints by dataEntryViewModel.allTravelPoints.observeAsState(initial = emptyList())
     val travelPointWithTrips by dataEntryViewModel.getTravelPointWithTrips(1).observeAsState()
@@ -114,18 +121,38 @@ fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(),
     val context = LocalContext.current
     exportToPdf(context,"testpdf",travel_points)
 
-    Travel_Point_Manager.add_Point("Vacation", Hotel_point(name = "Hotel_1"))
-    Travel_Point_Manager.add_Point("Vacation", Travel_point(name = "Mountain"))
-    Travel_Point_Manager.add_Point("Business", Attraction_point(name = "Conference"))
-    Column {
-        Text(
-            text = "Hello $name! \n $test_travel \n $test_attraction \n $test_hotel \n $test_trip",
-            modifier = modifier
-        )
-        Text(
-            text = "$Travel_Point_Manager",
-            modifier = modifier
-        )
-    }
+    TestScreen(navigationViewModel.navigationUiState)
 
+    Button(
+        colors = ButtonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.secondaryContainer,
+            disabledContentColor = MaterialTheme.colorScheme.tertiary,
+            disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer
+        ),
+        modifier = Modifier.padding(top = 400.dp, start = 12.dp, end = 12.dp)
+            .fillMaxWidth(),
+        onClick = {
+            navigationViewModel.counter++
+            navigationViewModel.getRoutesList(
+                    "52.50931,13.42936",
+                "52.50274,13.43872",
+                    "en-GB",
+                    true,
+                "car"
+                )
+        },
+        content = { Text("Test Directions API")}
+    )
+
+}
+
+@Composable
+fun TestScreen(uiState: NavigationUiState) {
+    val modifier = Modifier.padding(top=265.dp)
+    when (uiState) {
+        is NavigationUiState.NoRequest -> Log.d("LOADING","yes")
+        is NavigationUiState.Success -> Log.d("Success", uiState.route.toString())
+        is NavigationUiState.Error -> Log.d("ERROR","yes")
+    }
 }
