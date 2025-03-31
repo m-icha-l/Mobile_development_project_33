@@ -1,4 +1,8 @@
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.travel_buddy.classes_res.Travel_point
+import com.example.travel_buddy.classes_res.dbTravel_point
+import com.example.travel_buddy.classes_res.heritage_points.TravelPlanName
+import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Hours
@@ -58,28 +62,40 @@ data class Duration(
     }
 }
 
-object Travel_Point_Manager {
-    private val travelPointsMap: MutableMap<String, MutableList<Travel_point>> = mutableMapOf()
+class Travel_Point_Manager(var dataEntryViewModel: DataEntryViewModel) {
+
+    private val travelPointsMap: MutableMap<String, MutableList<dbTravel_point>> = mutableMapOf()
+
+    init {
+        val namesList = dataEntryViewModel.getAllNames()
+        for (list_name in namesList) {
+            travelPointsMap.put(list_name.name,dataEntryViewModel.getAllTravelsFromPlan(list_name.name))
+        }
+    }
 
     // Add a new Travel_point to a trip_name
-    fun add_Point(trip_name: String, point: Travel_point) {
+    fun add_Point(trip_name: String, point: dbTravel_point) {
+        val newTravelPlanName = TravelPlanName(name=trip_name)
+        dataEntryViewModel.insertName(newTravelPlanName)
+        dataEntryViewModel.insert(trip_name,point)
         travelPointsMap.getOrPut(trip_name) { mutableListOf() }.add(point)
     }
 
     // Get a specific Travel_point by index
-    fun get_point_from(trip_name: String, index: Int): Travel_point? {
+    fun get_point_from(trip_name: String, index: Int): dbTravel_point? {
         return travelPointsMap[trip_name]?.getOrNull(index)
     }
 
     // Replace the entire list of Travel_points for a trip_name
-    fun replace_point_List(trip_name: String, newList: List<Travel_point>) {
+    fun replace_point_List(trip_name: String, newList: List<dbTravel_point>) {
         travelPointsMap[trip_name] = newList.toMutableList()
     }
 
     // Replace a specific Travel_point in a trip_name at a given index
-    fun replace_point_from(trip_name: String, index: Int, newPoint: Travel_point): Boolean {
+    fun replace_point_from(trip_name: String, index: Int, newPoint: dbTravel_point): Boolean {
         val list = travelPointsMap[trip_name]
         return if (list != null && index in list.indices) {
+            dataEntryViewModel.update(trip_name,newPoint)
             list[index] = newPoint
             true
         } else {

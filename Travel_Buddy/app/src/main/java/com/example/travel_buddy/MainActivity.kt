@@ -66,6 +66,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        /*
         travelPointViewModel = ViewModelProvider(this).get(DataEntryViewModel::class.java)
 
         travelPointViewModel.allTravelPoints.observe(this, { travelPoints ->
@@ -74,6 +76,8 @@ class MainActivity : ComponentActivity() {
 
         val newTravelPoint = Travel_point(name = "Santa Claus Village")
         travelPointViewModel.insertTravelPoint(newTravelPoint)
+
+         */
     }
 }
 
@@ -83,13 +87,14 @@ fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(),
     val travelPoints by dataEntryViewModel.allTravelPoints.observeAsState(initial = emptyList())
     val travelPointWithTrips by dataEntryViewModel.getTravelPointWithTrips(1).observeAsState()
 
-    dataEntryViewModel.insertTravelPoint(Travel_point(name = "New Place"))
 
     val test_travel = Travel_point("travel class")
     val test_attraction = Attraction_point(1,"santa claus post office")
     val test_hotel = Hotel_point(1,"rovaniemi hotel")
     val test_trip = Trip_point(1,"santa claus village")
     val test_trip2 = Trip_point(1,"santa claus village2")
+
+    /*
 
     //This is only for testing, never insert objects into database directly in @Composable or LaunchedEffect, because any recomposition with observeAsState() will lead to infinite insert loop
     //Insert functions should be called only on user actions, for example buttons
@@ -100,16 +105,20 @@ fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(),
     dataEntryViewModel.insertHotelPoint(test_hotel)
     dataEntryViewModel.insertAttractionPoint(test_attraction)
 
-    Travel_Point_Manager.add_Point("Vacation", Hotel_point(name = "Hotel_1"))
-    Travel_Point_Manager.add_Point("Vacation", Travel_point(name = "Mountain"))
-    Travel_Point_Manager.add_Point("Business", Attraction_point(name = "Conference"))
+     */
+
+    val travelPointManager = Travel_Point_Manager(dataEntryViewModel)
+
+    //travelPointManager.add_Point("Vacation", Hotel_point(name = "Hotel_1"))
+    travelPointManager.add_Point("Vacation", Travel_point(name = "Mountain").getDb())
+    //travelPointManager.add_Point("Business", Attraction_point(name = "Conference"))
     Column {
         Text(
             text = "Hello $name! \n $test_travel \n $test_attraction \n $test_hotel \n $test_trip",
             modifier = modifier
         )
         Text(
-            text = "$Travel_Point_Manager",
+            text = "$travelPointManager",
             modifier = modifier
         )
     }

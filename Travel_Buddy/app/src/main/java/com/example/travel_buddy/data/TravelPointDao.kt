@@ -7,7 +7,10 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
+import com.example.travel_buddy.classes_res.Travel_point
 import com.example.travel_buddy.classes_res.dbTravel_point
+import com.example.travel_buddy.classes_res.heritage_points.TravelPlanName
 import com.example.travel_buddy.classes_res.heritage_points.TravelPointWithAttractions
 import com.example.travel_buddy.classes_res.heritage_points.TravelPointWithHotels
 import com.example.travel_buddy.classes_res.heritage_points.TravelPointWithTrips
@@ -22,6 +25,15 @@ interface TravelPointDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(item: dbTravel_point): Long
 
+    @Update
+    suspend fun update(item: dbTravel_point)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertName(item: TravelPlanName): Long
+
+    @Query("SELECT * from travel_plan_names")
+    fun getAllNames(): List<TravelPlanName>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTrip(item: dbTrip_point)
 
@@ -33,6 +45,9 @@ interface TravelPointDao {
 
     @Query("SELECT * from travel_points ORDER BY date ASC")
     fun getAllItems(): LiveData<List<dbTravel_point>>
+
+    @Query("SELECT * from travel_points WHERE travel_plan_name = :travel_plan_name ORDER BY date ASC")
+    fun getAllTravelsFromPlan(travel_plan_name: String): MutableList<dbTravel_point>
 
     @Query("SELECT * from travel_points WHERE id = :id")
     fun getItem(id: Int): LiveData<dbTravel_point>

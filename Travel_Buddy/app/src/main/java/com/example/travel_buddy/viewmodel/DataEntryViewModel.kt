@@ -13,6 +13,7 @@ import com.example.travel_buddy.classes_res.Travel_point
 import com.example.travel_buddy.classes_res.dbTravel_point
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
+import com.example.travel_buddy.classes_res.heritage_points.TravelPlanName
 import com.example.travel_buddy.classes_res.heritage_points.TravelPointWithTrips
 import com.example.travel_buddy.classes_res.heritage_points.Trip_point
 import com.example.travel_buddy.classes_res.heritage_points.dbAttraction_point
@@ -30,6 +31,7 @@ class DataEntryViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val repository: TravelPointRepository
     val allTravelPoints: LiveData<List<dbTravel_point>>
+    //val allTravelPlanNames: LiveData<List<String>>
 
     init {
         val dao = TravelPlannerDatabase.getDatabase(application).travelPointDao()
@@ -41,6 +43,18 @@ class DataEntryViewModel(application: Application) : AndroidViewModel(applicatio
         return repository.getTravelPointWithTrips(travelPointId)
     }
 
+    fun getAllTravelsFromPlan(travel_plan_name: String): MutableList<dbTravel_point> {
+        return repository.getAllTravelsFromPlan(travel_plan_name)
+    }
+
+    fun insertName(item: TravelPlanName) = viewModelScope.launch {
+        repository.insertName(item)
+    }
+
+    fun getAllNames(): List<TravelPlanName> {
+        return repository.getAllNames()
+    }
+
     /*
 
     fun getAllTripsForId(travelPointId: Int): LiveData<List<dbTrip_point>> {
@@ -49,8 +63,12 @@ class DataEntryViewModel(application: Application) : AndroidViewModel(applicatio
 
      */
 
-    fun insertTravelPoint(travelPoint: Travel_point) = viewModelScope.launch {
-        repository.insert(travelPoint)
+    fun insert(trip_name: String,travelPoint: dbTravel_point) = viewModelScope.launch {
+        repository.insert(trip_name,travelPoint)
+    }
+
+    fun update(trip_name: String,item: dbTravel_point) = viewModelScope.launch {
+        repository.update(trip_name,dbTravel_point())
     }
 
     fun insertTripPoint(tripPoint: Trip_point) = viewModelScope.launch {

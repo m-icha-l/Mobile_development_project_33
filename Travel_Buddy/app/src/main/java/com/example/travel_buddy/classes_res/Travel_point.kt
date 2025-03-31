@@ -25,6 +25,7 @@ data class dbTravel_point(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String = "No name point",
+    var travel_plan_name: String = "No travel plan name",
     val date: String = "day/month/year hour:minute",
     var location: String = ""
 )
@@ -32,7 +33,8 @@ data class dbTravel_point(
 open class Travel_point(
     val name: String = "No name point",
     val date: Date  = Date(), //in Helper_class
-    var location: Location? = null
+    var location: Location? = null,
+    var travel_plan_name: String = "No travel plan name",
 ){
     private var dbRef: dbTravel_point
     init {
@@ -45,7 +47,7 @@ open class Travel_point(
                 longitude = 0.0
             }
         }
-        dbRef = dbTravel_point(name = name, date = date.toString(), location = location.toString())
+        dbRef = dbTravel_point(travel_plan_name = travel_plan_name, name = name, date = date.toString(), location = location.toString())
     }
 
     fun getDb(): dbTravel_point {
