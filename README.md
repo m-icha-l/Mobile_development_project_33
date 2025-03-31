@@ -13,3 +13,14 @@ With an emphasis on **intelligent itinerary management, real-time travel insight
 - **Mikołaj Gdowski**  
 
 ---
+███████████████████████████████
+█                             █
+█   Travel Buddy Oy           █
+█   Aleksanterinkatu 15       █
+█   00100 Helsinki            █
+█   Finland                   █
+█                             █
+█   P: +358 100 200 300       █
+█   E: helpmebuddy@corp.com   █
+█                             █
+███████████████████████████████
