@@ -3,7 +3,7 @@
 ## About the Project
 **Travel Buddy** is an innovative mobile application designed to streamline travel planning by integrating transportation, accommodation, attractions, and activities into a single, user-friendly platform. This project leverages modern technologies to provide a seamless and efficient travel planning experience.
 
-[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge&logo=github)](https://github.com/m-icha-l/Mobile_development_project_33)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge&logo=github)](https://github.com/m-icha-l/Mobile_development_project_33/tree/main/Travel_Buddy)
 
 ---
 
