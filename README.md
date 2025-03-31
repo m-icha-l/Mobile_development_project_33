@@ -21,7 +21,7 @@
 ## Key Features
 - **Comprehensive Trip Planning:** Organize transportation, accommodation, and activities within a single app.
 - **Real-Time Data Integration:** Access up-to-date information for informed decision-making.
-- **Personalized Recommendations:** Receive suggestions tailored to user preferences and past behaviors.
+- **Important informations:** Providing important travel info, so new places can suprise you only in a good way.
 - **User-Friendly Interface:** Navigate the app effortlessly with an intuitive design.
 
 ---
@@ -86,7 +86,6 @@ To set up the **Travel Buddy** project on your local machine using Android Studi
 Once installed, **Travel Buddy** offers a suite of features to enhance your travel planning experience:
 
 - **Create New Trips:** Input destinations, dates, and preferences to generate personalized itineraries.
-- **Explore Recommendations:** Discover accommodations, attractions, and dining options tailored to your interests.
 - **Manage Bookings:** Keep track of reservations and receive timely reminders.
 - **Offline Access:** Download trip details to access information without an internet connection.
 
@@ -97,7 +96,7 @@ Once installed, **Travel Buddy** offers a suite of features to enhance your trav
 
 - **Subscription Fees:** Access to advanced features such as exclusive deals and personalized consultations.
 - **Affiliate Partnerships:** Collaborations with travel service providers to offer integrated booking options.
-- **In-App Advertising:** Strategically placed ads that align with user interests without compromising the user experience.
+- **In-App Advertising:**
 
 ---
 
@@ -124,4 +123,4 @@ For support, inquiries, or collaboration opportunities, please reach out to us:
 
 ---
 
-**Travel Buddy – Your Intelligent Travel Companion.**
+**Travel Buddy – Your personal planner**
