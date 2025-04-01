@@ -28,7 +28,6 @@ fun TopAppBar(drawerState: DrawerState) {
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
-
             Text(
                 "Travel buddy",
             )

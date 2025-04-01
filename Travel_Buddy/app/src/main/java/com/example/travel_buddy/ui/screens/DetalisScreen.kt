@@ -15,7 +15,7 @@ import androidx.navigation.NavController
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
 
 @Composable
-fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, modifier: Modifier = Modifier)
+fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, modifier: Modifier = Modifier, Index: Int = -1)
 {
 /*    IconButton(onClick = { navController.popBackStack() }, modifier = modifier) {
         Icon(
@@ -24,9 +24,9 @@ fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, m
         )
     }*/
     Card (
-        modifier = modifier.clickable{ navController.navigate("TravelsScreen")}
+        modifier = modifier.clickable{ navController.popBackStack()}
     ){
-        Text("Details Screen", modifier = Modifier.padding(4.dp))
+        Text("Details Screen $Index", modifier = Modifier.padding(4.dp))
     }
 
 }
