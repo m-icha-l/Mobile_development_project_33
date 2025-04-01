@@ -33,7 +33,9 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, m
 
         }*/
         val index = 1
-        TravelPlanItem(){
+        DataEntryViewModel.TopBarName.updateText(index.toString())
+        TravelPlanItem()
+        {
             navController.navigate("DetailsScreen/$index")
         }
     }
@@ -45,7 +47,7 @@ fun TravelPlanItem(onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(bottom = 4.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
     ) {

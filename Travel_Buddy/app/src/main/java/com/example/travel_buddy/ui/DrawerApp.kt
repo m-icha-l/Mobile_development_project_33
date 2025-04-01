@@ -100,7 +100,7 @@ fun DrawerApp(viewModel: DataEntryViewModel, navController: NavHostController, m
         gesturesEnabled = true
     ) {
         Scaffold(
-            topBar = { TopAppBar(drawerState) },
+            topBar = { TopAppBar(navController, drawerState) },
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
             MainApp(

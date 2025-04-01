@@ -12,4 +12,6 @@
     <string name="hourly_forecast">Hourly Forecast</string>
     <string name="lorem_ipsum">lorem ipsum</string>
     <string name="travel_name">Travel name</string>
+    <string name="travel_point_name">Travel point name</string>
+
 </resources>
