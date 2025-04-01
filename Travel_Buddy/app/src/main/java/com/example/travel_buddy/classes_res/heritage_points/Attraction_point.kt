@@ -1,10 +1,10 @@
 package com.example.travel_buddy.classes_res.heritage_points
 
-import Date
-import Duration
 import android.location.Location
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.travel_buddy.classes_res.Date
+import com.example.travel_buddy.classes_res.Duration
 import com.example.travel_buddy.classes_res.Travel_point
 import com.example.travel_buddy.classes_res.dbTravel_point
 import com.example.travel_buddy.functions.formatLocation
@@ -14,7 +14,6 @@ import com.example.travel_buddy.functions.parseLocation
 data class dbAttraction_point(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val rootId: Int = 0,
     val name: String = "No name point",
     val date: String = "day/month/year hour:minute",
     val end_date: String = "day/month/year hour:minute",
@@ -26,7 +25,6 @@ data class dbAttraction_point(
 
 fun dbAttraction_point.translateFromDb(): Attraction_point {
     return Attraction_point(
-        rootId = this.rootId,
         name = this.name,
         date = Date(this.date), // Tworzy obiekt klasy Date
         end_date = Date(this.end_date),
@@ -38,7 +36,6 @@ fun dbAttraction_point.translateFromDb(): Attraction_point {
 }
 
 class Attraction_point(
-    var rootId: Int = 0,
     name: String = "No name point",
     date: Date = Date(),
     var end_date: Date = Date(),
@@ -50,7 +47,6 @@ class Attraction_point(
 
     fun getDbObject(): dbAttraction_point {
         return dbAttraction_point(
-            rootId = rootId,
             name = name,
             date = date.toString(),
             end_date = end_date.toString(),
@@ -63,7 +59,6 @@ class Attraction_point(
 
     override fun ToDb(): dbAttraction_point {
         return dbAttraction_point(
-            rootId = this.rootId,
             name = this.name,
             date = this.date.toString(), // Klasa Date ma nadpisane toString()
             end_date = this.end_date.toString(),

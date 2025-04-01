@@ -1,6 +1,5 @@
 package com.example.travel_buddy.classes_res
 
-import Date
 import android.util.Log
 
 import android.location.Location
@@ -49,8 +48,6 @@ open class Travel_point(
     var newId: Int = 0,  // Przekazujemy ID
     var travel_plan_name: String = "No travel plan name" // Przekazujemy travel_plan_name
 ) {
-    private var dbRef: dbTravel_point
-
     init {
         if (location == null) {
             location = Location("default").apply { // placeholder waiting for Mikłaj's function
@@ -59,17 +56,15 @@ open class Travel_point(
             }
         }
         // Inicjalizujemy dbRef z przekazanymi wartościami
-        dbRef = dbTravel_point(
+    }
+
+    fun getDb(): dbTravel_point {
+        return dbTravel_point(
             name = name,
             date = date.toString(),
             location = location?.let { formatLocation(it) } ?: "",
             newId = newId,
-            travel_plan_name = travel_plan_name
-        )
-    }
-
-    fun getDb(): dbTravel_point {
-        return dbRef
+            travel_plan_name = travel_plan_name)
     }
 
     open fun ToDb(): Any {
@@ -83,6 +78,6 @@ open class Travel_point(
     }
 
     override fun toString(): String {
-        return "Name: $name, Date: $date, $location"
+        return "Name: $name, Date: $date, $location, ID: $newId"
     }
 }

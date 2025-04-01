@@ -1,6 +1,7 @@
 package com.example.travel_buddy.classes_res.heritage_points
 
-import Date
+import com.example.travel_buddy.classes_res.Date
+import com.example.travel_buddy.classes_res.Duration
 import android.location.Location
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -13,7 +14,6 @@ import com.example.travel_buddy.functions.parseLocation
 data class dbHotel_point(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val rootId: Int = 0,
     val name: String = "No name point",
     val city: String? = "",
     val date: String = "day/month/year hour:minute",
@@ -25,7 +25,6 @@ data class dbHotel_point(
 
 fun dbHotel_point.translateFromDb(): Hotel_point {
     return Hotel_point(
-        rootId = this.rootId,
         name = this.name,
         city = this.city,
         date = Date(this.date), // Tworzy obiekt klasy Date
@@ -37,7 +36,6 @@ fun dbHotel_point.translateFromDb(): Hotel_point {
 }
 
 class Hotel_point(
-    var rootId: Int = 0,
     name: String = "No name point",
     val city: String? = "",
     date: Date = Date(),
@@ -49,7 +47,6 @@ class Hotel_point(
 
     fun getDbObject(): dbHotel_point {
         return dbHotel_point(
-            rootId = rootId,
             name = name,
             city = city,
             date = date.toString(),
@@ -66,7 +63,6 @@ class Hotel_point(
 
     override fun ToDb(): dbHotel_point {
         return dbHotel_point(
-            rootId = this.rootId,
             name = this.name,
             city = this.city,
             date = this.date.toString(), // Klasa Date ma nadpisane toString()

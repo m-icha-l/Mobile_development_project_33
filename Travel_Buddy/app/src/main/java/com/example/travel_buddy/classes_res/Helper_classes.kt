@@ -1,13 +1,21 @@
+package com.example.travel_buddy.classes_res
+
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.travel_buddy.classes_res.Travel_point
 import com.example.travel_buddy.classes_res.dbTravel_point
+import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
+import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
 import com.example.travel_buddy.classes_res.heritage_points.TravelPlanName
+import com.example.travel_buddy.classes_res.heritage_points.Trip_point
+import com.example.travel_buddy.classes_res.heritage_points.translateFromDb
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
+import android.util.Log
 import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Hours
 import org.joda.time.Minutes
 import org.joda.time.Period
+import kotlin.reflect.typeOf
 
 class Date(dateString: String? = null) {
     var day: Int
@@ -65,22 +73,68 @@ data class Duration(
 //          TRANSLACJI MIEDZY DBTRAVEL_POINT A TRAVEL_POINT(SA IMPLEMENTOWANE DLA KAZEDJ PODKLASY TRAVEL POINT ZOBACZ KOD)
 
 
-class Travel_Point_Manager(dataEntryViewModel: DataEntryViewModel) {
+class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
     private val travelPointsMap: MutableMap<String, MutableList<Travel_point>> = mutableMapOf()
+    private val lastIndexMap: MutableMap<String, Int> = mutableMapOf()
 
-    /*
     init {
         val namesList = dataEntryViewModel.getAllNames()
         for (list_name in namesList) {
-            travelPointsMap.put(list_name.name,dataEntryViewModel.getAllTravelsFromPlan(list_name.name))
+            var travels = dataEntryViewModel.getAllTravelsFromPlan(list_name.name)
+            var trips = dataEntryViewModel.getAllTripsFromPlan(list_name.name)
+            var hotels = dataEntryViewModel.getAllHotelsFromPlan(list_name.name)
+            var attractions = dataEntryViewModel.getAllAttractionsFromPlan(list_name.name)
+
+            val travelsList: MutableList<Travel_point> = mutableListOf()
+            for(travel in travels) {
+                travelsList.add(travel.translateFromDb())
+            }
+            for(trip in trips) {
+                travelsList.add(trip.translateFromDb())
+            }
+            for(hotel in hotels) {
+                travelsList.add(hotel.translateFromDb())
+            }
+            for(attraction in attractions) {
+                travelsList.add(attraction.translateFromDb())
+            }
+            travelsList.sortBy { it.newId }
+            travelPointsMap.put(list_name.name,travelsList)
+            lastIndexMap.put(list_name.name,travelsList.lastIndex+1)
+            Log.d("LAST INDEX",(travelsList.lastIndex+1).toString())
         }
     }
 
-     */
 
     // Add a new Travel_point to a trip_name
     fun add_Point(trip_name: String, point: Travel_point) {
+        val nextIndex: Int
+        if(!lastIndexMap.containsKey(trip_name)) {
+            nextIndex = 1
+            lastIndexMap.put(key = trip_name,value = nextIndex)
+            dataEntryViewModel.insertName(TravelPlanName(name=trip_name))
+        }
+        else
+        {
+            nextIndex = lastIndexMap[trip_name]!! + 1
+            lastIndexMap[trip_name] = nextIndex
+        }
         travelPointsMap.getOrPut(trip_name) { mutableListOf() }.add(point)
+
+        when (point) {
+            is Hotel_point -> {
+                dataEntryViewModel.insertHotelPoint(nextIndex,trip_name,point)
+            }
+            is Trip_point -> {
+                dataEntryViewModel.insertTripPoint(nextIndex,trip_name,point)
+            }
+            is Attraction_point -> {
+                dataEntryViewModel.insertAttractionPoint(nextIndex,trip_name,point)
+            }
+            else -> {
+                dataEntryViewModel.insert(nextIndex,trip_name,point)
+            }
+        }
     }
 
     // Get a specific Travel_point by index

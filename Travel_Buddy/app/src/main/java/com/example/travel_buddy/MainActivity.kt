@@ -1,6 +1,5 @@
 package com.example.travel_buddy
 
-import Travel_Point_Manager
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -42,17 +41,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.res.stringResource
+import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.viewmodel.NavigationUiState
 import com.example.travel_buddy.viewmodel.NavigationViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var travelPointViewModel: DataEntryViewModel
+    //private lateinit var travelPointViewModel: DataEntryViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        travelPointViewModel = ViewModelProvider(this).get(DataEntryViewModel::class.java)
+        //travelPointViewModel = ViewModelProvider(this).get(DataEntryViewModel::class.java)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -60,7 +60,6 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
                         name = "Travel buddy",
-                        dataEntryViewModel = travelPointViewModel,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -84,15 +83,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(), navigationViewModel: NavigationViewModel = viewModel(), modifier: Modifier = Modifier) {
 
-    val travelPoints by dataEntryViewModel.allTravelPoints.observeAsState(initial = emptyList())
+    //val travelPoints by dataEntryViewModel.allTravelPoints.observeAsState(initial = emptyList())
     //val travelPointWithTrips by dataEntryViewModel.getTravelPointWithTrips(1).observeAsState()
 
 
     val test_travel = Travel_point("travel class")
-    val test_attraction = Attraction_point(1,"santa claus post office")
-    val test_hotel = Hotel_point(1,"rovaniemi hotel")
-    val test_trip = Trip_point(1,"santa claus village")
-    val test_trip2 = Trip_point(1,"santa claus village2")
+    val test_attraction = Attraction_point(name="santa claus post office")
+    val test_hotel = Hotel_point(name="rovaniemi hotel")
+    val test_trip = Trip_point(name="santa claus village")
+    val test_trip2 = Trip_point(name="santa claus village2")
 
     /*
 
@@ -109,9 +108,10 @@ fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(),
 
     val travelPointManager = Travel_Point_Manager(dataEntryViewModel)
 
-    //travelPointManager.add_Point("Vacation", Hotel_point(name = "Hotel_1"))
-    //travelPointManager.add_Point("Vacation", Travel_point(name = "Mountain").getDb())
-    //travelPointManager.add_Point("Business", Attraction_point(name = "Conference"))
+    travelPointManager.add_Point("Vacation", Hotel_point(name = "Novotel"))
+    travelPointManager.add_Point("Vacation", Travel_point(name = "Beach"))
+    travelPointManager.add_Point("Business", Attraction_point(name = "Museum"))
+    //travelPointManager.add_Point("Business", Trip_point(name = "Stockholm"))
     Column {
         Text(
             text = "Hello $name! \n $test_travel \n $test_attraction \n $test_hotel \n $test_trip",

@@ -46,6 +46,15 @@ interface TravelPointDao {
     @Query("SELECT * from travel_points WHERE travel_plan_name = :travel_plan_name ORDER BY date ASC")
     fun getAllTravelsFromPlan(travel_plan_name: String): MutableList<dbTravel_point>
 
+    @Query("SELECT * from trip_points WHERE travel_plan_name = :travel_plan_name ORDER BY date ASC")
+    fun getAllTripsFromPlan(travel_plan_name: String): MutableList<dbTrip_point>
+
+    @Query("SELECT * from hotel_points WHERE travel_plan_name = :travel_plan_name ORDER BY date ASC")
+    fun getAllHotelsFromPlan(travel_plan_name: String): MutableList<dbHotel_point>
+
+    @Query("SELECT * from attraction_points WHERE travel_plan_name = :travel_plan_name ORDER BY date ASC")
+    fun getAllAttractionsFromPlan(travel_plan_name: String): MutableList<dbAttraction_point>
+
     @Query("SELECT * from travel_points WHERE id = :id")
     fun getItem(id: Int): LiveData<dbTravel_point>
 
