@@ -67,6 +67,17 @@ data class Duration(
 
 class Travel_Point_Manager(dataEntryViewModel: DataEntryViewModel) {
     private val travelPointsMap: MutableMap<String, MutableList<Travel_point>> = mutableMapOf()
+
+    /*
+    init {
+        val namesList = dataEntryViewModel.getAllNames()
+        for (list_name in namesList) {
+            travelPointsMap.put(list_name.name,dataEntryViewModel.getAllTravelsFromPlan(list_name.name))
+        }
+    }
+
+     */
+
     // Add a new Travel_point to a trip_name
     fun add_Point(trip_name: String, point: Travel_point) {
         travelPointsMap.getOrPut(trip_name) { mutableListOf() }.add(point)
