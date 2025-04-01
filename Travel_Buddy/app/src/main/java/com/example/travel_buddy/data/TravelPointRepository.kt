@@ -14,15 +14,11 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.travel_buddy.classes_res.heritage_points.TravelPlanName
-import com.example.travel_buddy.classes_res.heritage_points.TravelPointWithTrips
 
 class TravelPointRepository(private val travelPointDao: TravelPointDao) {
 
     val allTravelPoints: LiveData<List<dbTravel_point>> = travelPointDao.getAllItems()
 
-    fun getTravelPointWithTrips(travelPointId: Int): LiveData<TravelPointWithTrips> {
-        return travelPointDao.getTravelPointWithTrips(travelPointId)
-    }
 
     /*
 

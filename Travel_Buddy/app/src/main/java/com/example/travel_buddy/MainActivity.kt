@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity() {
 fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(), navigationViewModel: NavigationViewModel = viewModel(), modifier: Modifier = Modifier) {
 
     val travelPoints by dataEntryViewModel.allTravelPoints.observeAsState(initial = emptyList())
-    val travelPointWithTrips by dataEntryViewModel.getTravelPointWithTrips(1).observeAsState()
+    //val travelPointWithTrips by dataEntryViewModel.getTravelPointWithTrips(1).observeAsState()
 
 
     val test_travel = Travel_point("travel class")
@@ -110,7 +110,7 @@ fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(),
     val travelPointManager = Travel_Point_Manager(dataEntryViewModel)
 
     //travelPointManager.add_Point("Vacation", Hotel_point(name = "Hotel_1"))
-    travelPointManager.add_Point("Vacation", Travel_point(name = "Mountain").getDb())
+    //travelPointManager.add_Point("Vacation", Travel_point(name = "Mountain").getDb())
     //travelPointManager.add_Point("Business", Attraction_point(name = "Conference"))
     Column {
         Text(

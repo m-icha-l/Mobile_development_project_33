@@ -3,22 +3,14 @@ package com.example.travel_buddy.classes_res.heritage_points
 import Date
 import Duration
 import android.location.Location
-import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
-import androidx.room.Relation
 import com.example.travel_buddy.classes_res.Travel_point
 import com.example.travel_buddy.classes_res.dbTravel_point
+import com.example.travel_buddy.functions.formatLocation
+import com.example.travel_buddy.functions.parseLocation
 
-@Entity(tableName = "attraction_points",foreignKeys = [ForeignKey(
-    entity = dbTravel_point::class,
-    parentColumns = ["id"],
-    childColumns = ["rootId"],
-    onDelete = ForeignKey.CASCADE  // Delete trips when parent is deleted
-)],
-    indices = [Index(value = ["rootId"])])
+@Entity(tableName = "attraction_points")
 data class dbAttraction_point(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -27,17 +19,23 @@ data class dbAttraction_point(
     val date: String = "day/month/year hour:minute",
     val end_date: String = "day/month/year hour:minute",
     var time: String = "hour:minute",
-    var location: String = ""
+    var location: String = "",
+    var newId: Int = 0, // Nowe pole ID
+    var travel_plan_name: String = "No travel plan name" // Nowe pole travel_plan_name
 )
 
-data class TravelPointWithAttractions(
-    @Embedded val travelPoint: dbTravel_point,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "rootId"
+fun dbAttraction_point.translateFromDb(): Attraction_point {
+    return Attraction_point(
+        rootId = this.rootId,
+        name = this.name,
+        date = Date(this.date), // Tworzy obiekt klasy Date
+        end_date = Date(this.end_date),
+        time = Date(this.date) - Date(this.end_date), // Tworzy obiekt klasy Duration
+        location = parseLocation(this.location), // Tworzy obiekt android.location.Location
+        newId = this.newId, // Przekazanie ID
+        travel_plan_name = this.travel_plan_name // Przekazanie travel_plan_name
     )
-    val tripPoints: List<dbAttraction_point>
-)
+}
 
 class Attraction_point(
     var rootId: Int = 0,
@@ -46,7 +44,10 @@ class Attraction_point(
     var end_date: Date = Date(),
     var time: Duration = date - end_date,
     location: Location? = null,
-) : Travel_point(name, date, location) {
+    newId: Int = 0, // Nowe pole ID
+    travel_plan_name: String = "No travel plan name" // Nowe pole travel_plan_name
+) : Travel_point(name, date, location, newId, travel_plan_name) { // Przekazywanie ID i travel_plan_name do Travel_point
+
     fun getDbObject(): dbAttraction_point {
         return dbAttraction_point(
             rootId = rootId,
@@ -55,10 +56,25 @@ class Attraction_point(
             end_date = end_date.toString(),
             time = time.toString(),
             location = location.toString(),
+            newId = this.newId, // Przekazanie ID
+            travel_plan_name = this.travel_plan_name // Przekazanie travel_plan_name
+        )
+    }
+
+    override fun ToDb(): dbAttraction_point {
+        return dbAttraction_point(
+            rootId = this.rootId,
+            name = this.name,
+            date = this.date.toString(), // Klasa Date ma nadpisane toString()
+            end_date = this.end_date.toString(),
+            time = this.time.toString(),
+            location = (this.location?.let { formatLocation(it) } ?: ""),
+            newId = this.newId, // Przekazanie ID
+            travel_plan_name = this.travel_plan_name // Przekazanie travel_plan_name
         )
     }
 
     override fun toString(): String {
-        return "Name: $name, Date: $date, End activity date: $end_date, $location, time: $time"
+        return "Name: $name, Date: $date, End activity date: $end_date, $location, Time: $time, ID: $newId, Travel Plan: $travel_plan_name"
     }
 }

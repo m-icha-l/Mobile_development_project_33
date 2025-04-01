@@ -11,9 +11,6 @@ import androidx.room.Update
 import com.example.travel_buddy.classes_res.Travel_point
 import com.example.travel_buddy.classes_res.dbTravel_point
 import com.example.travel_buddy.classes_res.heritage_points.TravelPlanName
-import com.example.travel_buddy.classes_res.heritage_points.TravelPointWithAttractions
-import com.example.travel_buddy.classes_res.heritage_points.TravelPointWithHotels
-import com.example.travel_buddy.classes_res.heritage_points.TravelPointWithTrips
 import com.example.travel_buddy.classes_res.heritage_points.dbAttraction_point
 import com.example.travel_buddy.classes_res.heritage_points.dbHotel_point
 import com.example.travel_buddy.classes_res.heritage_points.dbTrip_point
@@ -67,19 +64,4 @@ interface TravelPointDao {
     fun getAllAttractionForId(travelPointId: Int): LiveData<List<dbAttraction_point>>
 
      */
-
-    @Transaction
-    @Query("SELECT * FROM travel_points WHERE id = :travelPointId")
-    fun getTravelPointWithTrips(travelPointId: Int): LiveData<TravelPointWithTrips>
-
-    @Transaction
-    @Query("SELECT * FROM travel_points WHERE id = :travelPointId")
-    fun getTravelPointWithHotels(travelPointId: Int): LiveData<TravelPointWithHotels>
-
-    @Transaction
-    @Query("SELECT * FROM travel_points WHERE id = :travelPointId")
-    fun getTravelPointWithAttractions(travelPointId: Int): LiveData<TravelPointWithAttractions>
-
-
-
 }

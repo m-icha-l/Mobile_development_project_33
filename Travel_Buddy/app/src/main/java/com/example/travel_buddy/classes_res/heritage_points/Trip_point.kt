@@ -13,13 +13,7 @@ import androidx.room.Relation
 import com.example.travel_buddy.classes_res.Travel_point
 import com.example.travel_buddy.classes_res.dbTravel_point
 
-@Entity(tableName = "trip_points",foreignKeys = [ForeignKey(
-    entity = dbTravel_point::class,
-    parentColumns = ["id"],
-    childColumns = ["rootId"],
-    onDelete = ForeignKey.CASCADE  // Delete trips when parent is deleted
-)],
-    indices = [Index(value = ["rootId"])])
+@Entity(tableName = "trip_points")
 data class dbTrip_point(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -32,23 +26,17 @@ data class dbTrip_point(
     var location: String = ""
 )
 
-data class TravelPointWithTrips(
-    @Embedded val travelPoint: dbTravel_point,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "rootId"
-    )
-    val tripPoints: List<dbTrip_point>
-)
-
 class Trip_point(
-    var rootId: Int = 0,
+    var rootId: Int = 0, // <--- TO JEST DO WYJEBANIA
     name: String = "No name point",
     var end_location: Location? = null,
     date: Date = Date(),
     var end_date: Date = Date(),
     var time: Duration = date - end_date,
-    location: Location? = null
+    location: Location? = null,
+    val ID: Int = 0,
+    val plan_name: String = "It belongs to no name plan"
+
 ) : Travel_point(name, date, location) {
     init {
         if (end_location == null) {

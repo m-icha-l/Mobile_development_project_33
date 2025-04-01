@@ -14,7 +14,6 @@ import com.example.travel_buddy.classes_res.dbTravel_point
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
 import com.example.travel_buddy.classes_res.heritage_points.TravelPlanName
-import com.example.travel_buddy.classes_res.heritage_points.TravelPointWithTrips
 import com.example.travel_buddy.classes_res.heritage_points.Trip_point
 import com.example.travel_buddy.classes_res.heritage_points.dbAttraction_point
 import com.example.travel_buddy.classes_res.heritage_points.dbTrip_point
@@ -37,10 +36,6 @@ class DataEntryViewModel(application: Application) : AndroidViewModel(applicatio
         val dao = TravelPlannerDatabase.getDatabase(application).travelPointDao()
         repository = TravelPointRepository(dao)
         allTravelPoints = repository.allTravelPoints
-    }
-
-    fun getTravelPointWithTrips(travelPointId: Int): LiveData<TravelPointWithTrips> {
-        return repository.getTravelPointWithTrips(travelPointId)
     }
 
     fun getAllTravelsFromPlan(travel_plan_name: String): MutableList<dbTravel_point> {

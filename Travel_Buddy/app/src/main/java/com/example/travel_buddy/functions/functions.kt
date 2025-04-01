@@ -8,11 +8,30 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
+import android.location.Location
 import com.example.travel_buddy.classes_res.Travel_point
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
+fun formatLocation(location: Location): String {
+    return "lat/lng: (${location.latitude},${location.longitude})"
+}
+
+fun parseLocation(locationString: String?): Location? {
+    if (locationString.isNullOrEmpty()) return null
+
+    val regex = Regex("lat/lng: \\(([-\\d.]+),([-\\d.]+)\\)")
+    val matchResult = regex.find(locationString)
+
+    return matchResult?.let {
+        val (lat, lng) = it.destructured
+        Location("parsed").apply {
+            latitude = lat.toDouble()
+            longitude = lng.toDouble()
+        }
+    }
+}
 
 fun exportToPdf(context: Context, fileName: String, travelPoints: Array<Travel_point>): File? {
     val pdfDocument = PdfDocument()
@@ -74,3 +93,4 @@ fun exportToPdf(context: Context, fileName: String, travelPoints: Array<Travel_p
 
     return pdfFile
 }
+
