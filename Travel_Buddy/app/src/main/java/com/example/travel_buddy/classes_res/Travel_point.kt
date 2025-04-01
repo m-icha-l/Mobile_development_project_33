@@ -36,7 +36,6 @@ open class Travel_point(
     var location: Location? = null,
     var travel_plan_name: String = "No travel plan name",
 ){
-    private var dbRef: dbTravel_point
     init {
         if (location == null) {
 
@@ -48,10 +47,6 @@ open class Travel_point(
             }
         }
         dbRef = dbTravel_point(travel_plan_name = travel_plan_name, name = name, date = date.toString(), location = location.toString())
-    }
-
-    fun getDb(): dbTravel_point {
-        return dbRef
     }
 
     override fun toString(): String {

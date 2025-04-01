@@ -9,23 +9,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.travel_buddy.classes_res.Travel_point
-import com.example.travel_buddy.classes_res.dbTravel_point
-import androidx.compose.foundation.lazy.items
 
 
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
@@ -47,12 +37,7 @@ import com.example.travel_buddy.viewmodel.NavigationViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-
-    private lateinit var travelPointViewModel: DataEntryViewModel
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        travelPointViewModel = ViewModelProvider(this).get(DataEntryViewModel::class.java)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -60,7 +45,6 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
                         name = "Travel buddy",
-                        dataEntryViewModel = travelPointViewModel,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -89,10 +73,9 @@ fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(),
 
 
     val test_travel = Travel_point("travel class")
-    val test_attraction = Attraction_point(1,"santa claus post office")
-    val test_hotel = Hotel_point(1,"rovaniemi hotel")
-    val test_trip = Trip_point(1,"santa claus village")
-    val test_trip2 = Trip_point(1,"santa claus village2")
+    val test_attraction = Attraction_point("attraction class")
+    val test_hotel = Hotel_point("hotel class")
+    val test_trip = Trip_point("trip class")
 
     /*
 
