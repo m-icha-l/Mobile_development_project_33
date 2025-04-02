@@ -35,7 +35,7 @@ interface TravelPointDao {
     suspend fun insertTrip(item: dbTrip_point)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertHotel(item: dbHotel_point)
+    suspend fun insertHotel(item: dbHotel_point): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAttraction(item: dbAttraction_point)
@@ -60,6 +60,42 @@ interface TravelPointDao {
 
     @Query("DELETE FROM travel_points WHERE id = :travelPointId")
     suspend fun deleteItem(travelPointId: Int)
+
+    @Query("DELETE FROM travel_points WHERE travel_plan_name = :travel_plan_name")
+    fun deletePlanFromTravelPoints(travel_plan_name: String)
+
+    @Query("DELETE FROM trip_points WHERE travel_plan_name = :travel_plan_name")
+    fun deletePlanFromTripPoints(travel_plan_name: String)
+
+    @Query("DELETE FROM hotel_points WHERE travel_plan_name = :travel_plan_name")
+    fun deletePlanFromHotelPoints(travel_plan_name: String)
+
+    @Query("DELETE FROM attraction_points WHERE travel_plan_name = :travel_plan_name")
+    fun deletePlanFromAttractionPoints(travel_plan_name: String)
+
+    @Query("UPDATE travel_points SET name = :name, date = :date, location = :location WHERE newId = :newId AND travel_plan_name = :travel_plan_name")
+    suspend fun updateTravelPoint(name: String,date: String,location: String, newId: Int, travel_plan_name: String)
+
+    @Query("UPDATE trip_points SET name = :name, end_location = :end_location, date = :date, end_date = :end_date, time = :time, location = :location WHERE newId = :newId AND travel_plan_name = :travel_plan_name")
+    suspend fun updateTripPoint(name: String, end_location:String, date: String, end_date:String, time:String, location: String, newId: Int, travel_plan_name: String)
+
+    @Query("UPDATE hotel_points SET name = :name, city = :city, date = :date, end_date = :end_date, location = :location WHERE newId = :newId AND travel_plan_name = :travel_plan_name")
+    suspend fun updateHotelPoint(name: String, city:String, date: String, end_date:String, location: String, newId: Int, travel_plan_name: String)
+
+    @Query("UPDATE attraction_points SET name = :name, date = :date, end_date = :end_date, time = :time, location = :location WHERE newId = :newId AND travel_plan_name = :travel_plan_name")
+    suspend fun updateAttractionPoint(name: String, date: String, end_date:String, time: String, location: String, newId: Int, travel_plan_name: String)
+
+    @Query("DELETE FROM travel_points WHERE travel_plan_name = :travel_plan_name AND newId = :index")
+    fun deleteTravelPoint(travel_plan_name: String, index: Int)
+
+    @Query("DELETE FROM trip_points WHERE travel_plan_name = :travel_plan_name AND newId = :index")
+    fun deleteTripPoint(travel_plan_name: String, index: Int)
+
+    @Query("DELETE FROM hotel_points WHERE travel_plan_name = :travel_plan_name AND newId = :index")
+    fun deleteHotelPoint(travel_plan_name: String, index: Int)
+
+    @Query("DELETE FROM attraction_points WHERE travel_plan_name = :travel_plan_name AND newId = :index")
+    fun deleteAttractionPoint(travel_plan_name: String, index: Int)
 
     /*
 

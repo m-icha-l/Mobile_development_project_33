@@ -15,7 +15,7 @@ data class dbHotel_point(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String = "No name point",
-    val city: String? = "",
+    val city: String = "", //Czemu to było nullable? Usunąłem to bo byłyby problemy przez to
     val date: String = "day/month/year hour:minute",
     val end_date: String = "day/month/year hour:minute",
     var location: String = "",
@@ -37,7 +37,7 @@ fun dbHotel_point.translateFromDb(): Hotel_point {
 
 class Hotel_point(
     name: String = "No name point",
-    val city: String? = "",
+    val city: String = "",
     date: Date = Date(),
     val end_date: Date = Date(),
     location: Location? = null,

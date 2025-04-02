@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import android.util.Log
 import com.example.travel_buddy.classes_res.Travel_point
 import com.example.travel_buddy.classes_res.dbTravel_point
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
@@ -93,7 +94,12 @@ class DataEntryViewModel(application: Application) : AndroidViewModel(applicatio
         hotelPoint.travel_plan_name = trip_name
         hotelPoint.newId = globalId
         val dbHotelPoint: dbHotel_point = hotelPoint.ToDb()
-        travelPointDao.insertHotel(dbHotelPoint)
+        val result = travelPointDao.insertHotel(dbHotelPoint)
+        if (result == -1L) {
+            Log.d("DAO", "Insert failed")
+        } else {
+            Log.d("DAO", "Insert successful, row ID: $result")
+        }
     }
 
     fun insertAttractionPoint(globalId:Int,trip_name: String,attractionPoint: Attraction_point) = viewModelScope.launch {
@@ -105,6 +111,56 @@ class DataEntryViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun deleteById(id: Int) = viewModelScope.launch {
         travelPointDao.deleteItem(id)
+    }
+
+    fun updateTravelPoint(trip_name: String, id: Int, travelPoint: Travel_point) = viewModelScope.launch {
+        when(travelPoint) {
+            is Travel_point -> {
+                val dbTravelPoint = travelPoint.ToDb() as dbTravel_point
+                travelPointDao.updateTravelPoint(dbTravelPoint.name,dbTravelPoint.date,dbTravelPoint.location,id,trip_name)
+            }
+            else -> {
+                Log.d("ERROR", "Other object than Travel_point")
+            }
+        }
+    }
+
+    fun updateTripPoint(trip_name: String, id: Int, tripPoint: Trip_point) = viewModelScope.launch {
+        val dbTrip_point = tripPoint.ToDb()
+        travelPointDao.updateTripPoint(dbTrip_point.name,dbTrip_point.end_location,dbTrip_point.date,dbTrip_point.end_date,dbTrip_point.time,dbTrip_point.location,id,trip_name)
+    }
+
+    fun updateHotelPoint(trip_name: String, id: Int, hotelPoint: Hotel_point) = viewModelScope.launch {
+        val dbHotel_point = hotelPoint.ToDb()
+        travelPointDao.updateHotelPoint(dbHotel_point.name,dbHotel_point.city,dbHotel_point.date,dbHotel_point.end_date,dbHotel_point.location,id,trip_name)
+    }
+
+    fun updateAttractionPoint(trip_name: String, id: Int, attractionPoint: Attraction_point) = viewModelScope.launch {
+        val dbAttraction_point = attractionPoint.ToDb()
+        travelPointDao.updateAttractionPoint(dbAttraction_point.name,dbAttraction_point.date,dbAttraction_point.end_date,dbAttraction_point.time,dbAttraction_point.location,id,trip_name)
+    }
+
+    fun deletePlan(trip_name: String) = viewModelScope.launch {
+        travelPointDao.deletePlanFromTravelPoints(trip_name)
+        travelPointDao.deletePlanFromTripPoints(trip_name)
+        travelPointDao.deletePlanFromHotelPoints(trip_name)
+        travelPointDao.deletePlanFromAttractionPoints(trip_name)
+    }
+
+    fun deleteTravelPoint(trip_name: String, index: Int) {
+        travelPointDao.deleteTravelPoint(trip_name,index)
+    }
+
+    fun deleteTripPoint(trip_name: String, index: Int) {
+        travelPointDao.deleteTripPoint(trip_name,index)
+    }
+
+    fun deleteHotelPoint(trip_name: String, index: Int) {
+        travelPointDao.deleteHotelPoint(trip_name,index)
+    }
+
+    fun deleteAttractionPoint(trip_name: String, index: Int) {
+        travelPointDao.deleteAttractionPoint(trip_name,index)
     }
 }
 

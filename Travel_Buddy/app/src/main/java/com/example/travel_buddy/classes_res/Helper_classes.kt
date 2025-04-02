@@ -121,20 +121,7 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
         }
         travelPointsMap.getOrPut(trip_name) { mutableListOf() }.add(point)
 
-        when (point) {
-            is Hotel_point -> {
-                dataEntryViewModel.insertHotelPoint(nextIndex,trip_name,point)
-            }
-            is Trip_point -> {
-                dataEntryViewModel.insertTripPoint(nextIndex,trip_name,point)
-            }
-            is Attraction_point -> {
-                dataEntryViewModel.insertAttractionPoint(nextIndex,trip_name,point)
-            }
-            else -> {
-                dataEntryViewModel.insert(nextIndex,trip_name,point)
-            }
-        }
+        insertAnyPoint(nextIndex,trip_name,point)
     }
 
     // Get a specific Travel_point by index
@@ -144,14 +131,28 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
     // Replace the entire list of Travel_points for a trip_name
 
     fun replace_point_List(trip_name: String, newList: List<Travel_point>) {
+        deleteTravelPlan(trip_name,false)
+        var currIndex = 1
+        for(element in newList) {
+            insertAnyPoint(currIndex,trip_name,element)
+            currIndex++
+        }
+
+        lastIndexMap[trip_name] = currIndex
         travelPointsMap[trip_name] = newList.toMutableList()
     }
     // Replace a specific Travel_point in a trip_name at a given index
     fun replace_point_from(trip_name: String, index: Int, newPoint: Travel_point): Boolean {
         val list = travelPointsMap[trip_name]
 
+        deleteAnyPoint(index,trip_name)
+
         return if (list != null && index in list.indices) {
+
+            insertAnyPoint(index,trip_name,newPoint)
+
             list[index] = newPoint
+            lastIndexMap[trip_name] = lastIndexMap[trip_name]!! + 1
             true
 
         } else
@@ -160,6 +161,15 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
         }
 
     }
+
+    fun deleteTravelPlan(trip_name: String, deletePlanNames: Boolean) {
+        if(deletePlanNames) {
+            travelPointsMap.remove(trip_name)
+            lastIndexMap.remove(trip_name)
+        }
+        dataEntryViewModel.deletePlan(trip_name)
+    }
+
     // Display all categories with their travel points
     fun display_all_trips() : String {
 
@@ -200,6 +210,35 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
         }
         return str
     }
+
+    fun insertAnyPoint(index: Int, trip_name: String,travelPoint: Travel_point) {
+        when (travelPoint) {
+            is Hotel_point -> {
+                dataEntryViewModel.insertHotelPoint(index,trip_name,travelPoint)
+            }
+            is Trip_point -> {
+                dataEntryViewModel.insertTripPoint(index,trip_name,travelPoint)
+            }
+            is Attraction_point -> {
+                dataEntryViewModel.insertAttractionPoint(index,trip_name,travelPoint)
+            }
+            else -> {
+                dataEntryViewModel.insert(index,trip_name,travelPoint)
+            }
+        }
+    }
+
+    fun deleteAnyPoint(index: Int, trip_name: String) {
+
+        travelPointsMap[trip_name]?.removeAt(index)
+        lastIndexMap[trip_name] = lastIndexMap[trip_name]!! - 1
+
+        dataEntryViewModel.deleteTravelPoint(trip_name,index)
+        dataEntryViewModel.deleteTripPoint(trip_name,index)
+        dataEntryViewModel.deleteHotelPoint(trip_name,index)
+        dataEntryViewModel.deleteAttractionPoint(trip_name,index)
+    }
+
     override fun toString(): String {
         return display_all_trips()
     }

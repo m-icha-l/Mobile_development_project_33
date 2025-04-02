@@ -108,9 +108,17 @@ fun Greeting(name: String, dataEntryViewModel: DataEntryViewModel = viewModel(),
 
     val travelPointManager = Travel_Point_Manager(dataEntryViewModel)
 
-    travelPointManager.add_Point("Vacation", Hotel_point(name = "Novotel"))
-    travelPointManager.add_Point("Vacation", Travel_point(name = "Beach"))
-    travelPointManager.add_Point("Business", Attraction_point(name = "Museum"))
+    travelPointManager.add_Point("Vacation", Hotel_point(name = "Hotel1"))
+    travelPointManager.add_Point("Vacation", Travel_point(name = "Mountains"))
+    //travelPointManager.add_Point("Business", Attraction_point(name = "Restaurant"))
+
+    val list:List<Hotel_point> = listOf(Hotel_point(name="Hotel2"), Hotel_point(name="Hotel3"))
+
+    //travelPointManager.replace_point_List("Vacation",list)
+    //travelPointManager.replace_point_from("Vacation",4,Hotel_point(name = "Novotel"))
+
+    travelPointManager.deleteAnyPoint(4,"Vacation")
+
     //travelPointManager.add_Point("Business", Trip_point(name = "Stockholm"))
     Column {
         Text(
