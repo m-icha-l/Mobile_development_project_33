@@ -1,7 +1,6 @@
 package com.example.travel_buddy.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +28,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class DataEntryViewModel(application: Application) : AndroidViewModel(application) {
+
     object TopBarName {
         private val _text = mutableStateOf("Travel Buddy")
         val text = _text.value
