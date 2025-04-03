@@ -63,4 +63,5 @@ fun TravelPlanItem(onClick: () -> Unit) {
             }
         }
     }
+
 }
