@@ -54,7 +54,6 @@ room {
 
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -66,12 +65,16 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     implementation(libs.danlew.android.joda)
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.room.common)
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation(libs.androidx.navigation.compose)
+    implementation (libs.gson)
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation(libs.play.services.location)
+    implementation(libs.coil.compose)
+    implementation(libs.logging.interceptor)
     ksp(libs.room.compiler)
     annotationProcessor(libs.room.compiler)
     testImplementation(libs.junit)

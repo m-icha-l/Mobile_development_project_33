@@ -29,6 +29,15 @@ import kotlinx.coroutines.launch
 
 class DataEntryViewModel(application: Application) : AndroidViewModel(application) {
 
+    object TopBarName {
+        private val _text = mutableStateOf("Travel Buddy")
+        val text = _text.value
+        fun updateText(newText: String) {
+            _text.value = newText
+            Log.d("text_update", "updatedText:  ${_text.value}")
+        }
+    }
+
     val allTravelPoints: LiveData<List<dbTravel_point>>
     //val allTravelPlanNames: LiveData<List<String>>
 

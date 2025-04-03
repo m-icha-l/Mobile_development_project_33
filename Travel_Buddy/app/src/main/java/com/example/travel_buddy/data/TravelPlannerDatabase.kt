@@ -9,6 +9,7 @@ import com.example.travel_buddy.classes_res.heritage_points.TravelPlanName
 import com.example.travel_buddy.classes_res.heritage_points.dbAttraction_point
 import com.example.travel_buddy.classes_res.heritage_points.dbHotel_point
 import com.example.travel_buddy.classes_res.heritage_points.dbTrip_point
+import com.example.travel_buddy.data.TravelPointDao
 
 @Database(entities = [dbTravel_point::class, dbTrip_point::class,dbHotel_point::class,dbAttraction_point::class, TravelPlanName::class], version = 1, exportSchema = false)
 abstract class TravelPlannerDatabase : RoomDatabase() {
