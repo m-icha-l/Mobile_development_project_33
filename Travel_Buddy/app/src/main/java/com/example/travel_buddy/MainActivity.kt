@@ -1,6 +1,5 @@
 package com.example.travel_buddy
 
-import Travel_Point_Manager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -11,23 +10,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.travel_buddy.classes_res.Travel_point
-import com.example.travel_buddy.classes_res.dbTravel_point
-import androidx.compose.foundation.lazy.items
 
 
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
@@ -59,6 +48,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.travel_buddy.ui.DrawerApp
 import com.example.travel_buddy.ui.MainApp
 import com.example.travel_buddy.viewmodel.WeatherViewModel
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.res.stringResource
+import com.example.travel_buddy.classes_res.Travel_Point_Manager
+import com.example.travel_buddy.viewmodel.NavigationUiState
+import com.example.travel_buddy.viewmodel.NavigationViewModel
 import kotlinx.coroutines.launch
 import android.location.Location
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -71,9 +68,10 @@ class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var viewModel: WeatherViewModel
     private lateinit var travelPointViewModel: DataEntryViewModel
+    //private lateinit var travelPointViewModel: DataEntryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        travelPointViewModel = ViewModelProvider(this).get(DataEntryViewModel::class.java)
+        //travelPointViewModel = ViewModelProvider(this).get(DataEntryViewModel::class.java)
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
@@ -95,12 +93,13 @@ class MainActivity : ComponentActivity() {
                     )
                     /*TestDisplay(
                         name = "Travel buddy",
-                        dataEntryViewModel = travelPointViewModel,
                         modifier = Modifier.padding(innerPadding)
                     )*/
                 }
             }
         }
+
+        /*
         travelPointViewModel = ViewModelProvider(this).get(DataEntryViewModel::class.java)
 
         travelPointViewModel.allTravelPoints.observe(this, { travelPoints ->
@@ -109,6 +108,8 @@ class MainActivity : ComponentActivity() {
 
         val newTravelPoint = Travel_point(name = "Santa Claus Village")
         travelPointViewModel.insertTravelPoint(newTravelPoint)
+
+         */
     }
 
     private val locationPermissionLauncher =
@@ -143,5 +144,45 @@ class MainActivity : ComponentActivity() {
             onLocationReceived(null, null)
         }
     }
+    val test = Travel_point()
+    val test2 = Travel_point()
+    val test3 = Travel_point()
+    val travel_points = arrayOf(test,test2,test3)
+    val context = LocalContext.current
+    exportToPdf(context,"testpdf",travel_points)
+
+    TestScreen(navigationViewModel.navigationUiState)
+
+    Button(
+        colors = ButtonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.secondaryContainer,
+            disabledContentColor = MaterialTheme.colorScheme.tertiary,
+            disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer
+        ),
+        modifier = Modifier.padding(top = 400.dp, start = 12.dp, end = 12.dp)
+            .fillMaxWidth(),
+        onClick = {
+            navigationViewModel.counter++
+            navigationViewModel.getRoutesList(
+                    "52.50931,13.42936",
+                "52.50274,13.43872",
+                    "en-GB",
+                    true,
+                "car"
+                )
+        },
+        content = { Text("Test Directions API")}
+    )
+
 }
 
+@Composable
+fun TestScreen(uiState: NavigationUiState) {
+    val modifier = Modifier.padding(top=265.dp)
+    when (uiState) {
+        is NavigationUiState.NoRequest -> Log.d("LOADING","yes")
+        is NavigationUiState.Success -> Log.d("Success", uiState.route.toString())
+        is NavigationUiState.Error -> Log.d("ERROR","yes")
+    }
+}
