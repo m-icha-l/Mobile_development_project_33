@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.travel_buddy.R
-import com.example.travel_buddy.ui.ui_elements.Add_btns
+import com.example.travel_buddy.ui.ui_elements.Add_btn
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
 
 @Composable
@@ -71,5 +71,5 @@ fun TravelDetailItem() {
             }
         }
     }
-    Add_btns()
+    Add_btn()
 }

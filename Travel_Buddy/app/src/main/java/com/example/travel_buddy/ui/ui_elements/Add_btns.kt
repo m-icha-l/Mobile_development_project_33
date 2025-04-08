@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.example.travel_buddy.R
 
 @Composable
-fun Add_btns() {
+fun Add_btn() {
     var open_popup by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
