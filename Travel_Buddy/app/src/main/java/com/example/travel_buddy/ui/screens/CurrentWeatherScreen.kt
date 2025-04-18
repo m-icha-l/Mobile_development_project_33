@@ -5,9 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
+import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
-fun CurrentWeatherScreen(viewModel: DataEntryViewModel, navController: NavController, modifier: Modifier = Modifier)
+fun CurrentWeatherScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier = Modifier)
 {
     Text("Current Weather Screen", modifier = modifier)
 }

@@ -23,9 +23,10 @@ import androidx.navigation.NavController
 import com.example.travel_buddy.R
 import com.example.travel_buddy.ui.ui_elements.Add_btn
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
+import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
-fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, modifier: Modifier = Modifier, Index: Int = -1)
+fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier = Modifier, Index: Int = -1)
 {
 /*    IconButton(onClick = { navController.popBackStack() }, modifier = modifier) {
         Icon(
@@ -45,14 +46,14 @@ fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, m
 
 
         Text("Details Screen $Index", modifier = Modifier.padding(4.dp))
-        TravelDetailItem()
+        TravelDetailItem(tempDataViewModel,navController)
     }
 
 
 }
 
 @Composable
-fun TravelDetailItem() {
+fun TravelDetailItem(tempDataViewModel: TempDataViewModel,navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -71,5 +72,5 @@ fun TravelDetailItem() {
             }
         }
     }
-    Add_btn()
+    Add_btn(tempDataViewModel,navController)
 }

@@ -19,9 +19,10 @@ import androidx.navigation.NavController
 import com.example.travel_buddy.R
 import com.example.travel_buddy.TestDisplay
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
+import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
-fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, modifier: Modifier)
+fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier)
 {
     Column (
         modifier = modifier
@@ -33,7 +34,7 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, m
 
         }*/
         val index = 1
-        DataEntryViewModel.TopBarName.updateText(index.toString())
+        tempDataViewModel.lastTravel = index.toString()
         TravelPlanItem()
         {
             navController.navigate("DetailsScreen/$index")

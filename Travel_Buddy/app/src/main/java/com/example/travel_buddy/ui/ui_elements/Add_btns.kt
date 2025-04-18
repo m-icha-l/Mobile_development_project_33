@@ -45,10 +45,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.travel_buddy.R
+import com.example.travel_buddy.viewmodel.DataEntryViewModel
+import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
-fun Add_btn() {
+fun Add_btn(tempDataViewModel: TempDataViewModel, navController: NavController) {
     var open_popup by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -78,11 +81,11 @@ fun Add_btn() {
             )
         }
     }
-    adder_opup(open_popup,{open_popup = false},"works")
+    adder_opup(open_popup,{open_popup = false},"works",navController,tempDataViewModel)
 }
 
 @Composable
-fun adder_opup(isDialogOpen: Boolean, onDismiss: () -> Unit, text: String) {
+fun adder_opup(isDialogOpen: Boolean, onDismiss: () -> Unit, text: String,navController: NavController,tempDataViewModel: TempDataViewModel) {
     var selectedPoint by remember { mutableStateOf("") }
     if (isDialogOpen) {
         AlertDialog(
@@ -98,7 +101,11 @@ fun adder_opup(isDialogOpen: Boolean, onDismiss: () -> Unit, text: String) {
                 )
                    },
             confirmButton = {
-                Button(onClick = onDismiss) {
+                Button(onClick = {
+                    navController.navigate("AddPointScreen/$selectedPoint")
+                    tempDataViewModel.updateText(selectedPoint)
+                    onDismiss
+                }) {
                     Text("OK")
                 }
             },
