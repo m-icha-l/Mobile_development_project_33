@@ -24,12 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.travel_buddy.R
 import com.example.travel_buddy.classes_res.Travel_Point_Manager
-import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import kotlin.collections.forEachIndexed
 import kotlin.text.iterator
+import com.example.travel_buddy.ui.ui_elements.Add_btn
+import com.example.travel_buddy.viewmodel.DataEntryViewModel
+import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
-fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, modifier: Modifier = Modifier, Index: Int = -1)
+fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier = Modifier, Index: Int = -1)
 {
 /*    IconButton(onClick = { navController.popBackStack() }, modifier = modifier) {
         Icon(
@@ -54,17 +56,19 @@ fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, m
             modifier = Modifier.padding(top = 100.dp)
         ) {
             points.forEachIndexed { index, point ->
-                TravelDetailItem(point.toString())
+                TravelDetailItem(point.toString(), tempDataViewModel, navController)
 
             }
         }
+        Text("Details Screen $Index", modifier = Modifier.padding(4.dp))
+        TravelDetailItem("", tempDataViewModel, navController)
     }
 
 
 }
 
 @Composable
-fun TravelDetailItem(name: String) {
+fun TravelDetailItem(name: String, tempDataViewModel: TempDataViewModel,navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -83,4 +87,5 @@ fun TravelDetailItem(name: String) {
             }
         }
     }
+    Add_btn(tempDataViewModel,navController)
 }

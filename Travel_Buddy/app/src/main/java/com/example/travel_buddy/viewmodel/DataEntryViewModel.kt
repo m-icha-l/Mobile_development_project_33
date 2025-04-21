@@ -38,6 +38,12 @@ class DataEntryViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    var text by mutableStateOf("Travel Buddy")
+    fun updateText(newText: String) {
+        text = newText
+        Log.d("text_update", "updatedText:  ${text}")
+    }
+
     val allTravelPoints: LiveData<List<dbTravel_point>>
     //val allTravelPlanNames: LiveData<List<String>>
 

@@ -19,13 +19,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.travel_buddy.viewmodel.TempDataViewModel
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import com.example.travel_buddy.viewmodel.WeatherViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun DrawerApp(viewModel: DataEntryViewModel, weatherViewModel: WeatherViewModel, navController: NavHostController, modifier: Modifier) {
+fun DrawerApp(dataViewModel: DataEntryViewModel, navController: NavHostController, modifier: Modifier, tempDataViewModel: TempDataViewModel = viewModel()) {
     var drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
@@ -101,13 +103,13 @@ fun DrawerApp(viewModel: DataEntryViewModel, weatherViewModel: WeatherViewModel,
         gesturesEnabled = true
     ) {
         Scaffold(
-            topBar = { TopAppBar(navController, drawerState) },
+            topBar = { TopAppBar(navController, drawerState, tempDataViewModel) },
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
             MainApp(
-                viewModel,
-                weatherViewModel,
+                dataViewModel,
                 navController,
+                tempDataViewModel,
                 modifier.padding(innerPadding)
             )
         }

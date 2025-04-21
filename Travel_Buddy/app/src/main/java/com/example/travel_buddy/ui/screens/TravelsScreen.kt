@@ -21,15 +21,17 @@ import com.example.travel_buddy.R
 import com.example.travel_buddy.TestDisplay
 import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
+import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
-fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, modifier: Modifier)
+fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier)
 {
     var index = 1
     DataEntryViewModel.TopBarName.updateText(index.toString())
 
     var travelManager = Travel_Point_Manager(viewModel)
     val names = travelManager.display_all_trips()
+    tempDataViewModel.lastTravel = index.toString()
 
     Column(
         modifier = modifier
@@ -42,13 +44,13 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, m
         }*/
 
         if(names == "No travel plans available")
+
         {
             TravelPlanItem(names.toString()){}
         }
         else
         {
             for (name in names) {
-                index++
                 TravelPlanItem(name.toString())
                 {
                     navController.navigate("DetailsScreen/$name")
@@ -83,4 +85,5 @@ fun TravelPlanItem(name : String, onClick: () -> Unit) {
             }
         }
     }
+
 }
