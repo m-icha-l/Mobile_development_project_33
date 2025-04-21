@@ -1,6 +1,8 @@
 package com.example.travel_buddy.ui
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
@@ -15,6 +17,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
@@ -42,6 +46,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState) {
                 "CurrentWeatherScreen" -> "Weather Forecast"
                 "SettingsScreen" -> "Settings"
                 "DetailsScreen/{Index}" -> DataEntryViewModel.TopBarName.text
+                "weatherScreen" -> "Weather forecast"
+                "hourly_forecast/{dayIndex}" -> "Hourly forecast"
                 else -> "Travel Buddy"
             }
             Text(
@@ -49,28 +55,33 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState) {
             )
         },
         navigationIcon = {
-            if(currentRoute == "DetailsScreen/{Index}") {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }
-            }
-                else
-            {
-                IconButton(onClick = {
-                    scope.launch {
-                        drawerState.apply {
-                            if (isClosed) open() else close()
-                        }
+
+            IconButton(onClick = {
+                scope.launch {
+                    drawerState.apply {
+                        if (isClosed) open() else close()
                     }
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Menu,
-                        contentDescription = null
-                    )
                 }
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = null
+                )
+            }
+
+            if(currentRoute == "DetailsScreen/{Index}" || currentRoute == "hourly_forecast/{dayIndex}") {
+                Box(
+                    modifier = Modifier.padding(start = 40.dp)
+                )
+                {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+
             }
         },
         actions = {

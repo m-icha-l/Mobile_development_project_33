@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
@@ -21,7 +23,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.travel_buddy.R
+import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
+import kotlin.collections.forEachIndexed
+import kotlin.text.iterator
 
 @Composable
 fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, modifier: Modifier = Modifier, Index: Int = -1)
@@ -38,20 +43,28 @@ fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, m
 
     }*/
 
-    Column (
-        modifier = Modifier.padding(top = 100.dp)
-    ){
+    var travelManager = Travel_Point_Manager(viewModel)
+    val points = travelManager.display_trip(Index.toString())
 
+    Text("Details Screen $Index", modifier = Modifier.padding(4.dp))
+    if (points == "No travel points found in trip_name: $Index") {
+        TravelDetailItem(points.toString())
+    } else {
+        Column(
+            modifier = Modifier.padding(top = 100.dp)
+        ) {
+            points.forEachIndexed { index, point ->
+                TravelDetailItem(point.toString())
 
-        Text("Details Screen $Index", modifier = Modifier.padding(4.dp))
-        TravelDetailItem()
+            }
+        }
     }
 
 
 }
 
 @Composable
-fun TravelDetailItem() {
+fun TravelDetailItem(name: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,7 +78,7 @@ fun TravelDetailItem() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(text = stringResource(R.string.travel_point_name), style = MaterialTheme.typography.bodyLarge)
+                Text(text = name, style = MaterialTheme.typography.bodyLarge)
                 Text(text = stringResource(R.string.lorem_ipsum), style = MaterialTheme.typography.bodyMedium)
             }
         }

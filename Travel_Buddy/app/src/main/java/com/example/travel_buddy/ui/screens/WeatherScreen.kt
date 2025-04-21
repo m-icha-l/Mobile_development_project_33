@@ -31,36 +31,44 @@ import com.example.travel_buddy.data.ForecastDay
 import com.example.travel_buddy.viewmodel.WeatherViewModel
 
 @Composable
-fun WeatherScreen(viewModel: WeatherViewModel, navController: NavController) {
+fun WeatherScreen(viewModel: WeatherViewModel, navController: NavController, modifier: Modifier) {
     val forecast by viewModel.forecast
     val errorText by viewModel.error.collectAsState()
 
     if (errorText != null) {
-        Text(
-            text = errorText!!,
-            color = Color.Red,
-            modifier = Modifier.padding(16.dp)
-        )
+        Column (
+            modifier = modifier
+        ) {
+            Text(
+                text = errorText!!,
+                color = Color.Red,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
     } else {
-        forecast?.let { data ->
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = stringResource(R.string._3_day_forecast),
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
+        Column (
+            modifier = modifier
+        ) {
+            forecast?.let { data ->
+                Column(modifier = Modifier.padding(16.dp)) {
+                    /*Text(
+                        text = stringResource(R.string._3_day_forecast),
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))*/
 
-                LazyColumn {
-                    itemsIndexed(data.forecast.forecastday) { index, dayData ->
-                        DayForecastItem(dayData) {
-                            navController.navigate("hourly_forecast/$index")
+                    LazyColumn {
+                        itemsIndexed(data.forecast.forecastday) { index, dayData ->
+                            DayForecastItem(dayData) {
+                                navController.navigate("hourly_forecast/$index")
+                            }
                         }
                     }
                 }
-            }
-        } ?: Text(text = stringResource(R.string.loading_forecast))
+            } ?: Text(text = stringResource(R.string.loading_forecast))
+        }
     }
 }
 

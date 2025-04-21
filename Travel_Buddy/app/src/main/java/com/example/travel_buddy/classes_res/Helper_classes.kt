@@ -177,7 +177,7 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
 
         if (travelPointsMap.isEmpty()) {
 
-            str = "No travel points available"
+            str = "No travel plans available"
 
         }
 

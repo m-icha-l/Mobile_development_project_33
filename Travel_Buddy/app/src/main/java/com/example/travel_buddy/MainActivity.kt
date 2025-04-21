@@ -65,21 +65,21 @@ import androidx.lifecycle.ViewModelProvider
 
 class MainActivity : ComponentActivity() {
 
-/*    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var viewModel: WeatherViewModel*/
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var weatherViewModel: WeatherViewModel
     private lateinit var travelPointViewModel: DataEntryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         travelPointViewModel = ViewModelProvider(this).get(DataEntryViewModel::class.java)
         super.onCreate(savedInstanceState)
-/*        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]   */
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        weatherViewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
 
         enableEdgeToEdge()
         setContent {
-/*            requestLocationPermission { lat, lon ->
-                viewModel.fetchForecast(lat, lon)
-            }   */
+            requestLocationPermission { lat, lon ->
+                weatherViewModel.fetchForecast(lat, lon)
+            }
             val navController = rememberNavController()
             Travel_BuddyTheme {
                 Scaffold(
@@ -87,6 +87,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     DrawerApp(
                         travelPointViewModel,
+                        weatherViewModel,
                         navController,
                         Modifier.padding(innerPadding)
                     )
@@ -111,14 +112,14 @@ class MainActivity : ComponentActivity() {
          */
     }
 
-    /*private val locationPermissionLauncher =
+    private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 getApproximateLocation { lat, lon ->
-                    viewModel.fetchForecast(lat, lon)
+                    weatherViewModel.fetchForecast(lat, lon)
                 }
             } else {
-                viewModel.fetchForecast(null, null)
+                weatherViewModel.fetchForecast(null, null)
             }
         }
 
@@ -142,6 +143,6 @@ class MainActivity : ComponentActivity() {
         } else {
             onLocationReceived(null, null)
         }
-    }*/
+    }
 
 }

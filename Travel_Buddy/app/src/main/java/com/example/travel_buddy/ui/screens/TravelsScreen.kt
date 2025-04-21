@@ -1,5 +1,6 @@
 package com.example.travel_buddy.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,12 +19,19 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.travel_buddy.R
 import com.example.travel_buddy.TestDisplay
+import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
 
 @Composable
 fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, modifier: Modifier)
 {
-    Column (
+    var index = 1
+    DataEntryViewModel.TopBarName.updateText(index.toString())
+
+    var travelManager = Travel_Point_Manager(viewModel)
+    val names = travelManager.display_all_trips()
+
+    Column(
         modifier = modifier
     ){
 /*        Card (
@@ -32,18 +40,30 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, m
             Text("Travels Screen", modifier = Modifier.padding(4.dp))
 
         }*/
-        val index = 1
-        DataEntryViewModel.TopBarName.updateText(index.toString())
-        TravelPlanItem()
+
+        if(names == "No travel plans available")
         {
-            navController.navigate("DetailsScreen/$index")
+            TravelPlanItem(names.toString()){}
         }
+        else
+        {
+            for (name in names) {
+                index++
+                TravelPlanItem(name.toString())
+                {
+                    navController.navigate("DetailsScreen/$name")
+                }
+            }
+        }
+
+
+        Log.d("Travel names: ", names)
     }
 
 }
 
 @Composable
-fun TravelPlanItem(onClick: () -> Unit) {
+fun TravelPlanItem(name : String, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -58,8 +78,8 @@ fun TravelPlanItem(onClick: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(text = stringResource(R.string.travel_name), style = MaterialTheme.typography.bodyLarge)
-                Text(text = stringResource(R.string.lorem_ipsum), style = MaterialTheme.typography.bodyMedium)
+                Text(text = name, style = MaterialTheme.typography.bodyLarge)
+//                Text(text = stringResource(R.string.lorem_ipsum), style = MaterialTheme.typography.bodyMedium)
             }
         }
     }

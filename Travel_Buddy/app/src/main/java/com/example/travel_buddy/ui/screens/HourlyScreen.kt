@@ -36,104 +36,116 @@ import com.example.travel_buddy.viewmodel.WeatherViewModel
 import com.example.travel_buddy.R
 
 @Composable
-fun HourlyForecastScreen(viewModel: WeatherViewModel, navController: NavController, dayIndex: Int) {
+fun HourlyForecastScreen(viewModel: WeatherViewModel, navController: NavController, dayIndex: Int, modifier: Modifier) {
     val forecast by viewModel.forecast
     val errorText by viewModel.error.collectAsState()
 
     if (errorText != null) {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)) {
-            // Back Button
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
+        Column (
+            modifier = modifier
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                // Back Button
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    /*IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }*/
+                    Text(
+                        text = stringResource(R.string.hourly_forecast),
+                        style = MaterialTheme.typography.headlineMedium
                     )
                 }
-                Text(text = stringResource(R.string.hourly_forecast), style = MaterialTheme.typography.headlineMedium)
-            }
 
-            // Show Error Message
-            Text(
-                text = errorText!!,
-                color = Color.Red,
-                modifier = Modifier.padding(16.dp)
-            )
+                // Show Error Message
+                Text(
+                    text = errorText!!,
+                    color = Color.Red,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
     } else {
         forecast?.let { data ->
             val hourlyForecast: List<HourlyWeather> = data.forecast.forecastday
                 .getOrNull(dayIndex)?.hour.orEmpty()
+            Column (
+                modifier = modifier
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    /*Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        *//*IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }*//*
 
-            Column(modifier = Modifier.padding(16.dp)) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.primary
+                        Text(
+                            text = stringResource(R.string.hourly_forecast),
+                            style = MaterialTheme.typography.headlineMedium,
+                            modifier = Modifier.weight(1f),
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
 
-                    Text(
-                        text = stringResource(R.string.hourly_forecast),
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier.weight(1f),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
 
+                    Spacer(modifier = Modifier.height(8.dp))*/
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                LazyColumn {
-                    items(hourlyForecast) { hourData ->
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.primary.copy(
-                                    alpha = 0.8f
-                                )
-                            )
-                        ) {
-                            Row(
+                    LazyColumn {
+                        items(hourlyForecast) { hourData ->
+                            Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                    .padding(vertical = 4.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.primary.copy(
+                                        alpha = 0.8f
+                                    )
+                                )
                             ) {
-                                Column {
-                                    Text(
-                                        text = stringResource(R.string.time, hourData.time),
-                                        style = MaterialTheme.typography.bodyLarge
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.temp_c, hourData.tempC),
-                                        style = MaterialTheme.typography.bodyMedium
-                                    )
-                                    Text(
-                                        text = stringResource(
-                                            R.string.condition,
-                                            hourData.condition.text
-                                        ), style = MaterialTheme.typography.bodyMedium
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column {
+                                        Text(
+                                            text = stringResource(R.string.time, hourData.time),
+                                            style = MaterialTheme.typography.bodyLarge
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.temp_c, hourData.tempC),
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                        Text(
+                                            text = stringResource(
+                                                R.string.condition,
+                                                hourData.condition.text
+                                            ), style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
+
+                                    Image(
+                                        painter = rememberAsyncImagePainter("https:${hourData.condition.icon}"),
+                                        contentDescription = "Weather Icon",
+                                        modifier = Modifier.size(50.dp),
+                                        contentScale = ContentScale.Fit
                                     )
                                 }
-
-                                Image(
-                                    painter = rememberAsyncImagePainter("https:${hourData.condition.icon}"),
-                                    contentDescription = "Weather Icon",
-                                    modifier = Modifier.size(50.dp),
-                                    contentScale = ContentScale.Fit
-                                )
                             }
                         }
                     }

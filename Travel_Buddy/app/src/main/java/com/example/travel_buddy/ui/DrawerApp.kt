@@ -21,10 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
+import com.example.travel_buddy.viewmodel.WeatherViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun DrawerApp(viewModel: DataEntryViewModel, navController: NavHostController, modifier: Modifier) {
+fun DrawerApp(viewModel: DataEntryViewModel, weatherViewModel: WeatherViewModel, navController: NavHostController, modifier: Modifier) {
     var drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
@@ -63,7 +64,7 @@ fun DrawerApp(viewModel: DataEntryViewModel, navController: NavHostController, m
                                 scope.launch {
                                     drawerState.close()
                                 }
-                                navController.navigate("CurrentWeatherScreen")
+                                navController.navigate("weatherScreen")
                             }
                         ) {
                             Text(
@@ -105,6 +106,7 @@ fun DrawerApp(viewModel: DataEntryViewModel, navController: NavHostController, m
         ) { innerPadding ->
             MainApp(
                 viewModel,
+                weatherViewModel,
                 navController,
                 modifier.padding(innerPadding)
             )
