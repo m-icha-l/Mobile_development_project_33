@@ -25,20 +25,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import android.app.DatePickerDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -58,6 +62,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddPointScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, type: String?)
 {
@@ -77,7 +82,6 @@ fun AddPointScreen(viewModel: DataEntryViewModel, navController: NavController, 
 @Composable
 fun DateTimePickerModal() {
     val context = LocalContext.current
-    var showDatePicker by remember { mutableStateOf(false) }
     var selectedDateTime by remember { mutableStateOf<LocalDateTime?>(null) }
 
     val displayFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm")
@@ -86,22 +90,24 @@ fun DateTimePickerModal() {
     val datePickerState = rememberDatePickerState()
 
     // Handle TimePickerDialog after date selection
-    fun openTimePicker(date: LocalDate) {
-        val calendar = Calendar.getInstance()
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
+    val calendar = Calendar.getInstance()
 
-        TimePickerDialog(
-            context,
-            { _, selectedHour, selectedMinute ->
-                selectedDateTime = date.atTime(selectedHour, selectedMinute)
-            },
-            hour,
-            minute,
-            true // 24-hour format
-        ).show()
-    }
+    val timePicker = remember {
+        { date: LocalDate ->
+            TimePickerDialog(
+                context,
+                { _, selectedHour, selectedMinute ->
+                    selectedDateTime = date.atTime(selectedHour, selectedMinute)
+                },
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                true // 24-hour format
+            ).show()
+        }
+        }
 
+
+/*
     if (showDatePicker) {
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
@@ -112,7 +118,7 @@ fun DateTimePickerModal() {
                         val selectedDate = Instant.ofEpochMilli(it)
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate()
-                        openTimePicker(selectedDate)
+                        timePicker(selectedDate)
                     }
                 }) {
                     Text("OK")
@@ -132,6 +138,18 @@ fun DateTimePickerModal() {
         }
     }
 
+ */
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _, year, month, dayOfMonth ->
+            timePicker(LocalDate.of(year,month,dayOfMonth))
+        },
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)
+    )
+
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -146,7 +164,7 @@ fun DateTimePickerModal() {
             placeholder = { Text("mm/dd/yyyy hh:mm") },
             readOnly = true,
             trailingIcon = {
-                IconButton(onClick = { showDatePicker = true }) {
+                IconButton(onClick = { datePickerDialog.show() }) {
                     Icon(Icons.Default.DateRange, contentDescription = "Pick date and time")
                 }
             }
@@ -158,116 +176,70 @@ fun DateTimePickerModal() {
 @Composable
 fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier) {
 
-    val context = LocalContext.current
-    val calendar = Calendar.getInstance()
-
-    /*
-    val datePickerDialog = DatePickerDialog(
-        context,
-        { _, year, month, dayOfMonth ->
-            tempDataViewModel.selectedDate = "${month + 1}/$dayOfMonth/$year"
-        },
-        calendar.get(Calendar.YEAR),
-        calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH)
-    )
-
-    val timePickerDialog = remember {
-        { year: Int, month: Int, day: Int ->
-            TimePickerDialog(
-                context,
-                { _, hour, minute ->
-                    tempDataViewModel.selectedDate = "${month + 1}/$day/$year $hour:${minute.toString().padStart(2, '0')}"
-                },
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),
-                true
-            ).show()
-        }
-    }
-
-    val datePickerDialog = DatePickerDialog(
-        context,
-        { _, year, month, dayOfMonth ->
-            timePickerDialog(year, month, dayOfMonth)
-        },
-        calendar.get(Calendar.YEAR),
-        calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH),
-    )
-
-     */
-
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        OutlinedTextField(
-            value = tempDataViewModel.startingPoint,
-            onValueChange = { tempDataViewModel.startingPoint = it },
-            label = { Text("City") },
-            placeholder = { Text("Enter starting point") },
-            modifier = Modifier.fillMaxWidth(),
-            leadingIcon = {
-                Icon(Icons.Default.LocationOn, contentDescription = "StartLocation")
-            },
-            trailingIcon = {
-                if (tempDataViewModel.startingPoint.isNotEmpty()) {
-                    IconButton(onClick = { tempDataViewModel.startingPoint = "" }) {
-                        Icon(Icons.Default.Close, contentDescription = "Clear")
-                    }
-                }
-            }
-        )
-        OutlinedTextField(
-            value = tempDataViewModel.destinationPoint,
-            onValueChange = { tempDataViewModel.destinationPoint = it },
-            label = { Text("City") },
-            placeholder = { Text("Enter travel destination") },
-            modifier = Modifier.fillMaxWidth(),
-            leadingIcon = {
-                Icon(Icons.Default.LocationOn, contentDescription = "StartLocation")
-            },
-            trailingIcon = {
-                if (tempDataViewModel.destinationPoint.isNotEmpty()) {
-                    IconButton(onClick = { tempDataViewModel.destinationPoint = "" }) {
-                        Icon(Icons.Default.Close, contentDescription = "Clear")
-                    }
-                }
-            }
-        )
-
-        /*
-        Card(
-            modifier = Modifier.fillMaxWidth()
-                .padding(8.dp),
-            colors = CardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                disabledContentColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary,
-                disabledContainerColor = MaterialTheme.colorScheme.secondary),
-            shape = RoundedCornerShape(CornerSize(10.dp))
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Select date", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(8.dp))
-            Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
-                value = tempDataViewModel.selectedDate,
-                onValueChange = {},
-                enabled = false,
-                placeholder = { Text("mm/dd/yyyy") },
-                trailingIcon = {
-                    IconButton(onClick = { datePickerDialog.show() }) {
-                        Icon(Icons.Default.DateRange, contentDescription = "Pick date")
-                    }
+                value = tempDataViewModel.startingPoint,
+                onValueChange = { tempDataViewModel.startingPoint = it },
+                label = { Text("Starting point") },
+                placeholder = { Text("Browse for starting point...") },
+                modifier = Modifier.fillMaxWidth(0.7f),
+                readOnly = true,
+                leadingIcon = {
+                    Icon(Icons.Default.LocationOn, contentDescription = "StartLocation")
                 },
-                modifier = Modifier.fillMaxWidth()
-                    .padding(8.dp)
+                trailingIcon = {
+                    if (tempDataViewModel.startingPoint.isNotEmpty()) {
+                        IconButton(onClick = { tempDataViewModel.startingPoint = "" }) {
+                            Icon(Icons.Default.Close, contentDescription = "Clear")
+                        }
+                    }
+                }
             )
+            Button(
+                onClick = { navController.navigate("Browser/trip_start_point") },
+                modifier = Modifier.fillMaxWidth()
+                    .padding(start = 6.dp),
+            ) {
+                Text("Browse")
+            }
         }
-
-         */
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            OutlinedTextField(
+                value = tempDataViewModel.destinationPoint,
+                onValueChange = { tempDataViewModel.destinationPoint = it },
+                label = { Text("Travel destination") },
+                placeholder = { Text("Browse for travel destination...") },
+                modifier = Modifier.fillMaxWidth(0.7f),
+                readOnly = true,
+                leadingIcon = {
+                    Icon(Icons.Default.LocationOn, contentDescription = "StartLocation")
+                },
+                trailingIcon = {
+                    if (tempDataViewModel.destinationPoint.isNotEmpty()) {
+                        IconButton(onClick = { tempDataViewModel.destinationPoint = "" }) {
+                            Icon(Icons.Default.Close, contentDescription = "Clear")
+                        }
+                    }
+                }
+            )
+            Button(
+                onClick = { navController.navigate("Browser/trip_destination_point") },
+                modifier = Modifier.fillMaxWidth()
+                    .padding(start = 6.dp),
+            ) {
+                Text("Browse")
+            }
+        }
 
         DateTimePickerModal()
 

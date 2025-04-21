@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.travel_buddy.ui.screens.AddPointScreen
+import com.example.travel_buddy.ui.screens.BrowseCitiesScreen
 import com.example.travel_buddy.ui.screens.CurrentWeatherScreen
 import com.example.travel_buddy.ui.screens.DetailsScreen
 import com.example.travel_buddy.ui.screens.HourlyForecastScreen
@@ -35,6 +36,9 @@ fun MainApp(viewModel: DataEntryViewModel, navController: NavHostController, tem
         composable("AddPointScreen/{type}",
             arguments = listOf(navArgument("type") { type = NavType.StringType })
             ) { AddPointScreen(viewModel, navController, tempDataViewModel, modifier,it.arguments?.getString("type")) }
+        composable("Browser/{type}",
+            arguments = listOf(navArgument("type") { type = NavType.StringType })
+        ) { BrowseCitiesScreen(viewModel, navController, tempDataViewModel, modifier,it.arguments?.getString("type")) }
     }
 }
 
