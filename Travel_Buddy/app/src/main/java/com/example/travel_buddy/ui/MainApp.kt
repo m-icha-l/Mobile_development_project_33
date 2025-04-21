@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.travel_buddy.ui.screens.AddPointScreen
 import com.example.travel_buddy.ui.screens.BrowseCitiesScreen
-import com.example.travel_buddy.ui.screens.CurrentWeatherScreen
 import com.example.travel_buddy.ui.screens.DetailsScreen
 import com.example.travel_buddy.ui.screens.HourlyForecastScreen
 import com.example.travel_buddy.ui.screens.SettingsScreen
@@ -17,10 +16,11 @@ import com.example.travel_buddy.ui.screens.TravelsScreen
 import com.example.travel_buddy.ui.screens.WeatherScreen
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
+import com.example.travel_buddy.viewmodel.WeatherViewModel
 
 
 @Composable
-fun MainApp(viewModel: DataEntryViewModel, navController: NavHostController, tempDataViewModel: TempDataViewModel, modifier: Modifier = Modifier)
+fun MainApp(viewModel: DataEntryViewModel, weatherViewModel: WeatherViewModel, navController: NavHostController, tempDataViewModel: TempDataViewModel, modifier: Modifier = Modifier)
 {
     NavHost(navController = navController, startDestination = "TravelsScreen")
     {

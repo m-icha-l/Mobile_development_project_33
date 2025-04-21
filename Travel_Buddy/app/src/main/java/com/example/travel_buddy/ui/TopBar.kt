@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 import kotlinx.coroutines.launch
 

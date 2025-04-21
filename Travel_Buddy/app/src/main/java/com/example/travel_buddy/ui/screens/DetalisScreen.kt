@@ -50,7 +50,11 @@ fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, t
 
     Text("Details Screen $Index", modifier = Modifier.padding(4.dp))
     if (points == "No travel points found in trip_name: $Index") {
-        TravelDetailItem(points.toString())
+        TravelDetailItem(
+            points.toString(),
+            tempDataViewModel,
+            navController
+        )
     } else {
         Column(
             modifier = Modifier.padding(top = 100.dp)
@@ -68,7 +72,7 @@ fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, t
 }
 
 @Composable
-fun TravelDetailItem(name: String, tempDataViewModel: TempDataViewModel,navController: NavController) {
+fun TravelDetailItem(name: String, tempDataViewModel: TempDataViewModel, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

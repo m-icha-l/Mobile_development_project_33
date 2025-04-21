@@ -27,7 +27,7 @@ import com.example.travel_buddy.viewmodel.WeatherViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun DrawerApp(dataViewModel: DataEntryViewModel, navController: NavHostController, modifier: Modifier, tempDataViewModel: TempDataViewModel = viewModel()) {
+fun DrawerApp(dataViewModel: DataEntryViewModel, weatherViewModel: WeatherViewModel, navController: NavHostController, modifier: Modifier, tempDataViewModel: TempDataViewModel = viewModel()) {
     var drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
@@ -108,6 +108,7 @@ fun DrawerApp(dataViewModel: DataEntryViewModel, navController: NavHostControlle
         ) { innerPadding ->
             MainApp(
                 dataViewModel,
+                weatherViewModel,
                 navController,
                 tempDataViewModel,
                 modifier.padding(innerPadding)
