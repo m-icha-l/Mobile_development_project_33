@@ -69,6 +69,12 @@ data class Duration(
         return "$days, $hours:$minutes"
     }
 }
+
+data class Trip(
+    var trip_name: String = "",
+    var points_list: MutableList<Travel_point>
+)
+
 //          MIKOLAJ PLS MAPA MA PRZECHOWYWAC TRAVEL_POINT ZEBY FUNKCJE DZIALALY DO KAZDEJ KLASY DOPISALEM CI FUNKCJE DO
 //          TRANSLACJI MIEDZY DBTRAVEL_POINT A TRAVEL_POINT(SA IMPLEMENTOWANE DLA KAZEDJ PODKLASY TRAVEL POINT ZOBACZ KOD)
 
@@ -172,44 +178,53 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
     }
 
     // Display all categories with their travel points
-    fun display_all_trips() : String {
+    fun display_all_trips() : MutableList<Trip>? {
 
         var str = ""
-
+        var _tripName: String = ""
+        var _pointsList: MutableList<Travel_point> = mutableListOf()
+        var tripArray = mutableListOf<Trip>()
         if (travelPointsMap.isEmpty()) {
 
             str = "No travel plans available"
-
+            return null
         }
 
         for ((trip_name, points) in travelPointsMap) {
 
             str += "trip_name: $trip_name\n"
+            _tripName = trip_name
 
             points.forEachIndexed { index, point ->
                 str += "  ${index + 1}. $point\n"
-
+                _pointsList.add(point)
             }
+            tripArray.add(Trip(_tripName, _pointsList))
             str += "\n"
         }
-        return str
+
+        return tripArray
     }
     // Display all travel points under a specific trip_name
-    fun display_trip(trip_name: String) : String {
+    fun display_trip(trip_name: String): Trip? {
         var str = ""
+        var _tripName: String = ""
+        var _pointsList: MutableList<Travel_point> = mutableListOf()
         val points = travelPointsMap[trip_name]
 
         if (points.isNullOrEmpty()) {
             str = "No travel points found in trip_name: $trip_name"
+            return null
 
         } else {
             println("trip_name: $trip_name")
 
             points.forEachIndexed { index, point ->
                 str += "  ${index + 1}. $point\n"
+                _pointsList.add(point)
             }
         }
-        return str
+        return Trip(_tripName, _pointsList)
     }
 
     fun insertAnyPoint(index: Int, trip_name: String,travelPoint: Travel_point) {
@@ -240,7 +255,7 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
         dataEntryViewModel.deleteAttractionPoint(trip_name,index)
     }
 
-    override fun toString(): String {
+/*    override fun toString(): String {
         return display_all_trips()
-    }
+    }*/
 }

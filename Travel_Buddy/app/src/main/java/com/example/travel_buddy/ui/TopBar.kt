@@ -47,7 +47,6 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                 "TravelsScreen" -> "Your Travels"
                 "CurrentWeatherScreen" -> "Weather Forecast"
                 "SettingsScreen" -> "Settings"
-                "DetailsScreen/{Index}" -> DataEntryViewModel.TopBarName.text
                 "weatherScreen" -> "Weather forecast"
                 "hourly_forecast/{dayIndex}" -> "Hourly forecast"
                 "DetailsScreen/{Index}" -> {

@@ -28,9 +28,9 @@ fun MainApp(viewModel: DataEntryViewModel, weatherViewModel: WeatherViewModel, n
         composable("SettingsScreen") { SettingsScreen(viewModel, navController, tempDataViewModel, modifier) }
         composable(
             "DetailsScreen/{Index}",
-            arguments = listOf(navArgument("Index") { type = NavType.IntType })
+            arguments = listOf(navArgument("Index") { type = NavType.StringType })
         ) { backStackEntry ->
-            val Index = backStackEntry.arguments?.getInt("Index") ?: 0
+            val Index = backStackEntry.arguments?.getString("Index") ?: null
             DetailsScreen(viewModel, navController, tempDataViewModel, modifier, Index)
         }
         composable("weatherScreen") { WeatherScreen(weatherViewModel, navController, modifier) }
