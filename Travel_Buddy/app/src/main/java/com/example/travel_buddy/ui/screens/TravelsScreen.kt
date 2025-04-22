@@ -33,10 +33,12 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
 
     val name = "New point"
     val date = Date("01/05/2025 15:20")
+    val end_date = Date("01/05/2025 15:20")
+    var notes: String = ""
     var location: Location? = null
     var newId = 0
     var travelPlanName = "New travel plan"
-    val newPoint = Travel_point(name, date, location, newId, travelPlanName)
+    val newPoint = Travel_point(name, date, end_date, null ,location,"",newId, travelPlanName)
 
     val names = travelManager.display_all_trips()
 

@@ -54,7 +54,7 @@ open class Travel_point(
     val name: String = "No name point",
     val date: Date = Date(),
     var end_date: Date = date,
-    var time: Duration = end_date - date,
+    var time: Duration? = null,
     var location: Location? = null,
     var notes: String = "",
     var newId: Int = 0,
@@ -67,6 +67,10 @@ open class Travel_point(
                 latitude = 0.0
                 longitude = 0.0
             }
+        }
+        if(time == null)
+        {
+            time = end_date - date
         }
     }
 
