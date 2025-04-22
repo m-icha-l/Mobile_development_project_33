@@ -255,6 +255,24 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
         dataEntryViewModel.deleteAttractionPoint(trip_name,index)
     }
 
+    fun get_trip_duration(trip_name: String): Int {
+        val points = travelPointsMap[trip_name]
+        var duration = 0
+
+        if (points.isNullOrEmpty()) {
+
+            duration = 0
+
+        } else {
+            println("trip_name: $trip_name")
+
+            points.forEachIndexed{ index, point ->
+                duration = (duration + (point.time?.days ?: 0 )).toInt()
+            }
+        }
+        return duration
+    }
+
 /*    override fun toString(): String {
         return display_all_trips()
     }*/
