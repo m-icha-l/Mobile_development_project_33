@@ -66,7 +66,7 @@ data class Duration(
     var minutes: Long = 0
 ){
     override fun toString(): String {
-        return "$days days, $hours hours, $minutes minutes"
+        return "$days, $hours:$minutes"
     }
 }
 //          MIKOLAJ PLS MAPA MA PRZECHOWYWAC TRAVEL_POINT ZEBY FUNKCJE DZIALALY DO KAZDEJ KLASY DOPISALEM CI FUNKCJE DO
@@ -74,6 +74,7 @@ data class Duration(
 
 
 class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
+
     private val travelPointsMap: MutableMap<String, MutableList<Travel_point>> = mutableMapOf()
     private val lastIndexMap: MutableMap<String, Int> = mutableMapOf()
 

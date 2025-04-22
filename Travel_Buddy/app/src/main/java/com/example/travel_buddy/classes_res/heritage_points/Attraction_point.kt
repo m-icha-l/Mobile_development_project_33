@@ -20,30 +20,31 @@ data class dbAttraction_point(
     var time: String = "hour:minute",
     var location: String = "",
     var newId: Int = 0, // Nowe pole ID
-    var travel_plan_name: String = "No travel plan name" // Nowe pole travel_plan_name
+    var travel_plan_name: String = "No travel plan name"
 )
 
 fun dbAttraction_point.translateFromDb(): Attraction_point {
     return Attraction_point(
         name = this.name,
-        date = Date(this.date), // Tworzy obiekt klasy Date
+        date = Date(this.date),
         end_date = Date(this.end_date),
-        time = Date(this.date) - Date(this.end_date), // Tworzy obiekt klasy Duration
-        location = parseLocation(this.location), // Tworzy obiekt android.location.Location
-        newId = this.newId, // Przekazanie ID
-        travel_plan_name = this.travel_plan_name // Przekazanie travel_plan_name
+        time = Date(this.date) - Date(this.end_date),
+        location = parseLocation(this.location),
+        newId = this.newId,
+        travel_plan_name = this.travel_plan_name
     )
 }
 
 class Attraction_point(
     name: String = "No name point",
     date: Date = Date(),
-    var end_date: Date = Date(),
-    var time: Duration = date - end_date,
+    end_date: Date = date,
+    time: Duration = end_date - date,
     location: Location? = null,
     newId: Int = 0, // Nowe pole ID
-    travel_plan_name: String = "No travel plan name" // Nowe pole travel_plan_name
-) : Travel_point(name, date, location, newId, travel_plan_name) { // Przekazywanie ID i travel_plan_name do Travel_point
+    travel_plan_name: String = "No travel plan name",
+    notes: String = ""
+) : Travel_point(name, date,end_date, time,  location, notes, newId, travel_plan_name) {
 
     fun getDbObject(): dbAttraction_point {
         return dbAttraction_point(
@@ -52,20 +53,20 @@ class Attraction_point(
             end_date = end_date.toString(),
             time = time.toString(),
             location = location.toString(),
-            newId = this.newId, // Przekazanie ID
-            travel_plan_name = this.travel_plan_name // Przekazanie travel_plan_name
+            newId = this.newId,
+            travel_plan_name = this.travel_plan_name
         )
     }
 
     override fun ToDb(): dbAttraction_point {
         return dbAttraction_point(
             name = this.name,
-            date = this.date.toString(), // Klasa Date ma nadpisane toString()
+            date = this.date.toString(),
             end_date = this.end_date.toString(),
             time = this.time.toString(),
             location = (this.location?.let { formatLocation(it) } ?: ""),
-            newId = this.newId, // Przekazanie ID
-            travel_plan_name = this.travel_plan_name // Przekazanie travel_plan_name
+            newId = this.newId,
+            travel_plan_name = this.travel_plan_name
         )
     }
 

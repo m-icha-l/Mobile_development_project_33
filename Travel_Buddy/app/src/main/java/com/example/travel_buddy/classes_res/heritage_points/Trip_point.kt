@@ -26,7 +26,8 @@ data class dbTrip_point(
     val end_date: String = "day/month/year hour:minute",
     val time: String = "hour:minute",
     var location: String = "",
-    var travel_plan_name: String = "No travel plan name"
+    var travel_plan_name: String = "No travel plan name",
+    var notes: String
 )
 
 fun dbTrip_point.translateFromDb(): Trip_point {
@@ -36,9 +37,11 @@ fun dbTrip_point.translateFromDb(): Trip_point {
         end_location = parseLocation(this.end_location),
         date = Date(this.date), // Tworzy obiekt klasy Date
         end_date = Date(this.end_date),
-        location = parseLocation(this.location), // Tworzy obiekt android.location.Location
         time = Date(this.date) - Date(this.end_date),
-        plan_name = this.travel_plan_name // Przekazanie travel_plan_name
+        location = parseLocation(this.location), // Tworzy obiekt android.location.Location
+        plan_name = this.travel_plan_name, // Przekazanie travel_plan_name
+        notes = notes
+
     )
 }
 
@@ -47,12 +50,13 @@ class Trip_point(
     name: String = "No name point",
     var end_location: Location? = null,
     date: Date = Date(),
-    var end_date: Date = Date(),
-    var time: Duration = date - end_date,
+    end_date: Date = date,
+    time: Duration = end_date - date,
     location: Location? = null,
-    var plan_name: String = "It belongs to no name plan"
+    var plan_name: String = "It belongs to no name plan",
+    notes: String = ""
 
-) : Travel_point(name, date, location) {
+) : Travel_point(name, date,end_date,time, location,notes) {
     init {
         if (end_location == null) {
 
@@ -66,8 +70,17 @@ class Trip_point(
     }
     fun getDbObject(): dbTrip_point {
         Log.d("ROOT ID",newId.toString())
-        return dbTrip_point(newId = newId,name = name, end_location = end_location.toString(),
-            date = date.toString(),end_date = end_date.toString(),time = time.toString(), location = location.toString())
+        return dbTrip_point(
+            newId = newId,
+            name = name,
+            end_location = (this.end_location?.let { formatLocation(it) } ?: ""),
+            date = date.toString(),
+            end_date = end_date.toString(),
+            time = time.toString(),
+            location = (this.location?.let { formatLocation(it) } ?: ""),
+            travel_plan_name = travel_plan_name,
+            notes = notes
+        )
     }
     override fun toString(): String {
         return "Name: $name, Date: $date, End reservation date: $end_date, $location, time: $time"
@@ -77,12 +90,13 @@ class Trip_point(
         return dbTrip_point(
             newId = this.newId,
             name = this.name,
-            end_location = (this.location?.let { formatLocation(it) } ?: ""),
+            end_location = (this.end_location?.let { formatLocation(it) } ?: ""),
             date = this.date.toString(), // Klasa Date ma nadpisane toString()
             end_date = this.end_date.toString(),
-            location = (this.location?.let { formatLocation(it) } ?: ""),
             time = this.time.toString(),
-            travel_plan_name = this.plan_name  // Przekazanie travel_plan_name
+            location = (this.location?.let { formatLocation(it) } ?: ""),
+            travel_plan_name = this.plan_name,  // Przekazanie travel_plan_name
+            notes = this.notes
         )
     }
 }

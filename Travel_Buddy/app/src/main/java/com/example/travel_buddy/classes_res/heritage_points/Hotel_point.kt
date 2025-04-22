@@ -18,6 +18,7 @@ data class dbHotel_point(
     val city: String = "", //Czemu to było nullable? Usunąłem to bo byłyby problemy przez to
     val date: String = "day/month/year hour:minute",
     val end_date: String = "day/month/year hour:minute",
+    val time: String = "hour:minute",
     var location: String = "",
     var newId: Int = 0,  // Nowe pole ID
     var travel_plan_name: String = "No travel plan name" // Nowe pole travel_plan_name
@@ -29,6 +30,7 @@ fun dbHotel_point.translateFromDb(): Hotel_point {
         city = this.city,
         date = Date(this.date), // Tworzy obiekt klasy Date
         end_date = Date(this.end_date),
+        time = Date(this.date) - Date(this.end_date),
         location = parseLocation(this.location), // Tworzy obiekt android.location.Location
         newId = this.newId, // Przekazanie ID
         travel_plan_name = this.travel_plan_name // Przekazanie travel_plan_name
@@ -39,11 +41,13 @@ class Hotel_point(
     name: String = "No name point",
     val city: String = "",
     date: Date = Date(),
-    val end_date: Date = Date(),
+    end_date: Date = date,
+    time: Duration = end_date - date,
     location: Location? = null,
     newId: Int = 0,  // Nowe pole ID
-    travel_plan_name: String = "No travel plan name" // Nowe pole travel_plan_name
-) : Travel_point(name, date, location, newId, travel_plan_name) { // Przekazywanie ID i travel_plan_name do Travel_point
+    travel_plan_name: String = "No travel plan name", // Nowe pole travel_plan_name
+    notes: String=""
+) : Travel_point(name, date,end_date,time, location,notes, newId, travel_plan_name) { // Przekazywanie ID i travel_plan_name do Travel_point
 
     fun getDbObject(): dbHotel_point {
         return dbHotel_point(
@@ -51,7 +55,7 @@ class Hotel_point(
             city = city,
             date = date.toString(),
             end_date = end_date.toString(),
-            location = location.toString(),
+            location = location?.let { formatLocation(it) } ?: "",
             newId = this.newId,  // Przekazanie ID
             travel_plan_name = this.travel_plan_name  // Przekazanie travel_plan_name
         )
@@ -67,6 +71,7 @@ class Hotel_point(
             city = this.city,
             date = this.date.toString(), // Klasa Date ma nadpisane toString()
             end_date = this.end_date.toString(),
+            time = this.time.toString(),
             location = (this.location?.let { formatLocation(it) } ?: ""),
             newId = this.newId,  // Przekazanie ID
             travel_plan_name = this.travel_plan_name  // Przekazanie travel_plan_name
