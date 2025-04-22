@@ -18,8 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.travel_buddy.classes_res.Date
+import com.example.travel_buddy.classes_res.Duration
 import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.classes_res.Travel_point
+import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
+import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
+import com.example.travel_buddy.classes_res.heritage_points.Trip_point
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 
@@ -31,29 +35,35 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
 
     var travelManager = Travel_Point_Manager(viewModel)
 
+    //Temporary for testing purposes
     val name = "New point"
-    val date = Date("01/05/2025 15:20")
-    val end_date = Date("01/05/2025 15:20")
+    val date = Date("01/05/2025 10:00")
+    val end_date = Date("06/05/2025 15:21")
     var notes: String = ""
     var location: Location? = null
     var newId = 0
     var travelPlanName = "New travel plan"
-    val newPoint = Travel_point(name, date, end_date, null ,location,"",newId, travelPlanName)
+//    val newPoint = Travel_point(name, date, end_date, null ,location,"",newId, travelPlanName)
+
+
+    var time: Duration = date - end_date
+    val city: String = "Oulu"
+    val newHotel = Hotel_point(name, city, date, end_date, time,  location, newId, travelPlanName, notes)
+
+
+    val newAttra = Attraction_point(name, date, end_date, time, location, newId, travelPlanName )
+
+    val newTrip = Trip_point(newId, name, location,date,end_date,time,location, travelPlanName)
 
     val names = travelManager.display_all_trips()
+
+
 
     Column(
         modifier = modifier
     ){
-        if(names == null)
 
-        {
-            TravelPlanItem("No travel plans available")
-            {
-                travelManager.add_Point(travelPlanName, newPoint)
-            }
-        }
-        else
+        if(names != null)
         {
 
             LazyColumn{
@@ -64,6 +74,16 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
                         navController.navigate("DetailsScreen/${name.trip_name}")
                     }
                 }
+            }
+        }
+        else
+        {
+            TravelPlanItem("Temporary for testing purposes")
+            {
+//                travelManager.add_Point(travelPlanName, newPoint)
+                travelManager.add_Point(travelPlanName, newHotel)
+                travelManager.add_Point(travelPlanName, newAttra)
+                travelManager.add_Point(travelPlanName, newTrip)
             }
         }
     }
