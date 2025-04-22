@@ -89,7 +89,7 @@ open class Travel_point(
     open fun ToDb(): Any {
         return dbTravel_point(
             name = this.name,
-            date = this.date.toString(), 
+            date = this.date.toString(),
             end_date = this.end_date.toString(),
             time = this.time.toString(),
             location = this.location?.let { formatLocation(it) } ?: "",

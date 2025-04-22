@@ -21,7 +21,8 @@ data class dbHotel_point(
     val time: String = "hour:minute",
     var location: String = "",
     var newId: Int = 0,
-    var travel_plan_name: String = "No travel plan name"
+    var travel_plan_name: String = "No travel plan name",
+    var notes: String = ""
 )
 
 fun dbHotel_point.translateFromDb(): Hotel_point {
@@ -33,7 +34,8 @@ fun dbHotel_point.translateFromDb(): Hotel_point {
         time = Date(this.date) - Date(this.end_date),
         location = parseLocation(this.location),
         newId = this.newId,
-        travel_plan_name = this.travel_plan_name
+        travel_plan_name = this.travel_plan_name,
+        notes = this.notes
     )
 }
 
@@ -57,7 +59,8 @@ class Hotel_point(
             end_date = end_date.toString(),
             location = location?.let { formatLocation(it) } ?: "",
             newId = this.newId,
-            travel_plan_name = this.travel_plan_name
+            travel_plan_name = this.travel_plan_name,
+            notes = this.notes
         )
     }
 
@@ -74,7 +77,8 @@ class Hotel_point(
             time = this.time.toString(),
             location = (this.location?.let { formatLocation(it) } ?: ""),
             newId = this.newId,
-            travel_plan_name = this.travel_plan_name
+            travel_plan_name = this.travel_plan_name,
+            notes = this.notes
         )
     }
 }

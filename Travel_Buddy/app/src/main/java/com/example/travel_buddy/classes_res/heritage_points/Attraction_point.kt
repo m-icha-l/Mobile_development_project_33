@@ -20,7 +20,8 @@ data class dbAttraction_point(
     var time: String = "hour:minute",
     var location: String = "",
     var newId: Int = 0,
-    var travel_plan_name: String = "No travel plan name"
+    var travel_plan_name: String = "No travel plan name",
+    var notes: String = ""
 )
 
 fun dbAttraction_point.translateFromDb(): Attraction_point {
@@ -31,7 +32,8 @@ fun dbAttraction_point.translateFromDb(): Attraction_point {
         time = Date(this.date) - Date(this.end_date),
         location = parseLocation(this.location),
         newId = this.newId,
-        travel_plan_name = this.travel_plan_name
+        travel_plan_name = this.travel_plan_name,
+        notes =this.notes
     )
 }
 
@@ -54,7 +56,8 @@ class Attraction_point(
             time = time.toString(),
             location = location.toString(),
             newId = this.newId,
-            travel_plan_name = this.travel_plan_name
+            travel_plan_name = this.travel_plan_name,
+            notes = this.notes
         )
     }
 
@@ -66,7 +69,8 @@ class Attraction_point(
             time = this.time.toString(),
             location = (this.location?.let { formatLocation(it) } ?: ""),
             newId = this.newId,
-            travel_plan_name = this.travel_plan_name
+            travel_plan_name = this.travel_plan_name,
+            notes = this.notes
         )
     }
 
