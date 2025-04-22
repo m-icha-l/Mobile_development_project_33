@@ -38,8 +38,8 @@ fun dbTrip_point.translateFromDb(): Trip_point {
         date = Date(this.date), // Tworzy obiekt klasy Date
         end_date = Date(this.end_date),
         time = Date(this.date) - Date(this.end_date),
-        location = parseLocation(this.location), // Tworzy obiekt android.location.Location
-        plan_name = this.travel_plan_name, // Przekazanie travel_plan_name
+        location = parseLocation(this.location),
+        plan_name = this.travel_plan_name,
         notes = notes
 
     )
@@ -91,11 +91,11 @@ class Trip_point(
             newId = this.newId,
             name = this.name,
             end_location = (this.end_location?.let { formatLocation(it) } ?: ""),
-            date = this.date.toString(), // Klasa Date ma nadpisane toString()
+            date = this.date.toString(),
             end_date = this.end_date.toString(),
             time = this.time.toString(),
             location = (this.location?.let { formatLocation(it) } ?: ""),
-            travel_plan_name = this.plan_name,  // Przekazanie travel_plan_name
+            travel_plan_name = this.plan_name,
             notes = this.notes
         )
     }

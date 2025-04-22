@@ -19,7 +19,7 @@ data class dbAttraction_point(
     val end_date: String = "day/month/year hour:minute",
     var time: String = "hour:minute",
     var location: String = "",
-    var newId: Int = 0, // Nowe pole ID
+    var newId: Int = 0,
     var travel_plan_name: String = "No travel plan name"
 )
 
