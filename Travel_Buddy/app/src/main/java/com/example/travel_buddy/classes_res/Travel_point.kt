@@ -30,7 +30,7 @@ data class dbTravel_point(
     val name: String = "No name point",
     val date: String = "day/month/year hour:minute",
     val end_date: String = "day/month/year hour:minute",
-    val time: String = "hour:minute",
+    val time: String = "days, hours:minutes",
     var location: String = "",
     var newId: Int = 0,
     var travel_plan_name: String = "No travel plan name",

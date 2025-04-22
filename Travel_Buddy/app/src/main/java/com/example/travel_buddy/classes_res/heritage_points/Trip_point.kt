@@ -24,7 +24,7 @@ data class dbTrip_point(
     var end_location: String = "",
     val date: String = "day/month/year hour:minute",
     val end_date: String = "day/month/year hour:minute",
-    val time: String = "hour:minute",
+    val time: String = "days, hours:minutes",
     var location: String = "",
     var travel_plan_name: String = "No travel plan name",
     var notes: String
