@@ -47,6 +47,7 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                     tempDataViewModel.lastTravel
                 }
                 "AddPointScreen/{type}" -> "Add " + tempDataViewModel.text
+                "Browser/{type}" -> tempDataViewModel.browserType
                 else -> {
                     Log.d("ELSE","else switch")
                     "Travel Buddy"
@@ -57,7 +58,7 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
             )
         },
         navigationIcon = {
-            if(currentRoute == "DetailsScreen/{Index}" || currentRoute == "AddPointScreen/{type}") {
+            if(currentRoute == "DetailsScreen/{Index}" || currentRoute == "AddPointScreen/{type}" || currentRoute == "Browser/{type}") {
                 IconButton(onClick = {
                     navController.popBackStack()
                 }) {

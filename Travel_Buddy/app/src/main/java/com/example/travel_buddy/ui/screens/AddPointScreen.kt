@@ -26,6 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import android.app.DatePickerDialog
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -39,6 +44,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
@@ -55,6 +61,9 @@ import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
+import com.example.travel_buddy.R
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -176,6 +185,16 @@ fun DateTimePickerModal() {
 @Composable
 fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier) {
 
+    var startText = ""
+    if(tempDataViewModel.start_isSet) {
+        startText = tempDataViewModel.start_city_name + ", " + tempDataViewModel.start_subdivision + ", " + tempDataViewModel.start_country
+    }
+
+    var destText = ""
+    if(tempDataViewModel.dest_isSet) {
+        destText = tempDataViewModel.dest_city_name + ", " + tempDataViewModel.dest_subdivision + ", " + tempDataViewModel.dest_country
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -183,15 +202,18 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
             OutlinedTextField(
-                value = tempDataViewModel.startingPoint,
+                value = startText,
                 onValueChange = { tempDataViewModel.startingPoint = it },
                 label = { Text("Starting point") },
-                placeholder = { Text("Browse for starting point...") },
-                modifier = Modifier.fillMaxWidth(0.7f),
+                placeholder = { Text("Click \"+\" add point") },
+                modifier = Modifier
+                    .weight(1f),
                 readOnly = true,
+                singleLine = true,
                 leadingIcon = {
                     Icon(Icons.Default.LocationOn, contentDescription = "StartLocation")
                 },
@@ -203,24 +225,44 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                     }
                 }
             )
-            Button(
-                onClick = { navController.navigate("Browser/trip_start_point") },
-                modifier = Modifier.fillMaxWidth()
-                    .padding(start = 6.dp),
+
+            Spacer(modifier = Modifier.width(8.dp)) // Add space between the TextField and the button
+
+            Surface(
+                color = if (isSystemInDarkTheme()) Color(0xFF1E1D6D) else Color(0xFF6562DF),
+                shape = CircleShape,
+                modifier = Modifier
+                    .size(54.dp)
+                    .clickable(onClick = {
+                        tempDataViewModel.browserType = "Select starting point"
+                        navController.navigate("Browser/trip_start_point")
+                    })
             ) {
-                Text("Browse")
+                Image(
+                    painter = painterResource(id = R.drawable.plus_icon),
+                    contentDescription = "Add",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer(
+                            scaleX = 0.5f,
+                            scaleY = 0.5f
+                        )
+                )
             }
         }
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
             OutlinedTextField(
-                value = tempDataViewModel.destinationPoint,
+                value = destText,
                 onValueChange = { tempDataViewModel.destinationPoint = it },
                 label = { Text("Travel destination") },
-                placeholder = { Text("Browse for travel destination...") },
-                modifier = Modifier.fillMaxWidth(0.7f),
+                placeholder = { Text("Click \"+\" add point") },
+                supportingText = { Text("Use current location or add point")},
+                modifier = Modifier.weight(1f),
                 readOnly = true,
+                singleLine = true,
                 leadingIcon = {
                     Icon(Icons.Default.LocationOn, contentDescription = "StartLocation")
                 },
@@ -232,12 +274,28 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                     }
                 }
             )
-            Button(
-                onClick = { navController.navigate("Browser/trip_destination_point") },
-                modifier = Modifier.fillMaxWidth()
-                    .padding(start = 6.dp),
+            Spacer(modifier = Modifier.width(8.dp)) // Add space between the TextField and the button
+
+            Surface(
+                color = if (isSystemInDarkTheme()) Color(0xFF1E1D6D) else Color(0xFF6562DF),
+                shape = CircleShape,
+                modifier = Modifier
+                    .size(54.dp)
+                    .clickable(onClick = {
+                        tempDataViewModel.browserType = "Select travel destination"
+                        navController.navigate("Browser/trip_travel_destination")
+                    })
             ) {
-                Text("Browse")
+                Image(
+                    painter = painterResource(id = R.drawable.plus_icon),
+                    contentDescription = "Add",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer(
+                            scaleX = 0.5f,
+                            scaleY = 0.5f
+                        )
+                )
             }
         }
 
@@ -272,8 +330,7 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
             }
         }
     }
-
-}
+    }
 
 @Composable
 fun AddHotelPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier) {
