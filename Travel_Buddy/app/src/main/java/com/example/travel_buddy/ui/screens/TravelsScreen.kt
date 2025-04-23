@@ -117,8 +117,14 @@ fun TravelPlanItem(trip : Trip, onClick: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
                 val trip_duration = trip.points_list[trip.points_list.lastIndex].end_date - trip.points_list[0].date
+                val days = trip_duration.toString().substringBefore(",").trim()
+                val hours = trip_duration.toString().substringAfter(",").trim()
+                var daysInt = days.toInt()
+                if(hours != "0:0")
+                    daysInt++
+
                 Text(text = trip.trip_name, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(4.dp))
-                Text(text = "Length: $trip_duration", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(4.dp))
+                Text(text = "Length: $daysInt days", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(4.dp))
             }
         }
     }

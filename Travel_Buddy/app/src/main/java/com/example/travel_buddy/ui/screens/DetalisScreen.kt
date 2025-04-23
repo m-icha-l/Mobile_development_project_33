@@ -85,7 +85,7 @@ fun TravelDetailItem(point: Travel_point, onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(bottom = 4.dp)
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
     ) {
         Row(
             modifier = Modifier
@@ -94,7 +94,7 @@ fun TravelDetailItem(point: Travel_point, onClick: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(text = point.name, style = MaterialTheme.typography.bodyLarge)
+                Text(text = point.name, style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(top = 10.dp, bottom = 5.dp))
                 Text(text = "Default", style = MaterialTheme.typography.bodyMedium)
             }
         }
@@ -109,7 +109,7 @@ fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
             .padding(bottom = 4.dp)
             .clickable { onClick() },
 
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
     ) {
         Column(
             modifier = Modifier
@@ -119,14 +119,14 @@ fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
 
             Text(
                 text = point.name,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp, bottom = 10.dp)
             )
             Card (
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 4.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
             ){
                 Row(
                     modifier = Modifier
@@ -160,7 +160,6 @@ fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
                     }
                 }
             }
-
         }
     }
 }
@@ -173,48 +172,47 @@ fun TravelAttractionDetailItem(point: Attraction_point, onClick: () -> Unit) {
             .padding(bottom = 4.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary.copy(
-                alpha = 0.3f
-            )
+            containerColor = MaterialTheme.colorScheme.primary
         )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(12.dp),
         ) {
 
             Text(
                 text = point.name,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp)
             )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp),
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             )
             {
                 Card(
                     modifier = Modifier
-                        .width(230.dp)
-                        .padding(4.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+                        .width(280.dp)
+                        .padding(end = 4.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
                     Column {
                         Text(
                             text = "Meeting point: ",
                             style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(4.dp)
+                            modifier = Modifier.padding(6.dp)
                         )
                         Card (
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy())
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+                            modifier = Modifier.padding(8.dp)
                         ){
                             Text(
                                 text = point.location.toString(),
                                 style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.padding(4.dp)
+                                modifier = Modifier.padding(6.dp)
                             )
 
                         }
@@ -223,24 +221,21 @@ fun TravelAttractionDetailItem(point: Attraction_point, onClick: () -> Unit) {
 
                 Card (
                     modifier = Modifier
-                        .width(90.dp)
-                        .padding(4.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+                        .width(120.dp)
+                        .padding(start = 4.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ){
-                    Row (
-                        modifier = Modifier.padding(4.dp)
-                    ){
                         Card (
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy())
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+                            modifier = Modifier.padding(6.dp)
                         ){
                             Text(
                                 text = point.date.toString(),
                                 style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.padding(4.dp)
+                                modifier = Modifier.padding(6.dp)
                             )
 
                         }
-                    }
                 }
             }
         }
@@ -255,9 +250,7 @@ fun TravelHotelDetailItem(point: Hotel_point, onClick: () -> Unit) {
             .padding(bottom = 4.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary.copy(
-                alpha = 0.3f
-            )
+            containerColor = MaterialTheme.colorScheme.primary
         )
     ) {
         Column(
@@ -268,8 +261,8 @@ fun TravelHotelDetailItem(point: Hotel_point, onClick: () -> Unit) {
 
             Text(
                 text = point.name,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(4.dp)
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp, bottom = 5.dp)
             )
             Text(
                 text = point.location.toString(),
@@ -279,47 +272,47 @@ fun TravelHotelDetailItem(point: Hotel_point, onClick: () -> Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp),
+                    .padding(5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             )
             {
                 Card(
                     modifier = Modifier
-                        .width(180.dp)
-                        .padding(2.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+                        .width(190.dp)
+                        .padding(end = 2.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
                     Row {
-                        Text(text = "Check in: ", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(2.dp))
+                        Text(text = "Check in: ", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(6.dp))
                         Card (
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy()),
-                            modifier = Modifier.padding(2.dp).width(100.dp)
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+                            modifier = Modifier.padding(2.dp).fillMaxWidth()
                         ){
                             Text(text = point.date.toString(), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(2.dp))
 
                         }
                     }
 
-                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(4.dp))
+                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(6.dp))
                 }
 
                 Card (
                     modifier = Modifier
-                        .width(200.dp)
-                        .padding(4.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+                        .width(190.dp)
+                        .padding(start = 2.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ){
                     Row {
-                        Text(text = "Check out: ", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(2.dp))
+                        Text(text = "Check out: ", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(6.dp))
                         Card (
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy()),
-                            modifier = Modifier.padding(2.dp).width(140.dp)
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+                            modifier = Modifier.padding(2.dp).fillMaxWidth()
                         ){
                             Text(text = point.end_date.toString(), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(2.dp))
 
                         }
                     }
-                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(4.dp))
+                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(6.dp))
                 }
             }
         }
