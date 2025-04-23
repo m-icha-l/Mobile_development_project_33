@@ -1,29 +1,57 @@
 package com.example.travel_buddy.ui.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.travel_buddy.R
 import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.classes_res.Travel_point
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
 import com.example.travel_buddy.classes_res.heritage_points.Trip_point
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
+import com.example.travel_buddy.viewmodel.NavigationUiState
+import com.example.travel_buddy.viewmodel.NavigationViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
@@ -39,7 +67,7 @@ fun PointDetailsScreen(viewModel: DataEntryViewModel, navController: NavControll
                 TravelHotelDetailPoint(point)
             }
             is Trip_point -> {
-                TravelTripDetailPoint(point)
+                DisplayTripPoint(point)
             }
             is Attraction_point -> {
                 TravelAttractionDetailPoint(point)
@@ -80,7 +108,7 @@ fun TravelTripDetailPoint(point: Trip_point) {
             .fillMaxWidth()
             .padding(bottom = 4.dp),
 
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
     ) {
         Column(
             modifier = Modifier
@@ -97,7 +125,7 @@ fun TravelTripDetailPoint(point: Trip_point) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 4.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
             ){
                 Row(
                     modifier = Modifier
@@ -142,6 +170,95 @@ fun TravelTripDetailPoint(point: Trip_point) {
         }
     }
 }
+@Composable
+fun DisplayTripPoint(point: Trip_point) {
+
+    var startText = point.location.toString()
+
+    var destText = point.end_location.toString()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            OutlinedTextField(
+                value = startText,
+                onValueChange = {},
+                label = { Text("Starting point") },
+                placeholder = { Text(point.location.toString()) },
+                modifier = Modifier
+                    .weight(1f),
+                readOnly = true,
+                singleLine = true,
+                leadingIcon = {
+                    Icon(Icons.Default.LocationOn, contentDescription = "StartLocation")
+                }
+            )
+        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            OutlinedTextField(
+                value = destText,
+                onValueChange = { },
+                label = { Text("Travel destination") },
+                placeholder = { Text(point.end_location.toString()) },
+                modifier = Modifier.weight(1f),
+                readOnly = true,
+                singleLine = true,
+                leadingIcon = {
+                    Icon(Icons.Default.LocationOn, contentDescription = "StartLocation")
+                }
+            )
+        }
+
+//        DateTimePickerModal(tempDataViewModel)
+        OutlinedTextField(
+            value = point.date.toString(),
+            onValueChange = {},
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(point.date.toString()) },
+            readOnly = true
+        )
+
+        Card(
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.cardElevation(4.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        "Popular travel destinations for:",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text("Finland", style = MaterialTheme.typography.bodyLarge)
+                }
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .background(Color.LightGray)
+                ) {
+                    // Placeholder for image
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun TravelAttractionDetailPoint(point: Attraction_point) {
@@ -150,9 +267,7 @@ fun TravelAttractionDetailPoint(point: Attraction_point) {
             .fillMaxWidth()
             .padding(bottom = 4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary.copy(
-                alpha = 0.3f
-            )
+            containerColor = MaterialTheme.colorScheme.primary
         )
     ) {
         Column(
@@ -177,7 +292,7 @@ fun TravelAttractionDetailPoint(point: Attraction_point) {
                     modifier = Modifier
                         .width(230.dp)
                         .padding(4.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
                     Column {
                         Text(
@@ -186,7 +301,7 @@ fun TravelAttractionDetailPoint(point: Attraction_point) {
                             modifier = Modifier.padding(4.dp)
                         )
                         Card (
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy())
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
                         ){
                             Text(
                                 text = point.location.toString(),
@@ -202,13 +317,13 @@ fun TravelAttractionDetailPoint(point: Attraction_point) {
                     modifier = Modifier
                         .width(90.dp)
                         .padding(4.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ){
                     Row (
                         modifier = Modifier.padding(4.dp)
                     ){
                         Card (
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy())
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
                         ){
                             Text(
                                 text = point.date.toString(),
@@ -239,9 +354,7 @@ fun TravelHotelDetailPoint(point: Hotel_point) {
             .fillMaxWidth()
             .padding(bottom = 4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary.copy(
-                alpha = 0.3f
-            )
+            containerColor = MaterialTheme.colorScheme.primary
         )
     ) {
         Column(
@@ -252,8 +365,8 @@ fun TravelHotelDetailPoint(point: Hotel_point) {
 
             Text(
                 text = point.name,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(4.dp)
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp, bottom = 5.dp)
             )
             Text(
                 text = point.location.toString(),
@@ -263,43 +376,47 @@ fun TravelHotelDetailPoint(point: Hotel_point) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp),
+                    .padding(5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             )
             {
                 Card(
                     modifier = Modifier
-                        .width(180.dp)
-                        .padding(2.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+                        .width(190.dp)
+                        .padding(end = 2.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
                     Row {
-                        Text(text = "Check in: ", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(2.dp))
+                        Text(text = "Check in: ", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(6.dp))
                         Card (
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy()),
-                            modifier = Modifier.padding(2.dp).width(100.dp)
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+                            modifier = Modifier.padding(2.dp).fillMaxWidth()
                         ){
                             Text(text = point.date.toString(), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(2.dp))
 
                         }
                     }
+
+                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(6.dp))
                 }
 
                 Card (
                     modifier = Modifier
-                        .width(200.dp)
-                        .padding(4.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+                        .width(190.dp)
+                        .padding(start = 2.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ){
                     Row {
-                        Text(text = "Check out: ", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(2.dp))
+                        Text(text = "Check out: ", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(6.dp))
                         Card (
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy()),
-                            modifier = Modifier.padding(2.dp).width(140.dp)
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+                            modifier = Modifier.padding(2.dp).fillMaxWidth()
                         ){
                             Text(text = point.end_date.toString(), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(2.dp))
+
                         }
                     }
+                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(6.dp))
                 }
             }
             Text(text = point.city , style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(2.dp))

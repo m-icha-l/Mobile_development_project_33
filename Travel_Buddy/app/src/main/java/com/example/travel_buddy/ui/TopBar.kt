@@ -34,8 +34,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
     val currentRoute = navBackStackEntry?.destination?.route
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.secondary,
         ),
 /*        title = {
 
@@ -67,6 +67,7 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
             }
             Text(
                 text,
+                color = MaterialTheme.colorScheme.onPrimary
             )
         },
         navigationIcon = {
@@ -80,7 +81,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
             }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
 
@@ -94,9 +96,12 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
+                }
+            }
             if (currentRoute == "PointDetailsScreen/{tripName}/{pointIndex}")
             {
                 Box(
@@ -108,7 +113,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                         navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
@@ -123,7 +129,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
-                        contentDescription = "Edit"
+                        contentDescription = "Edit",
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
