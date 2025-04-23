@@ -34,7 +34,8 @@ interface DirectionsApi {
         @Path("locations") locations: String,
         @Query("language") language: String,
         @Query("traffic") canShowTrafficDelays: Boolean,
-        @Query("travelMode") type: String
+        @Query("travelMode") type: String,
+        @Query("departAt") departAt: String
     ): RouteResponse
     companion object {
         var directionsService : DirectionsApi? = null

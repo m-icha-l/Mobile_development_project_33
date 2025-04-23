@@ -3,6 +3,7 @@ package com.example.travel_buddy.viewmodel
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,7 @@ import com.example.travel_buddy.classes_res.model.PlacesApi
 import com.example.travel_buddy.classes_res.model.RouteResponse
 import com.example.travel_buddy.classes_res.model.TomTomSearchResponse
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 interface PlacesUiState {
     data class Success(val searchResponse: TomTomSearchResponse): PlacesUiState
@@ -26,6 +28,7 @@ class TempDataViewModel : ViewModel() {
     var showDatePicker by mutableStateOf(false)
     var lastTravel by mutableStateOf("")
     var browserType by mutableStateOf("")
+    var selectedDateTime by mutableStateOf<LocalDateTime?>(null)
 
     var placesUiState: PlacesUiState by
     mutableStateOf<PlacesUiState>(PlacesUiState.NoRequest) //all data fetched from API is stored here (if succeeded)

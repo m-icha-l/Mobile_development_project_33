@@ -111,8 +111,6 @@ fun BrowseCitiesScreen(
     var searchQuery by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
 
-    BrowseCitiesUiState(tempDataViewModel,tempDataViewModel.placesUiState,navController,modifier,type)
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -174,6 +172,7 @@ fun BrowseCitiesScreen(
 
              */
         }
+        BrowseCitiesUiState(tempDataViewModel,tempDataViewModel.placesUiState,navController,modifier,type)
     }
 }
 
@@ -201,8 +200,8 @@ fun CitiesCards(tempDataViewModel: TempDataViewModel,response: TomTomSearchRespo
                                 tempDataViewModel.start_subdivision =
                                     result.address.countrySubdivisionName.toString()
                                 tempDataViewModel.start_country = result.address.country.toString()
-                                tempDataViewModel.start_latitude = result.position.lon.toString()
-                                tempDataViewModel.start_longtitude = result.position.lat.toString()
+                                tempDataViewModel.start_latitude = result.position.lat.toString()
+                                tempDataViewModel.start_longtitude = result.position.lon.toString()
                                 tempDataViewModel.start_isSet = true
                                 navController.popBackStack()
                             }
@@ -212,8 +211,8 @@ fun CitiesCards(tempDataViewModel: TempDataViewModel,response: TomTomSearchRespo
                                 tempDataViewModel.dest_subdivision =
                                     result.address.countrySubdivisionName.toString()
                                 tempDataViewModel.dest_country = result.address.country.toString()
-                                tempDataViewModel.dest_latitude = result.position.lon.toString()
-                                tempDataViewModel.dest_longtitude = result.position.lat.toString()
+                                tempDataViewModel.dest_latitude = result.position.lat.toString()
+                                tempDataViewModel.dest_longtitude = result.position.lon.toString()
                                 tempDataViewModel.dest_isSet = true
                                 navController.popBackStack()
                             }
