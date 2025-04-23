@@ -35,16 +35,24 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.travel_buddy.classes_res.model.TomTomSearchResponse
+import com.example.travel_buddy.ui.theme.Typography
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
+import com.example.travel_buddy.viewmodel.PlacesUiState
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 /*
@@ -103,7 +111,6 @@ fun BrowseCitiesScreen(
     var searchQuery by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
 
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -115,11 +122,16 @@ fun BrowseCitiesScreen(
                 .fillMaxWidth(),
             query = searchQuery,
             onQueryChange = { searchQuery = it },
-            onSearch = { active = false },
+            onSearch = { active = false
+                tempDataViewModel.getPlacesList("search", searchQuery)},
             active = active,
             onActiveChange = { active = it },
 
-            placeholder = { Text("Search travel destinations...") },
+            placeholder = { if(type == "trip_start_point") {
+                Text("Search travel destinations...") }
+                          else if(type == "trip_travel_destination") {
+                                Text("Search travel destinations...")
+                          }},
 
             leadingIcon = {
                 Icon(
@@ -160,5 +172,102 @@ fun BrowseCitiesScreen(
 
              */
         }
+        BrowseCitiesUiState(tempDataViewModel,tempDataViewModel.placesUiState,navController,modifier,type)
+    }
+}
+
+@Composable
+fun BrowseCitiesUiState(tempDataViewModel: TempDataViewModel,uiState: PlacesUiState, navController: NavController, modifier: Modifier,type: String?) {
+    //val modifier = Modifier.padding(top=265.dp)
+    when (uiState) {
+        is PlacesUiState.NoRequest -> EmptyScreen()
+        is PlacesUiState.Success -> CitiesCards(tempDataViewModel,uiState.searchResponse, navController, modifier,type)
+        is PlacesUiState.Error -> ErrorScreen(modifier)
+    }
+}
+
+@Composable
+fun CitiesCards(tempDataViewModel: TempDataViewModel,response: TomTomSearchResponse, navController: NavController, modifier: Modifier,type: String?) {
+    LazyColumn(modifier = modifier.fillMaxWidth()) {
+        items(response.results) { result ->
+            if (result.type == "Geography") {
+                Card(
+                    modifier = Modifier.padding(top = 8.dp)
+                        .clickable(onClick = {
+                            if(type == "trip_start_point") {
+                                tempDataViewModel.start_city_name =
+                                    result.address.municipality.toString()
+                                tempDataViewModel.start_subdivision =
+                                    result.address.countrySubdivisionName.toString()
+                                tempDataViewModel.start_country = result.address.country.toString()
+                                tempDataViewModel.start_latitude = result.position.lat.toString()
+                                tempDataViewModel.start_longtitude = result.position.lon.toString()
+                                tempDataViewModel.start_isSet = true
+                                navController.popBackStack()
+                            }
+                            else if (type == "trip_travel_destination") {
+                                tempDataViewModel.dest_city_name =
+                                    result.address.municipality.toString()
+                                tempDataViewModel.dest_subdivision =
+                                    result.address.countrySubdivisionName.toString()
+                                tempDataViewModel.dest_country = result.address.country.toString()
+                                tempDataViewModel.dest_latitude = result.position.lat.toString()
+                                tempDataViewModel.dest_longtitude = result.position.lon.toString()
+                                tempDataViewModel.dest_isSet = true
+                                navController.popBackStack()
+                            }
+                        }),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp, focusedElevation = 8.dp,pressedElevation = 12.dp,hoveredElevation = 6.dp,draggedElevation = 10.dp,disabledElevation = 0.dp)
+                ) {
+                    ListItem(
+                        //colors = ListItemColors(containerColor = Color(0xFFB0B0B0)),
+                        headlineContent = {
+                            result.address.municipality?.let {
+                                Text(
+                                    text = it,
+                                    fontWeight = Typography.titleLarge.fontWeight
+                                )
+                            }
+                        },
+                        supportingContent = { Text(result.address.countrySubdivisionName + ", " + result.address.country) },
+                        trailingContent = { Text("Click to add") },
+                        //supportingContent = { Text("supporting content")},
+                        modifier = Modifier.animateItem()
+                            .fillMaxWidth()
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun EmptyScreen() {
+    Text(
+        modifier = Modifier.padding(vertical = 260.dp, horizontal = 10.dp),
+        text = "test"
+    )
+}
+
+@Composable
+fun ErrorScreen(modifier:Modifier) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(CornerSize(10.dp)),
+        colors = CardColors(
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            disabledContentColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        ),
+    ) {
+        Text(
+            modifier = Modifier.padding(12.dp),
+            text = "Error retrieving data from API"
+        )
     }
 }

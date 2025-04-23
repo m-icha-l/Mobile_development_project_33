@@ -58,6 +58,7 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                     Log.d("TOP BAR NAME", tempDataViewModel.lastTravel)
                     tempDataViewModel.lastTravel
                 }
+                "Browser/{type}" -> tempDataViewModel.browserType
                 else -> {
                     Log.d("ELSE","else switch")
                     "Travel Buddy"
@@ -84,7 +85,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
             }
 
             if( currentRoute == "DetailsScreen/{Index}" ||
-                currentRoute == "hourly_forecast/{dayIndex}") {
+                currentRoute == "hourly_forecast/{dayIndex}"||
+                currentRoute == "Browser/{type}") {
                 Box(
                     modifier = Modifier.padding(start = 40.dp)
                 )
@@ -95,8 +97,6 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                             contentDescription = "Back"
                         )
                     }
-                }
-            }
             if (currentRoute == "PointDetailsScreen/{tripName}/{pointIndex}")
             {
                 Box(

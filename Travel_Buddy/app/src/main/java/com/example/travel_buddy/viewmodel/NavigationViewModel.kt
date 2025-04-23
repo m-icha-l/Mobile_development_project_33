@@ -29,7 +29,7 @@ class NavigationViewModel: ViewModel()
     var counter by mutableStateOf(0)
     val MAX_REQUESTS = 20 //This is only for development to prevent api calls spam on accidental infinite loops
 
-    fun getRoutesList(startLocation: String, EndLocation: String,language:String,canShowTrafficDelays: Boolean,type: String) {
+    fun getRoutesList(startLocation: String, EndLocation: String,language:String,canShowTrafficDelays: Boolean,type: String,departAt:String) {
         val locations: String = startLocation + ":" + EndLocation
         viewModelScope.launch {
             var directionsApi: DirectionsApi? = null
@@ -37,7 +37,7 @@ class NavigationViewModel: ViewModel()
                 if(counter < MAX_REQUESTS) {
                     directionsApi = DirectionsApi.getInstance()
                     navigationUiState = NavigationUiState.Success(
-                        directionsApi.getRoute(locations, language, canShowTrafficDelays, type)
+                        directionsApi.getRoute(locations, language, canShowTrafficDelays, type, departAt)
                     )
                     Log.d("COUNTER", counter.toString())
                 } else {

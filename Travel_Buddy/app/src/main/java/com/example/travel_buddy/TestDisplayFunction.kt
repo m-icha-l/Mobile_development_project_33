@@ -101,7 +101,8 @@ fun TestDisplay(name: String, dataEntryViewModel: DataEntryViewModel = viewModel
                 "52.50274,13.43872",
                 "en-GB",
                 true,
-                "car"
+                "car",
+                "2025-04-23T21:15:16Z"
             )
         },
         content = { Text("Test Directions API")}

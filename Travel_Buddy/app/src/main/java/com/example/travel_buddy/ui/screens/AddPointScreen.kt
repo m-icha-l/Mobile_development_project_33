@@ -26,6 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import android.app.DatePickerDialog
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -39,6 +46,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
@@ -55,6 +63,13 @@ import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.travel_buddy.R
+import com.example.travel_buddy.classes_res.model.RouteResponse
+import com.example.travel_buddy.viewmodel.NavigationUiState
+import com.example.travel_buddy.viewmodel.NavigationViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -80,9 +95,8 @@ fun AddPointScreen(viewModel: DataEntryViewModel, navController: NavController, 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DateTimePickerModal() {
+fun DateTimePickerModal(tempDataViewModel: TempDataViewModel) {
     val context = LocalContext.current
-    var selectedDateTime by remember { mutableStateOf<LocalDateTime?>(null) }
 
     val displayFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm")
 
@@ -97,7 +111,7 @@ fun DateTimePickerModal() {
             TimePickerDialog(
                 context,
                 { _, selectedHour, selectedMinute ->
-                    selectedDateTime = date.atTime(selectedHour, selectedMinute)
+                    tempDataViewModel.selectedDateTime = date.atTime(selectedHour, selectedMinute)
                 },
                 calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE),
@@ -158,7 +172,7 @@ fun DateTimePickerModal() {
         Text("Select date", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(8.dp))
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
-            value = selectedDateTime?.format(displayFormatter) ?: "",
+            value = tempDataViewModel.selectedDateTime?.format(displayFormatter) ?: "",
             onValueChange = {},
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("mm/dd/yyyy hh:mm") },
@@ -172,26 +186,135 @@ fun DateTimePickerModal() {
     }
 }
 
+@Composable
+fun TripInfoCard(routeResponse: RouteResponse, tempDataViewModel: TempDataViewModel) {
+    var routeLengthInt = routeResponse.routes[0].summary.lengthInMeters
+    var routeLength = routeLengthInt.toString()
+    if( routeLengthInt >= 1000) {
+        val prefixLength = (routeLengthInt / 1000).toString().length
+        if(routeLengthInt % 1000 == 0) {
+            routeLength = routeLength.substring(0,prefixLength) + " km"
+        } else {
+            routeLength = routeLength.substring(0,prefixLength) + "." + routeLength[prefixLength] + " km"
+        }
+    }
+    else {
+        routeLength = routeLength + " m"
+    }
+    val departureTime = tempDataViewModel.selectedDateTime.toString().substring(5,10) + " " + tempDataViewModel.selectedDateTime.toString().substring(11,16)
+    val arrivalTime = routeResponse.routes[0].summary.arrivalTime.substring(5,10) + " " + routeResponse.routes[0].summary.arrivalTime.substring(11,16)
+    val context = LocalContext.current
+    val url = "https://www.google.pl/maps/dir/${tempDataViewModel.start_latitude},${tempDataViewModel.start_longtitude}/${tempDataViewModel.dest_latitude},${tempDataViewModel.dest_longtitude}"
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                context.startActivity(intent)
+            },
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Distance with Flag Icon
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_flag),
+                        contentDescription = "Distance",
+                        tint = Color.Gray,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = routeLength,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+
+                // Time Information with Clock Icon
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_clock),
+                        contentDescription = "Time",
+                        tint = Color.Gray,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    //Spacer(modifier = Modifier.width(8.dp))
+                    Column(
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Text(
+                            text = "Departure: $departureTime",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Gray
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Arrival: $arrivalTime",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Gray
+                        )
+                    }
+                }
+            }
+            Text(
+                text = "Click to see the route in Google maps",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray
+            )
+        }
+    }
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier) {
+fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, navigationViewModel: NavigationViewModel = viewModel()) {
+
+    var startText = ""
+    if(tempDataViewModel.start_isSet) {
+        startText = tempDataViewModel.start_city_name + ", " + tempDataViewModel.start_subdivision + ", " + tempDataViewModel.start_country
+    }
+
+    var destText = ""
+    if(tempDataViewModel.dest_isSet) {
+        destText = tempDataViewModel.dest_city_name + ", " + tempDataViewModel.dest_subdivision + ", " + tempDataViewModel.dest_country
+    }
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
             OutlinedTextField(
-                value = tempDataViewModel.startingPoint,
+                value = startText,
                 onValueChange = { tempDataViewModel.startingPoint = it },
                 label = { Text("Starting point") },
-                placeholder = { Text("Browse for starting point...") },
-                modifier = Modifier.fillMaxWidth(0.7f),
+                placeholder = { Text("Click \"+\" add point") },
+                modifier = Modifier
+                    .weight(1f),
                 readOnly = true,
+                singleLine = true,
                 leadingIcon = {
                     Icon(Icons.Default.LocationOn, contentDescription = "StartLocation")
                 },
@@ -203,24 +326,44 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                     }
                 }
             )
-            Button(
-                onClick = { navController.navigate("Browser/trip_start_point") },
-                modifier = Modifier.fillMaxWidth()
-                    .padding(start = 6.dp),
+
+            Spacer(modifier = Modifier.width(8.dp)) // Add space between the TextField and the button
+
+            Surface(
+                color = if (isSystemInDarkTheme()) Color(0xFF1E1D6D) else Color(0xFF6562DF),
+                shape = CircleShape,
+                modifier = Modifier
+                    .size(54.dp)
+                    .clickable(onClick = {
+                        tempDataViewModel.browserType = "Select starting point"
+                        navController.navigate("Browser/trip_start_point")
+                    })
             ) {
-                Text("Browse")
+                Image(
+                    painter = painterResource(id = R.drawable.plus_icon),
+                    contentDescription = "Add",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer(
+                            scaleX = 0.5f,
+                            scaleY = 0.5f
+                        )
+                )
             }
         }
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
             OutlinedTextField(
-                value = tempDataViewModel.destinationPoint,
+                value = destText,
                 onValueChange = { tempDataViewModel.destinationPoint = it },
                 label = { Text("Travel destination") },
-                placeholder = { Text("Browse for travel destination...") },
-                modifier = Modifier.fillMaxWidth(0.7f),
+                placeholder = { Text("Click \"+\" add point") },
+                supportingText = { Text("Use current location or add point")},
+                modifier = Modifier.weight(1f),
                 readOnly = true,
+                singleLine = true,
                 leadingIcon = {
                     Icon(Icons.Default.LocationOn, contentDescription = "StartLocation")
                 },
@@ -232,16 +375,32 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                     }
                 }
             )
-            Button(
-                onClick = { navController.navigate("Browser/trip_destination_point") },
-                modifier = Modifier.fillMaxWidth()
-                    .padding(start = 6.dp),
+            Spacer(modifier = Modifier.width(8.dp)) // Add space between the TextField and the button
+
+            Surface(
+                color = if (isSystemInDarkTheme()) Color(0xFF1E1D6D) else Color(0xFF6562DF),
+                shape = CircleShape,
+                modifier = Modifier
+                    .size(54.dp)
+                    .clickable(onClick = {
+                        tempDataViewModel.browserType = "Select travel destination"
+                        navController.navigate("Browser/trip_travel_destination")
+                    })
             ) {
-                Text("Browse")
+                Image(
+                    painter = painterResource(id = R.drawable.plus_icon),
+                    contentDescription = "Add",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer(
+                            scaleX = 0.5f,
+                            scaleY = 0.5f
+                        )
+                )
             }
         }
 
-        DateTimePickerModal()
+        DateTimePickerModal(tempDataViewModel)
 
         Card(
             shape = RoundedCornerShape(12.dp),
@@ -271,8 +430,48 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                 }
             }
         }
+        if(tempDataViewModel.start_isSet && tempDataViewModel.dest_isSet && tempDataViewModel.selectedDateTime != null) {
+            val startLoc: String = tempDataViewModel.start_latitude + "," + tempDataViewModel.start_longtitude
+            val endLoc: String = tempDataViewModel.dest_latitude + "," + tempDataViewModel.dest_longtitude
+            navigationViewModel.getRoutesList(startLoc,endLoc,"en-GB",true,"car",tempDataViewModel.selectedDateTime.toString() + ":00Z")
+            tripInfoUiState(navigationViewModel.navigationUiState,tempDataViewModel)
+            Button(
+                modifier = Modifier.padding(top=16.dp),
+                onClick = { TODO() }
+            ) {
+                Text("Add")
+            }
+        }
     }
+}
 
+@Composable
+fun tripInfoUiState(navigationUiState: NavigationUiState, tempDataViewModel: TempDataViewModel) {
+    when(navigationUiState) {
+        is NavigationUiState.NoRequest -> Text("Loading...")
+        is NavigationUiState.Success -> TripInfoCard(navigationUiState.route,tempDataViewModel)
+        is NavigationUiState.Error -> ErrorCard()
+    }
+}
+
+@Composable
+fun ErrorCard() {
+    Card(
+        shape = RoundedCornerShape(CornerSize(10.dp)),
+        colors = CardColors(
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            disabledContentColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        ),
+    ) {
+        Text(
+            modifier = Modifier.padding(12.dp),
+            text = "Error getting directions data"
+        )
+    }
 }
 
 @Composable
