@@ -21,6 +21,7 @@ import com.example.travel_buddy.classes_res.Date
 import com.example.travel_buddy.classes_res.Duration
 import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.classes_res.Travel_point
+import com.example.travel_buddy.classes_res.Trip
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
 import com.example.travel_buddy.classes_res.heritage_points.Trip_point
@@ -46,14 +47,14 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
 //    val newPoint = Travel_point(name, date, end_date, null ,location,"",newId, travelPlanName)
 
 
-    var time: Duration = date - end_date
+    var time: Duration = end_date - date
     val city: String = "Oulu"
     val newHotel = Hotel_point(name, city, date, end_date, time,  location, newId, travelPlanName, notes)
 
 
     val newAttra = Attraction_point(name, date, end_date, time, location, newId, travelPlanName )
 
-    val newTrip = Trip_point(newId, name, location,date,end_date,time,location, travelPlanName)
+    val newTrip = Trip_point(newId, name, location,date, end_date, time, location, travelPlanName)
 
     val names = travelManager.display_all_trips()
 
@@ -68,7 +69,7 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
 
             LazyColumn{
                 items (names){ name ->
-                    TravelPlanItem(name.trip_name)
+                    TravelPlanItem(name)
                     {
                         tempDataViewModel.lastTravel = name.trip_name
                         navController.navigate("DetailsScreen/${name.trip_name}")
@@ -76,22 +77,27 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
                 }
             }
         }
-        else
+/*        else
         {
-            TravelPlanItem("Temporary for testing purposes")
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 4.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+            )
             {
 //                travelManager.add_Point(travelPlanName, newPoint)
                 travelManager.add_Point(travelPlanName, newHotel)
                 travelManager.add_Point(travelPlanName, newAttra)
                 travelManager.add_Point(travelPlanName, newTrip)
             }
-        }
+        }*/
     }
 
 }
 
 @Composable
-fun TravelPlanItem(name : String, onClick: () -> Unit) {
+fun TravelPlanItem(trip : Trip, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,9 +111,13 @@ fun TravelPlanItem(name : String, onClick: () -> Unit) {
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column {
-                Text(text = name, style = MaterialTheme.typography.bodyLarge)
-//                Text(text = stringResource(R.string.lorem_ipsum), style = MaterialTheme.typography.bodyMedium)
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ){
+                val trip_duration = trip.points_list[trip.points_list.lastIndex].end_date - trip.points_list[0].date
+                Text(text = trip.trip_name, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(4.dp))
+                Text(text = "Length: $trip_duration", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(4.dp))
             }
         }
     }
