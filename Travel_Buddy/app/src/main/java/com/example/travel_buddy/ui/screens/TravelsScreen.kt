@@ -29,22 +29,23 @@ import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
-fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier)
+fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager)
 {
     var index = 1
     DataEntryViewModel.TopBarName.updateText(index.toString())
 
-    var travelManager = Travel_Point_Manager(viewModel)
+    //var travelManager = Travel_Point_Manager(viewModel)
 
     //Temporary for testing purposes
     val name = "New point"
-    val date = Date("01/05/2025 10:00")
-    val end_date = Date("06/05/2025 15:21")
+    val date = Date("2025-05-01 10:00")
+    val end_date = Date("2025-05-06 15:21")
     var notes: String = ""
     var location: Location? = null
     var newId = 0
     var travelPlanName = "New travel plan"
-//    val newPoint = Travel_point(name, date, end_date, null ,location,"",newId, travelPlanName)
+    val newPoint = Travel_point(name, date, end_date, null ,location,"",newId, travelPlanName)
+    travelManager.add_Point(travelPlanName,newPoint)
 
 
     var time: Duration = end_date - date

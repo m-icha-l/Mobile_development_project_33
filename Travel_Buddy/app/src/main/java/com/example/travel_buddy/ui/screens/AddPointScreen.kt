@@ -67,6 +67,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.travel_buddy.R
+import com.example.travel_buddy.classes_res.Travel_Point_Manager
+import com.example.travel_buddy.classes_res.heritage_points.Trip_point
 import com.example.travel_buddy.classes_res.model.RouteResponse
 import com.example.travel_buddy.viewmodel.NavigationUiState
 import com.example.travel_buddy.viewmodel.NavigationViewModel
@@ -76,15 +78,18 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import android.location.Location
+import com.example.travel_buddy.classes_res.Date
+import com.example.travel_buddy.functions.parseLocation
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AddPointScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, type: String?)
+fun AddPointScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager,type: String?,tripName: String?)
 {
     when (type) {
-        "Trip Point" -> AddTripPoint(navController,tempDataViewModel,modifier)
-        "Hotel Point" -> AddHotelPoint(navController,tempDataViewModel,modifier)
-        "Attraction Point" -> AddAttractionPoint(navController,tempDataViewModel,modifier)
+        "Trip Point" -> AddTripPoint(navController,tempDataViewModel,modifier,travelManager, tripName)
+        "Hotel Point" -> AddHotelPoint(navController,tempDataViewModel,modifier,travelManager, tripName)
+        "Attraction Point" -> AddAttractionPoint(navController,tempDataViewModel,modifier,travelManager, tripName)
         else -> Text (
             modifier = modifier,
             text = "Error"
@@ -203,6 +208,8 @@ fun TripInfoCard(routeResponse: RouteResponse, tempDataViewModel: TempDataViewMo
     }
     val departureTime = tempDataViewModel.selectedDateTime.toString().substring(5,10) + " " + tempDataViewModel.selectedDateTime.toString().substring(11,16)
     val arrivalTime = routeResponse.routes[0].summary.arrivalTime.substring(5,10) + " " + routeResponse.routes[0].summary.arrivalTime.substring(11,16)
+    tempDataViewModel.arrivalDate = routeResponse.routes[0].summary.arrivalTime.substring(0,10) + " " + routeResponse.routes[0].summary.arrivalTime.substring(11,16)
+    tempDataViewModel.distance = routeLength
     val context = LocalContext.current
     val url = "https://www.google.pl/maps/dir/${tempDataViewModel.start_latitude},${tempDataViewModel.start_longtitude}/${tempDataViewModel.dest_latitude},${tempDataViewModel.dest_longtitude}"
     Card(
@@ -283,7 +290,7 @@ fun TripInfoCard(routeResponse: RouteResponse, tempDataViewModel: TempDataViewMo
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, navigationViewModel: NavigationViewModel = viewModel()) {
+fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?,navigationViewModel: NavigationViewModel = viewModel()) {
 
     var startText = ""
     if(tempDataViewModel.start_isSet) {
@@ -437,7 +444,31 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
             tripInfoUiState(navigationViewModel.navigationUiState,tempDataViewModel)
             Button(
                 modifier = Modifier.padding(top=16.dp),
-                onClick = { TODO() }
+                onClick = {
+                        var startLoc = Location("uiygiy").apply {
+                            tempDataViewModel.start_latitude
+                            tempDataViewModel.start_longtitude }
+                        var endLoc = Location("sdjnsjdk").apply {
+                            tempDataViewModel.start_latitude
+                            tempDataViewModel.start_longtitude }
+                    if (tripName != null) {
+                        travelManager.add_Point(tripName,Trip_point(
+                            name = tempDataViewModel.start_city_name,
+                            location = startLoc,
+                            end_location = endLoc,
+                            date = Date(tempDataViewModel.selectedDateTime.toString().replace('T', ' ')),
+                            end_date = Date(tempDataViewModel.arrivalDate),
+                            plan_name = tripName,
+                            start_subdivision = tempDataViewModel.start_subdivision,
+                            start_country = tempDataViewModel.start_country,
+                            dest_name = tempDataViewModel.start_city_name,
+                            dest_subdivision = tempDataViewModel.dest_subdivision,
+                            dest_country = tempDataViewModel.dest_country,
+                            distance = tempDataViewModel.distance,
+                            urlToPhoto = ""
+                        ))
+                    }
+                    }
             ) {
                 Text("Add")
             }
@@ -475,7 +506,7 @@ fun ErrorCard() {
 }
 
 @Composable
-fun AddHotelPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier) {
+fun AddHotelPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -494,7 +525,7 @@ fun AddHotelPoint(navController: NavController, tempDataViewModel: TempDataViewM
 }
 
 @Composable
-fun AddAttractionPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier) {
+fun AddAttractionPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally

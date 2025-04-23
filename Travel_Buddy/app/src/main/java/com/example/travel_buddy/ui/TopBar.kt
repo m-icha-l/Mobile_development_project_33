@@ -53,7 +53,7 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                     Log.d("TOP BAR NAME", tempDataViewModel.lastTravel)
                     tempDataViewModel.lastTravel
                 }
-                "AddPointScreen/{type}" -> "Add " + tempDataViewModel.text
+                "AddPointScreen/{type}/{tripName}" -> "Add " + tempDataViewModel.text
                 "PointDetailsScreen/{tripName}/{pointIndex}" -> {
                     Log.d("TOP BAR NAME", tempDataViewModel.lastTravel)
                     tempDataViewModel.lastTravel
@@ -84,9 +84,10 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                 )
             }
 
-            if( currentRoute == "DetailsScreen/{Index}" ||
-                currentRoute == "hourly_forecast/{dayIndex}"||
-                currentRoute == "Browser/{type}") {
+            if (currentRoute == "DetailsScreen/{Index}" ||
+                currentRoute == "hourly_forecast/{dayIndex}" ||
+                currentRoute == "Browser/{type}"
+            ) {
                 Box(
                     modifier = Modifier.padding(start = 40.dp)
                 )
@@ -97,19 +98,22 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                             contentDescription = "Back"
                         )
                     }
-            if (currentRoute == "PointDetailsScreen/{tripName}/{pointIndex}")
-            {
-                Box(
-                    modifier = Modifier.padding(start = 40.dp)
-                )
-                {
-                    IconButton(onClick = {
-                        tempDataViewModel.lastTravel = tempDataViewModel.lastTravel.substringBefore("->").trim()
-                        navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                    if (currentRoute == "PointDetailsScreen/{tripName}/{pointIndex}") {
+                        Box(
+                            modifier = Modifier.padding(start = 40.dp)
                         )
+                        {
+                            IconButton(onClick = {
+                                tempDataViewModel.lastTravel =
+                                    tempDataViewModel.lastTravel.substringBefore("->").trim()
+                                navController.popBackStack()
+                            }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Back"
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -127,7 +131,7 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                     )
                 }
             }
-            if(currentRoute == "AddPointScreen/{type}"){
+            if(currentRoute == "AddPointScreen/{type}/{tripName}"){
                 IconButton(onClick = {  }) {
                     Icon(
                         imageVector = Icons.Filled.MoreVert,

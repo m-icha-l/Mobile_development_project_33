@@ -51,7 +51,7 @@ import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
-fun Add_btn(tempDataViewModel: TempDataViewModel, navController: NavController) {
+fun Add_btn(tempDataViewModel: TempDataViewModel, navController: NavController, Index: String?) {
     var open_popup by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -81,12 +81,12 @@ fun Add_btn(tempDataViewModel: TempDataViewModel, navController: NavController) 
             )
         }
     }
-    adder_opup(open_popup,{open_popup = false},"works",navController,tempDataViewModel)
+    adder_opup(open_popup,{open_popup = false},"works",navController,tempDataViewModel, Index)
 }
 
 @Composable
-fun adder_opup(isDialogOpen: Boolean, onDismiss: () -> Unit, text: String,navController: NavController,tempDataViewModel: TempDataViewModel) {
-    var selectedPoint by remember { mutableStateOf("") }
+fun adder_opup(isDialogOpen: Boolean, onDismiss: () -> Unit, text: String,navController: NavController,tempDataViewModel: TempDataViewModel, index: String?) {
+    var selectedPoint by remember { mutableStateOf("Trip Point") }
     if (isDialogOpen) {
         AlertDialog(
             onDismissRequest = onDismiss,
@@ -102,7 +102,7 @@ fun adder_opup(isDialogOpen: Boolean, onDismiss: () -> Unit, text: String,navCon
                    },
             confirmButton = {
                 Button(onClick = {
-                    navController.navigate("AddPointScreen/$selectedPoint")
+                    navController.navigate("AddPointScreen/$selectedPoint/$index")
                     tempDataViewModel.updateText(selectedPoint)
                     onDismiss
                 }) {
@@ -121,7 +121,7 @@ fun TravelPointDropdown(
     onOptionSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val options = listOf("Custom Point", "Trip Point", "Hotel Point", "Attraction Point")
+    val options = listOf("Trip Point", "Hotel Point", "Attraction Point")
     var expanded by remember { mutableStateOf(false) }
     var buttonWidth by remember { mutableStateOf(0) }
 

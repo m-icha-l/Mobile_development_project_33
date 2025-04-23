@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.ui.screens.AddPointScreen
 import com.example.travel_buddy.ui.screens.BrowseCitiesScreen
 import com.example.travel_buddy.ui.screens.DetailsScreen
@@ -23,16 +24,17 @@ import com.example.travel_buddy.viewmodel.WeatherViewModel
 @Composable
 fun MainApp(viewModel: DataEntryViewModel, weatherViewModel: WeatherViewModel, navController: NavHostController, tempDataViewModel: TempDataViewModel, modifier: Modifier = Modifier)
 {
+    var travelManager = Travel_Point_Manager(viewModel)
     NavHost(navController = navController, startDestination = "TravelsScreen")
     {
-        composable("TravelsScreen") { TravelsScreen(viewModel, navController, tempDataViewModel, modifier) }
+        composable("TravelsScreen") { TravelsScreen(viewModel, navController, tempDataViewModel, modifier, travelManager) }
         composable("SettingsScreen") { SettingsScreen(viewModel, navController, tempDataViewModel, modifier) }
         composable(
             "DetailsScreen/{Index}",
             arguments = listOf(navArgument("Index") { type = NavType.StringType })
         ) { backStackEntry ->
             val Index = backStackEntry.arguments?.getString("Index") ?: null
-            DetailsScreen(viewModel, navController, tempDataViewModel, modifier, Index)
+            DetailsScreen(viewModel, navController, tempDataViewModel, modifier, travelManager, Index)
         }
         composable("weatherScreen") { WeatherScreen(weatherViewModel, navController, modifier) }
         composable(
@@ -43,9 +45,10 @@ fun MainApp(viewModel: DataEntryViewModel, weatherViewModel: WeatherViewModel, n
             HourlyForecastScreen(weatherViewModel, navController, dayIndex, modifier)
         }
 
-        composable("AddPointScreen/{type}",
-            arguments = listOf(navArgument("type") { type = NavType.StringType })
-            ) { AddPointScreen(viewModel, navController, tempDataViewModel, modifier,it.arguments?.getString("type")) }
+        composable("AddPointScreen/{type}/{tripName}",
+            arguments = listOf(navArgument("type") { type = NavType.StringType },
+                navArgument("tripName") { type = NavType.StringType })
+            ) { AddPointScreen(viewModel, navController, tempDataViewModel, modifier,travelManager,it.arguments?.getString("type"),it.arguments?.getString("tripName")) }
         composable("Browser/{type}",
             arguments = listOf(navArgument("type") { type = NavType.StringType })
         ) { BrowseCitiesScreen(viewModel, navController, tempDataViewModel, modifier,it.arguments?.getString("type")) }

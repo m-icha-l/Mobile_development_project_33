@@ -62,12 +62,6 @@ open class Travel_point(
 
 ) {
     init {
-        if (location == null) {
-            location = Location("default").apply { // placeholder waiting for Mikłaj's function
-                latitude = 0.0
-                longitude = 0.0
-            }
-        }
         if(time == null)
         {
             time = end_date - date

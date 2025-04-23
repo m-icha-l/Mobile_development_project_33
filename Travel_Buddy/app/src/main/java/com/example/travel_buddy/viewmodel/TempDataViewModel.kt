@@ -29,6 +29,8 @@ class TempDataViewModel : ViewModel() {
     var lastTravel by mutableStateOf("")
     var browserType by mutableStateOf("")
     var selectedDateTime by mutableStateOf<LocalDateTime?>(null)
+    var arrivalDate by mutableStateOf("")
+    var distance by mutableStateOf("")
 
     var placesUiState: PlacesUiState by
     mutableStateOf<PlacesUiState>(PlacesUiState.NoRequest) //all data fetched from API is stored here (if succeeded)

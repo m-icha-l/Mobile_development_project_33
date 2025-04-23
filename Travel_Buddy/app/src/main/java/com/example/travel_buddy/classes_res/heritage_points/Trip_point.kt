@@ -27,7 +27,15 @@ data class dbTrip_point(
     val time: String = "days, hours:minutes",
     var location: String = "",
     var travel_plan_name: String = "No travel plan name",
-    var notes: String
+    var notes: String,
+    // NOWE
+    var start_subdivision: String = "No subdivision",
+    var start_country: String = "",
+    var dest_name: String = "",
+    var dest_subdivision: String = "No subdivision",
+    var dest_country: String = "",
+    var distance: String = "",
+    var urlToPhoto: String = ""
 )
 
 fun dbTrip_point.translateFromDb(): Trip_point {
@@ -40,8 +48,14 @@ fun dbTrip_point.translateFromDb(): Trip_point {
         time = Date(this.date) - Date(this.end_date),
         location = parseLocation(this.location),
         plan_name = this.travel_plan_name,
-        notes = notes
-
+        notes = notes,
+        start_subdivision = this.start_subdivision,
+        start_country = this.start_country,
+        dest_name = this.dest_name,
+        dest_subdivision = this.dest_subdivision,
+        dest_country = this.dest_country,
+        distance = this.distance,
+        urlToPhoto = this.urlToPhoto
     )
 }
 
@@ -54,7 +68,15 @@ class Trip_point(
     time: Duration = end_date - date,
     location: Location? = null,
     var plan_name: String = "It belongs to no name plan",
-    notes: String = ""
+    notes: String = "",
+    // NOWE
+    var start_subdivision: String = "No subdivision",
+    var start_country: String = "",
+    var dest_name: String = "",
+    var dest_subdivision: String = "No subdivision",
+    var dest_country: String = "",
+    var distance: String = "",
+    var urlToPhoto: String = ""
 
 ) : Travel_point(name, date,end_date,time, location,notes) {
     init {
@@ -79,7 +101,14 @@ class Trip_point(
             time = time.toString(),
             location = (this.location?.let { formatLocation(it) } ?: ""),
             travel_plan_name = travel_plan_name,
-            notes = notes
+            notes = notes,
+            start_subdivision = start_subdivision,
+            start_country = start_country,
+            dest_name = dest_name,
+            dest_subdivision = dest_subdivision,
+            dest_country = dest_country,
+            distance = distance,
+            urlToPhoto = urlToPhoto
         )
     }
     override fun toString(): String {
@@ -89,14 +118,21 @@ class Trip_point(
     override fun ToDb(): dbTrip_point {
         return dbTrip_point(
             newId = this.newId,
-            name = this.name,
+            name = name,
             end_location = (this.end_location?.let { formatLocation(it) } ?: ""),
             date = this.date.toString(),
             end_date = this.end_date.toString(),
             time = this.time.toString(),
             location = (this.location?.let { formatLocation(it) } ?: ""),
             travel_plan_name = this.plan_name,
-            notes = this.notes
+            notes = this.notes,
+            start_subdivision = start_subdivision,
+            start_country = start_country,
+            dest_name = dest_name,
+            dest_subdivision = dest_subdivision,
+            dest_country = dest_country,
+            distance = distance,
+            urlToPhoto = urlToPhoto
         )
     }
 }

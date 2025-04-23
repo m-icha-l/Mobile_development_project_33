@@ -33,10 +33,9 @@ import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
-fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier = Modifier, Index: String? = null)
+fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier = Modifier, travelManager: Travel_Point_Manager,Index: String? = null)
 {
 
-    var travelManager = Travel_Point_Manager(viewModel)
     val points = travelManager.display_trip(Index.toString())
 
     LazyColumn (
@@ -76,7 +75,7 @@ fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, t
         }
     }
 
-    Add_btn(tempDataViewModel,navController)
+    Add_btn(tempDataViewModel,navController, Index)
 }
 
 @Composable
