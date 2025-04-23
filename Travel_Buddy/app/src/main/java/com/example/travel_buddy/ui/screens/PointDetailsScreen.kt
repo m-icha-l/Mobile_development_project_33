@@ -1,14 +1,11 @@
 package com.example.travel_buddy.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Card
@@ -19,73 +16,47 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.travel_buddy.R
 import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.classes_res.Travel_point
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
 import com.example.travel_buddy.classes_res.heritage_points.Trip_point
-import com.example.travel_buddy.ui.ui_elements.Add_btn
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
-fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier = Modifier, Index: String? = null)
+fun PointDetailsScreen(viewModel: DataEntryViewModel, navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier = Modifier,  trip_name: String?,  pointIndex: Int? = null)
 {
-
     var travelManager = Travel_Point_Manager(viewModel)
-    val points = travelManager.display_trip(Index.toString())
-
-    LazyColumn (
+    val point = travelManager.display_trip_point(trip_name.toString(), pointIndex)
+    Column(
         modifier = modifier
     ){
-        items (points?.points_list!!){ point ->
-            when (point) {
-                is Hotel_point -> {
-                    TravelHotelDetailItem(point)
-                    {
-                        tempDataViewModel.lastTravel = Index + " -> " + point.name
-                        navController.navigate("PointDetailsScreen/$Index/${point.newId}")
-                    }
-                }
-                is Trip_point -> {
-                    TravelTripDetailItem(point)
-                    {
-                        tempDataViewModel.lastTravel = Index + " -> " + point.name
-                        navController.navigate("PointDetailsScreen/$Index/${point.newId}")
-                    }
-                }
-                is Attraction_point -> {
-                    TravelAttractionDetailItem(point)
-                    {
-                        tempDataViewModel.lastTravel = Index + " -> " + point.name
-                        navController.navigate("PointDetailsScreen/$Index/${point.newId}")
-                    }
-                }
-                else -> {
-                    TravelDetailItem(point)
-                    {
-                        tempDataViewModel.lastTravel = Index + " -> " + point.name
-                        navController.navigate("PointDetailsScreen/$Index/${point.newId}")
-                    }
-                }
+        when (point) {
+            is Hotel_point -> {
+                TravelHotelDetailPoint(point)
+            }
+            is Trip_point -> {
+                TravelTripDetailPoint(point)
+            }
+            is Attraction_point -> {
+                TravelAttractionDetailPoint(point)
+            }
+            else -> {
+                TravelDetailPoint(point)
             }
         }
     }
-
-    Add_btn(tempDataViewModel,navController)
 }
 
 @Composable
-fun TravelDetailItem(point: Travel_point, onClick: () -> Unit) {
+fun TravelDetailPoint(point: Travel_point?) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 4.dp)
-            .clickable { onClick() },
+            .padding(bottom = 4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
     ) {
         Row(
@@ -95,7 +66,7 @@ fun TravelDetailItem(point: Travel_point, onClick: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(text = point.name, style = MaterialTheme.typography.bodyLarge)
+                Text(text = point?.name ?: "Default Name", style = MaterialTheme.typography.bodyLarge)
                 Text(text = "Default", style = MaterialTheme.typography.bodyMedium)
             }
         }
@@ -103,12 +74,11 @@ fun TravelDetailItem(point: Travel_point, onClick: () -> Unit) {
 }
 
 @Composable
-fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
+fun TravelTripDetailPoint(point: Trip_point) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 4.dp)
-            .clickable { onClick() },
+            .padding(bottom = 4.dp),
 
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
     ) {
@@ -161,18 +131,24 @@ fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
                     }
                 }
             }
-
+            Text(text = point.date.toString() , style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(2.dp))
+            Text(text = point.end_date.toString() , style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(2.dp))
+            Text(text = point.notes , style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(2.dp))
+            /*
+                date: Date = Date(),
+                end_date: Date = date,
+                notes: String = ""
+             */
         }
     }
 }
 
 @Composable
-fun TravelAttractionDetailItem(point: Attraction_point, onClick: () -> Unit) {
+fun TravelAttractionDetailPoint(point: Attraction_point) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 4.dp)
-            .clickable { onClick() },
+            .padding(bottom = 4.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary.copy(
                 alpha = 0.3f
@@ -244,17 +220,24 @@ fun TravelAttractionDetailItem(point: Attraction_point, onClick: () -> Unit) {
                     }
                 }
             }
+            Text(text = point.end_date.toString() , style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(2.dp))
+            Text(text = point.time.toString() , style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(2.dp))
+            Text(text = point.notes , style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(2.dp))
+            /*
+                end_date: Date = date,
+                time: Duration = end_date - date,
+                notes: String = ""
+             */
         }
     }
 }
 
 @Composable
-fun TravelHotelDetailItem(point: Hotel_point, onClick: () -> Unit) {
+fun TravelHotelDetailPoint(point: Hotel_point) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 4.dp)
-            .clickable { onClick() },
+            .padding(bottom = 4.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary.copy(
                 alpha = 0.3f
@@ -300,8 +283,6 @@ fun TravelHotelDetailItem(point: Hotel_point, onClick: () -> Unit) {
 
                         }
                     }
-
-                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(4.dp))
                 }
 
                 Card (
@@ -317,12 +298,13 @@ fun TravelHotelDetailItem(point: Hotel_point, onClick: () -> Unit) {
                             modifier = Modifier.padding(2.dp).width(140.dp)
                         ){
                             Text(text = point.end_date.toString(), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(2.dp))
-
                         }
                     }
-                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(4.dp))
                 }
             }
+            Text(text = point.city , style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(2.dp))
+            Text(text = point.time.toString() , style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(2.dp))
+            Text(text = point.notes , style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(2.dp))
         }
     }
 }

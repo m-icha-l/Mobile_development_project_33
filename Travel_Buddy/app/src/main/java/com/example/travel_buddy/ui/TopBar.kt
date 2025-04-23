@@ -54,10 +54,15 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                     tempDataViewModel.lastTravel
                 }
                 "AddPointScreen/{type}" -> "Add " + tempDataViewModel.text
+                "PointDetailsScreen/{tripName}/{pointIndex}" -> {
+                    Log.d("TOP BAR NAME", tempDataViewModel.lastTravel)
+                    tempDataViewModel.lastTravel
+                }
                 else -> {
                     Log.d("ELSE","else switch")
                     "Travel Buddy"
                 }
+
             }
             Text(
                 text,
@@ -78,7 +83,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                 )
             }
 
-            if(currentRoute == "DetailsScreen/{Index}" || currentRoute == "hourly_forecast/{dayIndex}") {
+            if( currentRoute == "DetailsScreen/{Index}" ||
+                currentRoute == "hourly_forecast/{dayIndex}") {
                 Box(
                     modifier = Modifier.padding(start = 40.dp)
                 )
@@ -90,13 +96,31 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                         )
                     }
                 }
-
+            }
+            if (currentRoute == "PointDetailsScreen/{tripName}/{pointIndex}")
+            {
+                Box(
+                    modifier = Modifier.padding(start = 40.dp)
+                )
+                {
+                    IconButton(onClick = {
+                        tempDataViewModel.lastTravel = tempDataViewModel.lastTravel.substringBefore("->").trim()
+                        navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
             }
         },
         actions = {
             //to do: change to actually edit when possible
-            if(currentRoute == "DetailsScreen/{Index}"){
-                IconButton(onClick = { navController.popBackStack() }) {
+            if(currentRoute == "PointDetailsScreen/{tripName}/{pointIndex}"){
+                IconButton(onClick = {
+                    tempDataViewModel.lastTravel = tempDataViewModel.lastTravel.substringBefore("->").trim()
+                    navController.popBackStack()
+                }) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
                         contentDescription = "Edit"

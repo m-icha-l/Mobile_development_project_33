@@ -1,8 +1,5 @@
 package com.example.travel_buddy.classes_res
 
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.travel_buddy.classes_res.Travel_point
-import com.example.travel_buddy.classes_res.dbTravel_point
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
 import com.example.travel_buddy.classes_res.heritage_points.TravelPlanName
@@ -11,11 +8,7 @@ import com.example.travel_buddy.classes_res.heritage_points.translateFromDb
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import android.util.Log
 import org.joda.time.DateTime
-import org.joda.time.Days
-import org.joda.time.Hours
-import org.joda.time.Minutes
 import org.joda.time.Period
-import kotlin.reflect.typeOf
 
 class Date(dateString: String? = null) {
     var day: Int
@@ -225,6 +218,29 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
             }
         }
         return Trip(_tripName, _pointsList)
+    }
+
+    // Display one travel point under a specific trip_name
+    fun display_trip_point(trip_name: String, point_id: Int?): Travel_point? {
+        val points = travelPointsMap[trip_name]
+
+        if (points.isNullOrEmpty() || point_id == null) {
+            Log.d("display_trip_point", "null")
+            return null
+        } else {
+            Log.d("display_trip_point", "trip_name: $trip_name")
+
+            points.forEachIndexed { index, point ->
+                if(point.newId == point_id)
+                {
+                    Log.d("display_trip_point", "Found good ID")
+                    Log.d("display_trip_point", "${point.name} ${point.newId}")
+
+                    return point
+                }
+            }
+        }
+        return null
     }
 
     fun insertAnyPoint(index: Int, trip_name: String,travelPoint: Travel_point) {

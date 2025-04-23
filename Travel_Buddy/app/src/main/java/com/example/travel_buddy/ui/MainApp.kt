@@ -11,6 +11,7 @@ import com.example.travel_buddy.ui.screens.AddPointScreen
 import com.example.travel_buddy.ui.screens.BrowseCitiesScreen
 import com.example.travel_buddy.ui.screens.DetailsScreen
 import com.example.travel_buddy.ui.screens.HourlyForecastScreen
+import com.example.travel_buddy.ui.screens.PointDetailsScreen
 import com.example.travel_buddy.ui.screens.SettingsScreen
 import com.example.travel_buddy.ui.screens.TravelsScreen
 import com.example.travel_buddy.ui.screens.WeatherScreen
@@ -48,6 +49,17 @@ fun MainApp(viewModel: DataEntryViewModel, weatherViewModel: WeatherViewModel, n
         composable("Browser/{type}",
             arguments = listOf(navArgument("type") { type = NavType.StringType })
         ) { BrowseCitiesScreen(viewModel, navController, tempDataViewModel, modifier,it.arguments?.getString("type")) }
+
+        composable("PointDetailsScreen/{tripName}/{pointIndex}",
+            arguments = listOf(
+                navArgument("tripName") { type = NavType.StringType },
+                navArgument("pointIndex") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val tripName = backStackEntry.arguments?.getString("tripName")
+            val pointIndex = backStackEntry.arguments?.getInt("pointIndex")
+            PointDetailsScreen(viewModel, navController, tempDataViewModel, modifier, tripName, pointIndex)
+        }
     }
 }
 
