@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.danlew.android.joda)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.runtime.livedata)
+    implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.navigation.compose)
     implementation (libs.gson)

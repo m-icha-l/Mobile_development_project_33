@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material.icons.outlined.LocationCity
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -79,8 +80,19 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import android.location.Location
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
 import com.example.travel_buddy.classes_res.Date
 import com.example.travel_buddy.functions.parseLocation
+import com.example.travel_buddy.ui.ui_elements.DateTimeInputSection
+import com.example.travel_buddy.ui.ui_elements.HotelInputSection
+import com.example.travel_buddy.ui.ui_elements.HotelSuggestionsSection
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -510,22 +522,18 @@ fun ErrorCard() {
     }
 }
 
+// \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+// \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+//                          HOTEL POINT
+// \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+// \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+
 @Composable
 fun AddHotelPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row {
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(0.65f),
-                value = tempDataViewModel.startingPoint,
-                onValueChange = { tempDataViewModel.startingPoint = it },
-                label = { Text(text = "Enter starting point") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-            )
-        }
+    Column {
+        HotelInputSection(modifier)
+        DateTimeInputSection(modifier)
+        HotelSuggestionsSection(modifier = modifier, cityName = "city name")
     }
 }
 
