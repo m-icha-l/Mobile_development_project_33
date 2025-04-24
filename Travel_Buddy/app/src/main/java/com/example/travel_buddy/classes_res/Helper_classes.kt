@@ -19,7 +19,7 @@ class Date(dateString: String? = null) {
     var dateTime: DateTime
 
     init {
-        val format = org.joda.time.format.DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")
+        val format = org.joda.time.format.DateTimeFormat.forPattern("dd/MM/yyyy HH:mm")
 
         // If dateString is not provided, it will take the current date and time
         dateTime = if (dateString != null) {

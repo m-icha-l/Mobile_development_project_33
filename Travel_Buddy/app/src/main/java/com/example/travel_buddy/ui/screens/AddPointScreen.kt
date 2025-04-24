@@ -445,29 +445,34 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
             Button(
                 modifier = Modifier.padding(top=16.dp),
                 onClick = {
+                    val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                    val outputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+                    val startDate = LocalDateTime.parse(tempDataViewModel.selectedDateTime.toString().replace('T', ' '), inputFormat)
+                    val endDate = LocalDateTime.parse(tempDataViewModel.arrivalDate, inputFormat)
                         var startLoc = Location("uiygiy").apply {
-                            tempDataViewModel.start_latitude
-                            tempDataViewModel.start_longtitude }
+                            latitude = tempDataViewModel.start_latitude.toDouble()
+                            longitude =  tempDataViewModel.start_longtitude.toDouble() }
                         var endLoc = Location("sdjnsjdk").apply {
-                            tempDataViewModel.start_latitude
-                            tempDataViewModel.start_longtitude }
+                            latitude = tempDataViewModel.start_latitude.toDouble()
+                            longitude = tempDataViewModel.start_longtitude.toDouble() }
                     if (tripName != null) {
                         travelManager.add_Point(tripName,Trip_point(
                             name = tempDataViewModel.start_city_name,
                             location = startLoc,
                             end_location = endLoc,
-                            date = Date(tempDataViewModel.selectedDateTime.toString().replace('T', ' ')),
-                            end_date = Date(tempDataViewModel.arrivalDate),
+                            date = Date(endDate.format(outputFormat)),
+                            end_date = Date(endDate.format(outputFormat)),
                             plan_name = tripName,
                             start_subdivision = tempDataViewModel.start_subdivision,
                             start_country = tempDataViewModel.start_country,
-                            dest_name = tempDataViewModel.start_city_name,
+                            dest_name = tempDataViewModel.dest_city_name,
                             dest_subdivision = tempDataViewModel.dest_subdivision,
                             dest_country = tempDataViewModel.dest_country,
                             distance = tempDataViewModel.distance,
                             urlToPhoto = ""
                         ))
                     }
+                    navController.popBackStack()
                     }
             ) {
                 Text("Add")

@@ -38,14 +38,15 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
 
     //Temporary for testing purposes
     val name = "New point"
-    val date = Date("2025-05-01 10:00")
-    val end_date = Date("2025-05-06 15:21")
+    val date = Date("01/05/2025 10:00")
+    val end_date = Date("06/05/2025 15:21")
     var notes: String = ""
     var location: Location? = null
     var newId = 0
     var travelPlanName = "New travel plan"
     val newPoint = Travel_point(name, date, end_date, null ,location,"",newId, travelPlanName)
     travelManager.add_Point(travelPlanName,newPoint)
+
 
 
     var time: Duration = end_date - date
@@ -56,7 +57,6 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
     val newAttra = Attraction_point(name, date, end_date, time, location, newId, travelPlanName )
 
     val newTrip = Trip_point(newId, name, location,date, end_date, time, location, travelPlanName)
-
     val names = travelManager.display_all_trips()
 
 
