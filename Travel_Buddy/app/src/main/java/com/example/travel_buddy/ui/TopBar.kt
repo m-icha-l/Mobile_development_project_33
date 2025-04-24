@@ -19,6 +19,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -66,7 +67,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
 
             }
             Text(
-                text,
+                text = text,
+                color = Color.White
             )
         },
         navigationIcon = {
@@ -98,22 +100,23 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                             contentDescription = "Back"
                         )
                     }
-                    if (currentRoute == "PointDetailsScreen/{tripName}/{pointIndex}") {
-                        Box(
-                            modifier = Modifier.padding(start = 40.dp)
+
+                }
+            }
+            if (currentRoute == "PointDetailsScreen/{tripName}/{pointIndex}") {
+                Box(
+                    modifier = Modifier.padding(start = 40.dp)
+                )
+                {
+                    IconButton(onClick = {
+                        tempDataViewModel.lastTravel =
+                            tempDataViewModel.lastTravel.substringBefore("->").trim()
+                        navController.popBackStack()
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
                         )
-                        {
-                            IconButton(onClick = {
-                                tempDataViewModel.lastTravel =
-                                    tempDataViewModel.lastTravel.substringBefore("->").trim()
-                                navController.popBackStack()
-                            }) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = "Back"
-                                )
-                            }
-                        }
                     }
                 }
             }
