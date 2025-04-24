@@ -34,29 +34,31 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
     var index = 1
     DataEntryViewModel.TopBarName.updateText(index.toString())
 
-    //var travelManager = Travel_Point_Manager(viewModel)
+/*    //var travelManager = Travel_Point_Manager(viewModel)
 
     //Temporary for testing purposes
-    val name = "New point"
-    val date = Date("01/05/2025 10:00")
-    val end_date = Date("06/05/2025 15:21")
-    var notes: String = ""
+    var name = "Hotel Point"
+    var date = Date("01/05/2025 10:00")
+    var end_date = Date("06/05/2025 17:00")
+    var notes: String = "Hotel *****"
     var location: Location? = null
     var newId = 0
-    var travelPlanName = "New travel plan"
-    val newPoint = Travel_point(name, date, end_date, null ,location,"",newId, travelPlanName)
-    travelManager.add_Point(travelPlanName,newPoint)
-
-
-
+    var travelPlanName = "Demo travel plan"
     var time: Duration = end_date - date
     val city: String = "Oulu"
     val newHotel = Hotel_point(name, city, date, end_date, time,  location, newId, travelPlanName, notes)
 
-
+    name = "Attraction Point"
+    date = Date("02/05/2025 14:00")
+    end_date = Date("02/05/2025 16:00")
+    notes = "Cathedral"
     val newAttra = Attraction_point(name, date, end_date, time, location, newId, travelPlanName )
 
-    val newTrip = Trip_point(newId, name, location,date, end_date, time, location, travelPlanName)
+    name = "Trip Point"
+    date = Date("01/05/2025 5:00")
+    end_date = Date("01/05/2025 10:00")
+    notes = "Stop in Jyvaskyla"
+    val newTrip = Trip_point(newId, name, location,date, end_date, time, location, travelPlanName)*/
     val names = travelManager.display_all_trips()
 
 
@@ -78,21 +80,6 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
                 }
             }
         }
-/*        else
-        {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 4.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
-            )
-            {
-//                travelManager.add_Point(travelPlanName, newPoint)
-                travelManager.add_Point(travelPlanName, newHotel)
-                travelManager.add_Point(travelPlanName, newAttra)
-                travelManager.add_Point(travelPlanName, newTrip)
-            }
-        }*/
     }
 
 }
