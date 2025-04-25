@@ -60,11 +60,11 @@ class MainActivity : ComponentActivity() {
                         var date = Date("01/05/2025 10:00")
                         var end_date = Date("06/05/2025 17:00")
                         var notes: String = "Hotel *****"
-                        var location: Location? = null
+                        var location = null
                         var newId = 0
                         var travelPlanName = "Demo travel plan"
                         var time: Duration = end_date - date
-                        val city: String = "Oulu"
+                        val city = "Oulu"
                         val newHotel = Hotel_point(
                             name,
                             city,
@@ -95,6 +95,13 @@ class MainActivity : ComponentActivity() {
                         date = Date("01/05/2025 5:00")
                         end_date = Date("01/05/2025 10:00")
                         notes = "Stop in Jyvaskyla"
+                        var start_subdivision = "No subdivision"
+                        var start_country = "Finland"
+                        var dest_name = "Oulu"
+                        var dest_subdivision = "No subdivision"
+                        var dest_country = "Finland"
+                        var distance = "608"
+                        var urlToPhoto = ""
                         val newTrip = Trip_point(
                             newId,
                             name,
@@ -103,7 +110,15 @@ class MainActivity : ComponentActivity() {
                             end_date,
                             time,
                             location,
-                            travelPlanName
+                            travelPlanName,
+                            notes,
+                            start_subdivision,
+                            start_country,
+                            dest_name,
+                            dest_subdivision,
+                            dest_country,
+                            distance,
+                            urlToPhoto
                         )
                         travelManager.add_Point(travelPlanName, newHotel)
                         travelManager.add_Point(travelPlanName, newAttra)

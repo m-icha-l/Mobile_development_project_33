@@ -55,7 +55,7 @@ open class Travel_point(
     val date: Date = Date(),
     var end_date: Date = date,
     var time: Duration? = null,
-    var location: Location? = null,
+    open var location: Location? = null,
     var notes: String = "",
     var newId: Int = 0,
     var travel_plan_name: String = "No travel plan name"

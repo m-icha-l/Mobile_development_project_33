@@ -103,6 +103,8 @@ fun TravelDetailItem(point: Travel_point, onClick: () -> Unit) {
 
 @Composable
 fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
+
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -139,13 +141,15 @@ fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
                         modifier = Modifier
                             .width(100.dp)
                     ){
-                        Text(text = point.location.toString(), style = MaterialTheme.typography.bodyLarge)
+                        Text(text = point.start_country, style = MaterialTheme.typography.bodyLarge)
+                        if(point.start_subdivision != "No subdivision")
+                            Text(text = point.start_subdivision, style = MaterialTheme.typography.bodyLarge)
                     }
                     Column (
                         modifier = Modifier
                             .width(100.dp)
                     ){
-                        Text(text = point.time.toString(), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
+                        Text(text = point.distance, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                             contentDescription = "Arrow",
@@ -156,12 +160,18 @@ fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
                         modifier = Modifier
                             .width(100.dp)
                     ){
-                        Text(text = point.end_location.toString(), style = MaterialTheme.typography.bodyLarge)
+                        Text(text = point.dest_country, style = MaterialTheme.typography.bodyLarge)
+                        if(point.dest_subdivision != "No subdivision")
+                            Text(text = point.dest_subdivision, style = MaterialTheme.typography.bodyLarge)
+                        Text(text = point.dest_name, style = MaterialTheme.typography.bodyLarge)
                     }
                 }
             }
         }
     }
+    /*
+        var urlToPhoto: String = ""
+    */
 }
 
 @Composable
@@ -265,7 +275,7 @@ fun TravelHotelDetailItem(point: Hotel_point, onClick: () -> Unit) {
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp, bottom = 5.dp)
             )
             Text(
-                text = point.location.toString(),
+                text = point.city,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(4.dp)
             )
@@ -292,8 +302,7 @@ fun TravelHotelDetailItem(point: Hotel_point, onClick: () -> Unit) {
 
                         }
                     }
-
-                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(6.dp))
+//                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(6.dp))
                 }
 
                 Card (
@@ -312,7 +321,7 @@ fun TravelHotelDetailItem(point: Hotel_point, onClick: () -> Unit) {
 
                         }
                     }
-                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(6.dp))
+//                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(6.dp))
                 }
             }
         }

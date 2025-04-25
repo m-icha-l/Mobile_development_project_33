@@ -66,7 +66,7 @@ class Trip_point(
     date: Date = Date(),
     end_date: Date = date,
     time: Duration = end_date - date,
-    location: Location? = null,
+    override var location: Location? = null,
     var plan_name: String = "It belongs to no name plan",
     notes: String = "",
     // NOWE
@@ -80,6 +80,15 @@ class Trip_point(
 
 ) : Travel_point(name, date,end_date,time, location,notes) {
     init {
+        if (location == null) {
+
+            //location = get_current_location
+
+            location = Location("default").apply { // placeholder waiting for Mikłaj's function
+                latitude = 0.0
+                longitude = 0.0
+            }
+        }
         if (end_location == null) {
 
             //location = get_current_location

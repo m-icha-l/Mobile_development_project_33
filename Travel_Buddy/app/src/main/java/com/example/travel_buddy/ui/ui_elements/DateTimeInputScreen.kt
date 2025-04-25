@@ -37,10 +37,26 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.travel_buddy.classes_res.Travel_point
 
 @Composable
-fun DateTimeInputSection(modifier: Modifier) {
+fun DateTimeInputSection(modifier: Modifier, point: Travel_point? = null) {
     // Date input section
+    var start_date =  "dd/mm/yyyy"
+    var end_date =  "dd/mm/yyyy"
+    var start_hour = "hh:mm"
+    var end_hour = "hh:mm"
+    var start_label = "Enter check-in time"
+    var end_label = "Enter check-out time"
+    if(point != null)
+    {
+        start_date = point.date.toString().substringBefore(" ").trim()
+        end_date = point.end_date.toString().substringBefore(" ").trim()
+        start_hour = point.date.toString().substringAfter(" ").trim()
+        end_hour = point.end_date.toString().substringAfter(" ").trim()
+        start_label = "Check-in time"
+        end_label = "Check-out time"
+    }
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -53,45 +69,18 @@ fun DateTimeInputSection(modifier: Modifier) {
             // Check-in date/time
             DateTimeInput(
                 modifier = Modifier.weight(1f),
-                label = "Enter check-in time"
+                label = start_label,
+                start_date,
+                start_hour
             )
 
             // Check-out date/time
             DateTimeInput(
                 modifier = Modifier.weight(1f),
-                label = "Enter check-out time"
+                label = end_label,
+                end_date,
+                end_hour
             )
-        }
-
-        // Open map button
-        Button(
-            onClick = { /* No action needed */ },
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .clip(RoundedCornerShape(24.dp)),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = MaterialTheme.colorScheme.primary
-            ),
-            border = BorderStroke(1.dp, Color.LightGray)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.LocationOn,
-                    contentDescription = "Location",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = "Open map",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Medium
-                )
-            }
         }
     }
 }
@@ -99,7 +88,9 @@ fun DateTimeInputSection(modifier: Modifier) {
 @Composable
 fun DateTimeInput(
     modifier: Modifier = Modifier,
-    label: String
+    label: String,
+    date: String,
+    hour: String
 ) {
     Column(
         modifier = modifier
@@ -142,9 +133,9 @@ fun DateTimeInput(
                 )
                 Row {
                     Text(
-                        text = "dd/mm/yyyy",
+                        text = date,
                         style = TextStyle(
-                            fontSize = 12.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Normal,
                             color = MaterialTheme.colorScheme.primary,
                             platformStyle = PlatformTextStyle(
@@ -154,9 +145,9 @@ fun DateTimeInput(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "hh:mm",
+                        text = hour,
                         style = TextStyle(
-                            fontSize = 12.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Normal,
                             color = MaterialTheme.colorScheme.primary,
                             platformStyle = PlatformTextStyle(
@@ -170,10 +161,44 @@ fun DateTimeInput(
 
         Text(
             text = label,
-            fontSize = 10.sp,
+            fontSize = 14.sp,
             color = Color.Gray,
             modifier = Modifier.align(Alignment.Start)
                 .padding(start = 6.dp),
         )
+    }
+}
+
+@Composable
+fun MapButton(modifier: Modifier = Modifier,)
+{
+    // Open map button
+    Button(
+        onClick = { /* No action needed */ },
+        modifier = Modifier
+            .clip(RoundedCornerShape(24.dp)),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.White,
+            contentColor = MaterialTheme.colorScheme.primary
+        ),
+        border = BorderStroke(1.dp, Color.LightGray)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.LocationOn,
+                contentDescription = "Location",
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = "Open map",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Medium
+            )
+        }
     }
 }

@@ -19,7 +19,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material.icons.outlined.LocationCity
+//import androidx.compose.material.icons.outlined.LocationCity
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -93,6 +93,7 @@ import com.example.travel_buddy.functions.parseLocation
 import com.example.travel_buddy.ui.ui_elements.DateTimeInputSection
 import com.example.travel_buddy.ui.ui_elements.HotelInputSection
 import com.example.travel_buddy.ui.ui_elements.HotelSuggestionsSection
+import com.example.travel_buddy.ui.ui_elements.MapButton
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -530,9 +531,10 @@ fun ErrorCard() {
 
 @Composable
 fun AddHotelPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?) {
-    Column {
+    Column{
         HotelInputSection(modifier)
         DateTimeInputSection(modifier)
+//        MapButton(modifier)
         HotelSuggestionsSection(modifier = modifier, cityName = "city name")
     }
 }
