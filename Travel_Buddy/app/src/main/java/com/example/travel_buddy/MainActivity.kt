@@ -65,6 +65,7 @@ class MainActivity : ComponentActivity() {
                         var travelPlanName = "Demo travel plan"
                         var time: Duration = end_date - date
                         val city = "Oulu"
+                        /*
                         val newHotel = Hotel_point(
                             name,
                             city,
@@ -76,6 +77,8 @@ class MainActivity : ComponentActivity() {
                             travelPlanName,
                             notes
                         )
+
+                         */
 
                         name = "Attraction Point"
                         date = Date("02/05/2025 14:00")
@@ -120,7 +123,7 @@ class MainActivity : ComponentActivity() {
                             distance,
                             urlToPhoto
                         )
-                        travelManager.add_Point(travelPlanName, newHotel)
+                        //travelManager.add_Point(travelPlanName, newHotel)
                         travelManager.add_Point(travelPlanName, newAttra)
                         travelManager.add_Point(travelPlanName, newTrip)
                     }

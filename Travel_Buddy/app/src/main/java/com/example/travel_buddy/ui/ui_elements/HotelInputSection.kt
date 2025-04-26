@@ -1,5 +1,8 @@
 package com.example.travel_buddy.ui.ui_elements
 
+import android.location.Location
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -48,10 +51,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.travel_buddy.R
+import com.example.travel_buddy.classes_res.Date
+import com.example.travel_buddy.classes_res.Travel_Point_Manager
+import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
+import com.example.travel_buddy.classes_res.heritage_points.Trip_point
 import com.example.travel_buddy.viewmodel.TempDataViewModel
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier) {
+fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager,tripName: String?) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -103,4 +113,37 @@ fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataV
             modifier = Modifier.padding(start = 8.dp),
             text = "Address: ${tempDataViewModel.freeFormAddress}")
     }
+    if(tempDataViewModel.checkInDateTime != null && tempDataViewModel.checkOutDateTime != null && tempDataViewModel.selectedHotel != "")
+    Button(
+        modifier = Modifier.padding(top=16.dp),
+        onClick = {
+            val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            val outputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+            val startDate = LocalDateTime.parse(tempDataViewModel.checkInDateTime.toString().replace('T', ' '), inputFormat)
+            val endDate = LocalDateTime.parse(tempDataViewModel.checkOutDateTime.toString().replace('T', ' '), inputFormat)
+            var hotelLoc = Location("provider").apply {
+                latitude = tempDataViewModel.hotelLatitude
+                longitude =  tempDataViewModel.hotelLongitude }
+            if (tripName != null) {
+                travelManager.add_Point(tripName, Hotel_point(
+                    name = tempDataViewModel.selectedHotel,
+                    location = hotelLoc,
+                    date = Date(endDate.format(outputFormat)),
+                    end_date = Date(endDate.format(outputFormat)),
+                    city = tempDataViewModel.hotelMunicipality,
+                    neighborhood = tempDataViewModel.neighborhood,
+                    phone = tempDataViewModel.phone,
+                    url = tempDataViewModel.url,
+                    freeFormAddress = tempDataViewModel.freeFormAddress,
+                    travel_plan_name = tripName,
+                    notes = ""
+                )
+                )
+            }
+            navController.popBackStack()
+        }
+    ) {
+        Text("Add")
+    }
+
 }

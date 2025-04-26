@@ -104,10 +104,18 @@ class TempDataViewModel : ViewModel() {
     var lastLongitude by mutableStateOf(16.934994)
     var lastDestCityName by mutableStateOf("Poznań")
 
-    var selectedHotel by mutableStateOf("")
 
     var checkInDateTime by mutableStateOf<LocalDateTime?>(null)
     var checkOutDateTime by mutableStateOf<LocalDateTime?>(null)
 
+    // HOTEL DATA
+
+    var selectedHotel by mutableStateOf("")
     var freeFormAddress by mutableStateOf("")
+    var hotelLatitude by mutableStateOf(0.0)
+    var hotelLongitude by mutableStateOf(0.0)
+    var hotelMunicipality by mutableStateOf("")
+    var neighborhood by mutableStateOf("")
+    var phone by mutableStateOf("")
+    var url by mutableStateOf("")
 }

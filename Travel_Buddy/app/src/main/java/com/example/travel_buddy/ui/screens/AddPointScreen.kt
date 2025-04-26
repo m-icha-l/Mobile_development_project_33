@@ -453,6 +453,7 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                     }
                     tempDataViewModel.lastLatitude = tempDataViewModel.dest_latitude.toDouble()
                     tempDataViewModel.lastLongitude = tempDataViewModel.dest_longtitude.toDouble()
+                    tempDataViewModel.lastDestCityName = tempDataViewModel.dest_city_name
                     navController.popBackStack()
                     }
             ) {
@@ -500,7 +501,7 @@ fun ErrorCard() {
 @Composable
 fun AddHotelPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?) {
     Column {
-        HotelInputSection(navController,tempDataViewModel,modifier)
+        HotelInputSection(navController,tempDataViewModel,modifier,travelManager, tripName)
         DateTimeInputSection(tempDataViewModel,modifier)
         HotelSuggestionsSection(tempDataViewModel = tempDataViewModel,
             modifier = modifier,

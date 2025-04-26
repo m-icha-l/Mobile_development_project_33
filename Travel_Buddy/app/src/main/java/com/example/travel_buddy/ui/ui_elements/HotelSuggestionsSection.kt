@@ -113,49 +113,57 @@ fun HotelSuggestionsSection(tempDataViewModel: TempDataViewModel,modifier: Modif
 
 @Composable
 fun HotelCards(tempDataViewModel: TempDataViewModel, response: TomTomSearchResponse, navController: NavController, modifier: Modifier, mode: String = "row") {
-    if(mode == "row") {
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            items(response.results) { result ->
-                HotelCard(
-                    hotelName = result.poi.name,
-                    municipality = result.address.municipality,
-                    neighborhood = result.address.municipalitySubdivision,
-                    score = result.score,
-                    phone = result.poi.phone,
-                    url = result.poi.url,
-                    freeFormAddress = result.address.freeformAddress,
-                    mode = mode,
-                    navController = navController,
-                    tempDataViewModel = tempDataViewModel,
-                    modifier = Modifier.width(300.dp)
-                )
+    if(response.results[0].poi != null) {
+        if (mode == "row") {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(response.results) { result ->
+                    HotelCard(
+                        hotelName = result.poi.name,
+                        municipality = result.address.municipality,
+                        neighborhood = result.address.municipalitySubdivision,
+                        score = result.score,
+                        phone = result.poi.phone,
+                        url = result.poi.url,
+                        freeFormAddress = result.address.freeformAddress,
+                        lat = result.position.lat,
+                        lon = result.position.lon,
+                        mode = mode,
+                        navController = navController,
+                        tempDataViewModel = tempDataViewModel,
+                        modifier = Modifier.width(300.dp)
+                    )
+                }
+            }
+        } else {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(response.results) { result ->
+                    HotelCard(
+                        hotelName = result.poi.name,
+                        municipality = result.address.municipality,
+                        neighborhood = result.address.municipalitySubdivision,
+                        score = result.score,
+                        phone = result.poi.phone,
+                        url = result.poi.url,
+                        freeFormAddress = result.address.freeformAddress,
+                        lat = result.position.lat,
+                        lon = result.position.lon,
+                        navController = navController,
+                        mode = mode,
+                        tempDataViewModel = tempDataViewModel,
+                        modifier = Modifier.width(300.dp)
+                    )
+                }
             }
         }
     } else {
-        LazyColumn (
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            items(response.results) { result ->
-                HotelCard(
-                    hotelName = result.poi.name,
-                    municipality = result.address.municipality,
-                    neighborhood = result.address.municipalitySubdivision,
-                    score = result.score,
-                    phone = result.poi.phone,
-                    url = result.poi.url,
-                    freeFormAddress = result.address.freeformAddress,
-                    navController = navController,
-                    mode = mode,
-                    tempDataViewModel = tempDataViewModel,
-                    modifier = Modifier.width(300.dp)
-                )
-            }
-        }
+        Text("${response.results[0].address.municipality}")
     }
 }
 
@@ -169,6 +177,8 @@ private fun HotelCard(
     url: String?,
     freeFormAddress: String?,
     navController: NavController,
+    lat: Double,
+    lon: Double,
     mode: String,
     tempDataViewModel: TempDataViewModel,
     modifier: Modifier = Modifier
@@ -341,13 +351,15 @@ private fun HotelCard(
 
                 Button(
                     onClick = {
-                        if (hotelName != null) {
+                        if (hotelName != null && municipality != null && neighborhood != null && phone != null && url != null && freeFormAddress != null) {
                             tempDataViewModel.selectedHotel = hotelName
-                            if (freeFormAddress != null) {
-                                tempDataViewModel.freeFormAddress = freeFormAddress
-                            }
-                        } else {
-                            tempDataViewModel.selectedHotel = ""
+                            tempDataViewModel.hotelLatitude = lat
+                            tempDataViewModel.hotelLongitude = lon
+                            tempDataViewModel.hotelMunicipality = municipality
+                            tempDataViewModel.neighborhood = neighborhood
+                            tempDataViewModel.phone = phone
+                            tempDataViewModel.url = url
+                            tempDataViewModel.freeFormAddress = freeFormAddress
                         }
                         if(mode == "column") {
                             navController.popBackStack()

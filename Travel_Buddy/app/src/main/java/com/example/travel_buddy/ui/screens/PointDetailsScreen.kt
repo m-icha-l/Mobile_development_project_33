@@ -446,5 +446,5 @@ fun TravelHotelDetailPoint(point: Hotel_point) {
             }
         )
     }
-    DateTimeInputSection(Modifier, point)
+    //DateTimeInputSection(tempDataViewModel, Modifier)
 }
