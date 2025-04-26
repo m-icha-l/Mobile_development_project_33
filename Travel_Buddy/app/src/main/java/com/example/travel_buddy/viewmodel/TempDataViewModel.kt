@@ -31,6 +31,7 @@ class TempDataViewModel : ViewModel() {
     var selectedDateTime by mutableStateOf<LocalDateTime?>(null)
     var arrivalDate by mutableStateOf("")
     var distance by mutableStateOf("")
+    var tripNote by mutableStateOf("")
 
     var placesUiState: PlacesUiState by
     mutableStateOf<PlacesUiState>(PlacesUiState.NoRequest) //all data fetched from API is stored here (if succeeded)
@@ -118,6 +119,7 @@ class TempDataViewModel : ViewModel() {
     var hotelNeighborhood by mutableStateOf("")
     var hotelPhone by mutableStateOf("")
     var hotelUrl by mutableStateOf("")
+    var hotelNote by mutableStateOf("")
 
     // ATTRACTION DATA
 
@@ -130,4 +132,5 @@ class TempDataViewModel : ViewModel() {
     var attractionMunicipality by mutableStateOf("")
     var attrNeighborhood by mutableStateOf("")
     var attrPhone by mutableStateOf("")
+    var attractionNote by mutableStateOf("")
 }

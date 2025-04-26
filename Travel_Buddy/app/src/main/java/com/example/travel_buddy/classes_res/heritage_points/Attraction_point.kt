@@ -21,6 +21,11 @@ data class dbAttraction_point(
     var location: String = "",
     var newId: Int = 0,
     var travel_plan_name: String = "No travel plan name",
+    var city: String = "",
+    var neighborhood: String = "",
+    var phone: String = "",
+    var freeFormAddress: String = "",
+    var meetingPoint: String = "",
     var notes: String = ""
 )
 
@@ -33,6 +38,11 @@ fun dbAttraction_point.translateFromDb(): Attraction_point {
         location = parseLocation(this.location),
         newId = this.newId,
         travel_plan_name = this.travel_plan_name,
+        city = this.city,
+        neighborhood = this.neighborhood,
+        phone = this.phone,
+        freeFormAddress = this.freeFormAddress,
+        meetingPoint = this.meetingPoint,
         notes =this.notes
     )
 }
@@ -45,6 +55,11 @@ class Attraction_point(
     location: Location? = null,
     newId: Int = 0, // Nowe pole ID
     travel_plan_name: String = "No travel plan name",
+    var city: String = "",
+    var neighborhood: String = "",
+    var phone: String = "",
+    var freeFormAddress: String = "",
+    var meetingPoint: String = "",
     notes: String = ""
 ) : Travel_point(name, date,end_date, time,  location, notes, newId, travel_plan_name) {
 
@@ -57,6 +72,11 @@ class Attraction_point(
             location = location.toString(),
             newId = this.newId,
             travel_plan_name = this.travel_plan_name,
+            city = this.city,
+            neighborhood = this.neighborhood,
+            phone = this.phone,
+            freeFormAddress = this.freeFormAddress,
+            meetingPoint = this.meetingPoint,
             notes = this.notes
         )
     }
@@ -70,6 +90,11 @@ class Attraction_point(
             location = (this.location?.let { formatLocation(it) } ?: ""),
             newId = this.newId,
             travel_plan_name = this.travel_plan_name,
+            city = this.city,
+            neighborhood = this.neighborhood,
+            phone = this.phone,
+            freeFormAddress = this.freeFormAddress,
+            meetingPoint = this.meetingPoint,
             notes = this.notes
         )
     }

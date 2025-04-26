@@ -1,5 +1,6 @@
 package com.example.travel_buddy.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,8 +31,7 @@ fun BrowsePOIsScreen(navController: NavController,tempDataViewModel: TempDataVie
     var searchQuery by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
     Box(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = Modifier.padding(top = 50.dp)
     ) {
         SearchBar(
             modifier = Modifier
@@ -76,7 +76,11 @@ fun BrowsePOIsScreen(navController: NavController,tempDataViewModel: TempDataVie
                 if (active)
                     Icon(
                         imageVector = Icons.Rounded.Close,
-                        contentDescription = null
+                        contentDescription = null,
+                        modifier = Modifier.clickable {
+                            searchQuery = ""
+                            active = false
+                        }
                     )
             },
             colors = SearchBarDefaults.colors(
@@ -93,4 +97,5 @@ fun BrowsePOIsScreen(navController: NavController,tempDataViewModel: TempDataVie
             }
         }
     }
+    Text("Hello")
 }

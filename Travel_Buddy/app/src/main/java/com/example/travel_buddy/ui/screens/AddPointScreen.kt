@@ -80,11 +80,21 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import android.location.Location
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.TextField
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
@@ -273,7 +283,7 @@ fun TripInfoCard(routeResponse: RouteResponse, tempDataViewModel: TempDataViewMo
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?,navigationViewModel: NavigationViewModel = viewModel()) {
-
+    var noteExpanded: Boolean by remember { mutableStateOf(false)}
     var startText = ""
     if(tempDataViewModel.start_isSet) {
         startText = tempDataViewModel.start_city_name + ", " + tempDataViewModel.start_subdivision + ", " + tempDataViewModel.start_country
@@ -285,9 +295,9 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
     }
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(top = 130.dp, start = 16.dp, end = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -391,33 +401,50 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
 
         DateTimePickerModal(tempDataViewModel)
 
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            elevation = CardDefaults.cardElevation(4.dp),
-            modifier = Modifier.fillMaxWidth()
+        Button(
+            onClick = { noteExpanded = !noteExpanded },
+            modifier = Modifier
+                .clip(RoundedCornerShape(24.dp))
+                .padding(start = 8.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White,
+                contentColor = MaterialTheme.colorScheme.primary
+            ),
+            border = BorderStroke(1.dp, Color.LightGray)
         ) {
             Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AddBox,
+                    contentDescription = "Location",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = "Add note",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = noteExpanded,
+            enter = fadeIn(animationSpec = tween(500)) + expandVertically(animationSpec = tween(500)),
+            exit = fadeOut(animationSpec = tween(300)) + shrinkVertically(animationSpec = tween(300))
+        ) {
+            TextField(
+                value = tempDataViewModel.tripNote,
+                onValueChange = { tempDataViewModel.tripNote = it },
+                supportingText = {Text("Write your note...")},
+                maxLines = 2,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        "Popular travel destinations for:",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                    Text("Finland", style = MaterialTheme.typography.bodyLarge)
-                }
-                Box(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .background(Color.LightGray)
-                ) {
-                    // Placeholder for image
-                }
-            }
+                    .padding(vertical = 16.dp, horizontal = 16.dp)
+            )
         }
         if(tempDataViewModel.start_isSet && tempDataViewModel.dest_isSet && tempDataViewModel.selectedDateTime != null) {
             val startLoc: String = tempDataViewModel.start_latitude + "," + tempDataViewModel.start_longtitude
@@ -451,7 +478,7 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                             dest_subdivision = tempDataViewModel.dest_subdivision,
                             dest_country = tempDataViewModel.dest_country,
                             distance = tempDataViewModel.distance,
-                            urlToPhoto = ""
+                            notes = tempDataViewModel.tripNote
                         ))
                     }
                     tempDataViewModel.lastLatitude = tempDataViewModel.dest_latitude.toDouble()
@@ -514,10 +541,10 @@ fun AddHotelPoint(navController: NavController, tempDataViewModel: TempDataViewM
 }
 
 @Composable
-fun POIsUiState(tempDataViewModel: TempDataViewModel, uiState: PlacesUiState, navController: NavController, modifier: Modifier, mode: String = "row", searchType: String = "hotel") {
+fun POIsUiState(tempDataViewModel: TempDataViewModel, uiState: PlacesUiState, navController: NavController, modifier: Modifier, mode: String = "row", searchType: String = "Hotel") {
     when (uiState) {
         is PlacesUiState.NoRequest -> EmptyScreen()
-        is PlacesUiState.Success -> if(searchType == "hotel") { HotelCards(tempDataViewModel,uiState.searchResponse, navController, modifier, mode) }
+        is PlacesUiState.Success -> if(searchType == "Hotel") { HotelCards(tempDataViewModel,uiState.searchResponse, navController, modifier, mode) }
         else { AttractionCards(tempDataViewModel,uiState.searchResponse, navController, modifier, mode) }
         is PlacesUiState.Error -> ErrorScreen(modifier)
     }

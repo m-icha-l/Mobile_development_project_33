@@ -6,6 +6,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,8 +28,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.SpeakerNotes
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
@@ -31,6 +39,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.PlatformTextStyle
@@ -55,7 +65,13 @@ import androidx.core.net.toUri
 
 @Composable
 fun DateTimeInputSection(tempDataViewModel: TempDataViewModel,modifier: Modifier) {
-
+    var noteExpanded: Boolean by remember { mutableStateOf(false) }
+    val rainbowColors: List<Color> = listOf(Color.Red, Color.Yellow, Color.Green, Color.Blue, Color(0xFF19002E), Color.Magenta)
+    val brush = remember {
+        Brush.linearGradient(
+            colors = rainbowColors
+        )
+    }
     val context = LocalContext.current
     val url = "https://www.google.pl/maps/search/hotel/@${tempDataViewModel.lastLatitude},${tempDataViewModel.lastLongitude},20840m"
 
@@ -65,7 +81,7 @@ fun DateTimeInputSection(tempDataViewModel: TempDataViewModel,modifier: Modifier
     ) {
         Row(
             modifier = Modifier.fillMaxWidth()
-                .padding(8.dp),
+                .padding(start = 8.dp,end = 8.dp,bottom = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Check-in date/time
@@ -86,35 +102,87 @@ fun DateTimeInputSection(tempDataViewModel: TempDataViewModel,modifier: Modifier
         }
 
         // Open map button
-        Button(
-            onClick = { val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-                context.startActivity(intent) },
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .clip(RoundedCornerShape(24.dp)),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = MaterialTheme.colorScheme.primary
-            ),
-            border = BorderStroke(1.dp, Color.LightGray)
+        Row (
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+            Button(
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                    context.startActivity(intent)
+                },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(24.dp)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = MaterialTheme.colorScheme.primary
+                ),
+                border = BorderStroke(1.dp, Color.LightGray)
             ) {
-                Icon(
-                    imageVector = Icons.Default.LocationOn,
-                    contentDescription = "Location",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = "Open map",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Medium
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.LocationOn,
+                        contentDescription = "Location",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "Open map",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
+
+            Button(
+                onClick = { noteExpanded = !noteExpanded },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(24.dp))
+                .padding(start = 8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = MaterialTheme.colorScheme.primary
+                ),
+                border = BorderStroke(1.dp, Color.LightGray)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AddBox,
+                        contentDescription = "Location",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "Add note",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+        }
+
+        AnimatedVisibility(
+            visible = noteExpanded,
+            enter = fadeIn(animationSpec = tween(500)) + expandVertically(animationSpec = tween(500)),
+            exit = fadeOut(animationSpec = tween(300)) + shrinkVertically(animationSpec = tween(300))
+        ) {
+            TextField(
+                value = tempDataViewModel.hotelNote,
+                onValueChange = { tempDataViewModel.hotelNote = it },
+                textStyle = TextStyle(brush = brush),
+                supportingText = {Text("Write your note...")},
+                maxLines = 3,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp, horizontal = 16.dp)
+            )
         }
     }
 }

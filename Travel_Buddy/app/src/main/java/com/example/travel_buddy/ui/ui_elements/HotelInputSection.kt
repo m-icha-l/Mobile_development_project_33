@@ -3,6 +3,12 @@ package com.example.travel_buddy.ui.ui_elements
 import android.location.Location
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -56,6 +62,7 @@ import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
 import com.example.travel_buddy.classes_res.heritage_points.Trip_point
 import com.example.travel_buddy.viewmodel.TempDataViewModel
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -65,12 +72,12 @@ fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataV
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth()
-            .padding(horizontal = 16.dp),
+        modifier = Modifier.fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 140.dp, bottom = 12.dp),
     ) {
         OutlinedTextField(
             value = tempDataViewModel.selectedHotel,
-            onValueChange = {  },
+            onValueChange = { },
             label = { Text("Hotel point") },
             placeholder = { Text("Click \"+\" add point") },
             modifier = Modifier
@@ -108,44 +115,59 @@ fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataV
             )
         }
     }
-    if(tempDataViewModel.hotelFreeFormAddress != "") {
+    if (tempDataViewModel.hotelFreeFormAddress != "") {
         Text(
             modifier = Modifier.padding(start = 8.dp),
-            text = "Address: ${tempDataViewModel.hotelFreeFormAddress}")
+            text = "Address: ${tempDataViewModel.hotelFreeFormAddress}"
+        )
     }
-    if(tempDataViewModel.checkInDateTime != null && tempDataViewModel.checkOutDateTime != null && tempDataViewModel.selectedHotel != "")
-    {
-    Button(
-        modifier = Modifier.padding(top=16.dp),
-        onClick = {
-            val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-            val outputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-            val startDate = LocalDateTime.parse(tempDataViewModel.checkInDateTime.toString().replace('T', ' '), inputFormat)
-            val endDate = LocalDateTime.parse(tempDataViewModel.checkOutDateTime.toString().replace('T', ' '), inputFormat)
-            var hotelLoc = Location("provider").apply {
-                latitude = tempDataViewModel.hotelLatitude
-                longitude =  tempDataViewModel.hotelLongitude }
-            if (tripName != null) {
-                travelManager.add_Point(tripName, Hotel_point(
-                    name = tempDataViewModel.selectedHotel,
-                    location = hotelLoc,
-                    date = Date(startDate.format(outputFormat)),
-                    end_date = Date(endDate.format(outputFormat)),
-                    city = tempDataViewModel.hotelMunicipality,
-                    neighborhood = tempDataViewModel.hotelNeighborhood,
-                    phone = tempDataViewModel.hotelPhone,
-                    url = tempDataViewModel.hotelUrl,
-                    freeFormAddress = tempDataViewModel.hotelFreeFormAddress,
-                    travel_plan_name = tripName,
-                    notes = ""
-                )
-                )
-            }
-            navController.popBackStack()
-        }
-    ) {
-        Text("Add")
-    }
-        }
 
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        AnimatedVisibility(
+            visible = (tempDataViewModel.checkInDateTime != null && tempDataViewModel.checkOutDateTime != null && tempDataViewModel.selectedHotel != ""),
+            enter = fadeIn(animationSpec = tween(500)) + expandVertically(animationSpec = tween(500)),
+            exit = fadeOut(animationSpec = tween(300)) + shrinkVertically(animationSpec = tween(300))
+        ) {
+            Button(
+                modifier = Modifier.padding(bottom = 8.dp),
+                onClick = {
+                    val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                    val outputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+                    val startDate = LocalDateTime.parse(
+                        tempDataViewModel.checkInDateTime.toString().replace('T', ' '), inputFormat
+                    )
+                    val endDate = LocalDateTime.parse(
+                        tempDataViewModel.checkOutDateTime.toString().replace('T', ' '), inputFormat
+                    )
+                    var hotelLoc = Location("provider").apply {
+                        latitude = tempDataViewModel.hotelLatitude
+                        longitude = tempDataViewModel.hotelLongitude
+                    }
+                    if (tripName != null) {
+                        travelManager.add_Point(
+                            tripName, Hotel_point(
+                                name = tempDataViewModel.selectedHotel,
+                                location = hotelLoc,
+                                date = Date(startDate.format(outputFormat)),
+                                end_date = Date(endDate.format(outputFormat)),
+                                city = tempDataViewModel.hotelMunicipality,
+                                neighborhood = tempDataViewModel.hotelNeighborhood,
+                                phone = tempDataViewModel.hotelPhone,
+                                url = tempDataViewModel.hotelUrl,
+                                freeFormAddress = tempDataViewModel.hotelFreeFormAddress,
+                                travel_plan_name = tripName,
+                                notes = tempDataViewModel.hotelNote
+                            )
+                        )
+                    }
+                    navController.popBackStack()
+                }
+            ) {
+                Text("Add")
+            }
+        }
+    }
 }
