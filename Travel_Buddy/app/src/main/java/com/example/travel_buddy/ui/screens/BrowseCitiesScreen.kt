@@ -123,7 +123,7 @@ fun BrowseCitiesScreen(
             query = searchQuery,
             onQueryChange = { searchQuery = it },
             onSearch = { active = false
-                tempDataViewModel.getPlacesList("search", searchQuery)},
+                tempDataViewModel.getPlacesList("search", searchQuery, entityType = "Municipality")},
             active = active,
             onActiveChange = { active = it },
 

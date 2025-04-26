@@ -91,8 +91,10 @@ import androidx.compose.ui.unit.sp
 import com.example.travel_buddy.classes_res.Date
 import com.example.travel_buddy.functions.parseLocation
 import com.example.travel_buddy.ui.ui_elements.DateTimeInputSection
+import com.example.travel_buddy.ui.ui_elements.HotelCards
 import com.example.travel_buddy.ui.ui_elements.HotelInputSection
 import com.example.travel_buddy.ui.ui_elements.HotelSuggestionsSection
+import com.example.travel_buddy.viewmodel.PlacesUiState
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -136,40 +138,6 @@ fun DateTimePickerModal(tempDataViewModel: TempDataViewModel) {
             ).show()
         }
         }
-
-
-/*
-    if (showDatePicker) {
-        DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
-            confirmButton = {
-                TextButton(onClick = {
-                    showDatePicker = false
-                    datePickerState.selectedDateMillis?.let {
-                        val selectedDate = Instant.ofEpochMilli(it)
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                        timePicker(selectedDate)
-                    }
-                }) {
-                    Text("OK")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancel")
-                }
-            },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
-        ) {
-            DatePicker(
-                state = datePickerState,
-                title = { Text("Select date", fontWeight = FontWeight.Normal) }
-            )
-        }
-    }
-
- */
 
     val datePickerDialog = DatePickerDialog(
         context,
@@ -263,7 +231,6 @@ fun TripInfoCard(routeResponse: RouteResponse, tempDataViewModel: TempDataViewMo
                     Spacer(modifier = Modifier.width(8.dp))
                 }
 
-                // Time Information with Clock Icon
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -484,6 +451,8 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                             urlToPhoto = ""
                         ))
                     }
+                    tempDataViewModel.lastLatitude = tempDataViewModel.dest_latitude.toDouble()
+                    tempDataViewModel.lastLongitude = tempDataViewModel.dest_longtitude.toDouble()
                     navController.popBackStack()
                     }
             ) {
@@ -517,7 +486,7 @@ fun ErrorCard() {
     ) {
         Text(
             modifier = Modifier.padding(12.dp),
-            text = "Error getting directions data"
+            text = "Error getting data from API"
         )
     }
 }
@@ -531,9 +500,21 @@ fun ErrorCard() {
 @Composable
 fun AddHotelPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?) {
     Column {
-        HotelInputSection(modifier)
-        DateTimeInputSection(modifier)
-        HotelSuggestionsSection(modifier = modifier, cityName = "city name")
+        HotelInputSection(navController,tempDataViewModel,modifier)
+        DateTimeInputSection(tempDataViewModel,modifier)
+        HotelSuggestionsSection(tempDataViewModel = tempDataViewModel,
+            modifier = modifier,
+            cityName = "city name",
+            navController = navController)
+    }
+}
+
+@Composable
+fun POIsUiState(tempDataViewModel: TempDataViewModel, uiState: PlacesUiState, navController: NavController, modifier: Modifier, mode: String = "row") {
+    when (uiState) {
+        is PlacesUiState.NoRequest -> EmptyScreen()
+        is PlacesUiState.Success -> HotelCards(tempDataViewModel,uiState.searchResponse, navController, modifier, mode)
+        is PlacesUiState.Error -> ErrorScreen(modifier)
     }
 }
 

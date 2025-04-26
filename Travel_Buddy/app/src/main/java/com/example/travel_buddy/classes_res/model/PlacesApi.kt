@@ -13,8 +13,15 @@ data class Summary(
     val numResults: Int,
 )
 
+data class Poi(
+    val name: String?,
+    val phone: String?,
+    val url: String?,
+)
+
 data class Address(
     val municipality: String?,
+    val municipalitySubdivision: String?,
     val countrySubdivision: String?,
     val countrySubdivisionName: String?,
     val country: String?,
@@ -39,6 +46,7 @@ data class SearchResult(
     val id: String,
     val score: Double,
     val entityType: String,
+    val poi: Poi,
     val address: Address,
     val position: Position,
     val dataSources: DataSources
@@ -57,9 +65,12 @@ interface PlacesApi {
         @Path("query") query: String,
         @Query("limit") limit: Int = 10,
         @Query("typeahead") typeahead: Boolean = true,
-        @Query("entityType") entityType: String = "Municipality",
+        @Query("entityType") entityType: String = "",
         @Query("countrySet") countrySet: String = "",
-        @Query("categorySet") categorySet: String = ""
+        @Query("categorySet") categorySet: String = "",
+        @Query("lat") lat: Double = 0.0,
+        @Query("lon") lon: Double = 0.0,
+        @Query("radius") radius: Int = 0,
     ): TomTomSearchResponse
     companion object {
         var placesService : PlacesApi? = null

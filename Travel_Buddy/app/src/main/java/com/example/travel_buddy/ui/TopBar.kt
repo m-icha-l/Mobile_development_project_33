@@ -60,6 +60,7 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                     tempDataViewModel.lastTravel
                 }
                 "Browser/{type}" -> tempDataViewModel.browserType
+                "HotelBrowser" -> "Select Hotel"
                 else -> {
                     Log.d("ELSE","else switch")
                     "Travel Buddy"

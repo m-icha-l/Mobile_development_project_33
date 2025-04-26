@@ -49,9 +49,12 @@ class TempDataViewModel : ViewModel() {
         query: String,
         limit: Int = 10,
         typeahead: Boolean = true,
-        entityType: String = "Municipality",
+        entityType: String = "",
         countrySet: String = "",
-        categorySet: String = ""
+        categorySet: String = "",
+        lat: Double = 0.0,
+        lon: Double = 0.0,
+        radius: Int = 0
     ) {
         viewModelScope.launch {
             var placesApi: PlacesApi? = null
@@ -66,7 +69,10 @@ class TempDataViewModel : ViewModel() {
                             typeahead,
                             entityType,
                             countrySet,
-                            categorySet
+                            categorySet,
+                            lat,
+                            lon,
+                            radius
                         )
                     )
                     Log.d("COUNTER", places_max_requests_counter.toString())
@@ -93,4 +99,15 @@ class TempDataViewModel : ViewModel() {
     var dest_latitude by mutableStateOf("")
     var dest_longtitude by mutableStateOf("")
     var dest_isSet by mutableStateOf(false)
+
+    var lastLatitude by mutableStateOf(52.4058917)
+    var lastLongitude by mutableStateOf(16.934994)
+    var lastDestCityName by mutableStateOf("Poznań")
+
+    var selectedHotel by mutableStateOf("")
+
+    var checkInDateTime by mutableStateOf<LocalDateTime?>(null)
+    var checkOutDateTime by mutableStateOf<LocalDateTime?>(null)
+
+    var freeFormAddress by mutableStateOf("")
 }

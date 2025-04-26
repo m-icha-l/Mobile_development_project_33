@@ -46,11 +46,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.travel_buddy.R
+import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
-fun HotelInputSection(modifier: Modifier) {
-    var hotelName by remember { mutableStateOf("") }
+fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -58,7 +59,7 @@ fun HotelInputSection(modifier: Modifier) {
             .padding(horizontal = 16.dp),
     ) {
         OutlinedTextField(
-            value = "",
+            value = tempDataViewModel.selectedHotel,
             onValueChange = {  },
             label = { Text("Hotel point") },
             placeholder = { Text("Click \"+\" add point") },
@@ -82,8 +83,7 @@ fun HotelInputSection(modifier: Modifier) {
             modifier = Modifier
                 .size(54.dp)
                 .clickable(onClick = {
-                    //tempDataViewModel.browserType = "Select starting point"
-                   // navController.navigate("Browser/trip_start_point")
+                    navController.navigate("HotelBrowser")
                 })
         ) {
             Image(
@@ -97,5 +97,10 @@ fun HotelInputSection(modifier: Modifier) {
                     )
             )
         }
+    }
+    if(tempDataViewModel.freeFormAddress != "") {
+        Text(
+            modifier = Modifier.padding(start = 8.dp),
+            text = "Address: ${tempDataViewModel.freeFormAddress}")
     }
 }

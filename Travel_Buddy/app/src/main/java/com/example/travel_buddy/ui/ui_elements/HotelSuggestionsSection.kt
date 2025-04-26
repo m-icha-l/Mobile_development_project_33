@@ -1,25 +1,35 @@
 package com.example.travel_buddy.ui.ui_elements
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowOutward
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -35,14 +45,27 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.travel_buddy.classes_res.model.Address
+import com.example.travel_buddy.classes_res.model.TomTomSearchResponse
+import com.example.travel_buddy.ui.screens.POIsUiState
+import com.example.travel_buddy.viewmodel.TempDataViewModel
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 private class TriangleShape : Shape {
     override fun createOutline(
@@ -61,7 +84,8 @@ private class TriangleShape : Shape {
 }
 
 @Composable
-fun HotelSuggestionsSection(modifier: Modifier,cityName: String) {
+fun HotelSuggestionsSection(tempDataViewModel: TempDataViewModel,modifier: Modifier,cityName: String, navController: NavController) {
+    tempDataViewModel.getPlacesList("categorySearch","hotel",20,lat = tempDataViewModel.lastLatitude, lon = tempDataViewModel.lastLongitude, radius = 20000)
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -76,28 +100,58 @@ fun HotelSuggestionsSection(modifier: Modifier,cityName: String) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Suggested hotels for: <$cityName>",
+                text = "Suggested hotels for: ${tempDataViewModel.lastDestCityName}",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
             )
         }
 
-        // Sample hotel data
-        val hotels = listOf(
-            "Hotel Novotel" to "Centrum",
-            "Grand Hotel" to "Downtown",
-            "Seaside Resort" to "Beach Area"
-        )
+        POIsUiState(tempDataViewModel,tempDataViewModel.placesUiState, navController, modifier)
+    }
+}
 
+@Composable
+fun HotelCards(tempDataViewModel: TempDataViewModel, response: TomTomSearchResponse, navController: NavController, modifier: Modifier, mode: String = "row") {
+    if(mode == "row") {
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            items(hotels) { (name, location) ->
+            items(response.results) { result ->
                 HotelCard(
-                    hotelName = name,
-                    location = location,
+                    hotelName = result.poi.name,
+                    municipality = result.address.municipality,
+                    neighborhood = result.address.municipalitySubdivision,
+                    score = result.score,
+                    phone = result.poi.phone,
+                    url = result.poi.url,
+                    freeFormAddress = result.address.freeformAddress,
+                    mode = mode,
+                    navController = navController,
+                    tempDataViewModel = tempDataViewModel,
+                    modifier = Modifier.width(300.dp)
+                )
+            }
+        }
+    } else {
+        LazyColumn (
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            items(response.results) { result ->
+                HotelCard(
+                    hotelName = result.poi.name,
+                    municipality = result.address.municipality,
+                    neighborhood = result.address.municipalitySubdivision,
+                    score = result.score,
+                    phone = result.poi.phone,
+                    url = result.poi.url,
+                    freeFormAddress = result.address.freeformAddress,
+                    navController = navController,
+                    mode = mode,
+                    tempDataViewModel = tempDataViewModel,
                     modifier = Modifier.width(300.dp)
                 )
             }
@@ -107,10 +161,20 @@ fun HotelSuggestionsSection(modifier: Modifier,cityName: String) {
 
 @Composable
 private fun HotelCard(
-    hotelName: String,
-    location: String,
+    hotelName: String?,
+    municipality: String?,
+    neighborhood: String?,
+    score: Double?,
+    phone: String?,
+    url: String?,
+    freeFormAddress: String?,
+    navController: NavController,
+    mode: String,
+    tempDataViewModel: TempDataViewModel,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
@@ -166,57 +230,157 @@ private fun HotelCard(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text(
-                    text = hotelName,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.SemiBold
-                )
+                if (hotelName != null) {
+                    Text(
+                        text = hotelName,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
 
                 Text(
-                    text = location,
+                    text = "$municipality, $neighborhood",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .background(
+                                color = Color.Transparent
+                            )
+                            .padding(start = 6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "Star rating",
+                            tint = Color.Black
+                        )
+                    }
                     Text(
-                        text = "Very good hotel 👍",
+                        text = score.toString(),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+
+                Spacer(modifier = Modifier.height(4.dp))
+                if (phone != null) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .background(
+                                    color = Color.Transparent
+                                )
+                                .padding(start = 6.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Phone,
+                                contentDescription = "Star rating",
+                                tint = Color.Black
+                            )
+                        }
+                        Text(
+                            text = phone,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
 
-            // Choose hotel button
-            Button(
-                onClick = { /* No action needed */ },
+            val uriHandler = LocalUriHandler.current
+
+            Row(
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(16.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                Button(
+                    onClick = {
+                        if (url != null) {
+                            uriHandler.openUri(url)
+                        }
+                    },
+                    modifier = Modifier.border(width = 4.dp,MaterialTheme.colorScheme.primary, RoundedCornerShape(24.dp)),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add",
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Text(
-                        text = "Choose hotel",
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.Medium
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowOutward,
+                            contentDescription = "Website redirect",
+                            modifier = Modifier.size(20.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "Website",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+
+
+                Button(
+                    onClick = {
+                        if (hotelName != null) {
+                            tempDataViewModel.selectedHotel = hotelName
+                            if (freeFormAddress != null) {
+                                tempDataViewModel.freeFormAddress = freeFormAddress
+                            }
+                        } else {
+                            tempDataViewModel.selectedHotel = ""
+                        }
+                        if(mode == "column") {
+                            navController.popBackStack()
+                        }
+                    },
+                    //modifier = Modifier.widthIn(min = 120.dp),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp), // Small internal padding
+                    modifier = Modifier
+                        .defaultMinSize(minHeight = 48.dp) // Button height looks professional
+                        .padding(horizontal = 4.dp)         // Outer padding between buttons
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add",
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Text(
+                            text = "Choose hotel",
+                            fontSize = 12.sp,
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Medium,
+                            maxLines = 1, // Force 1 line only
+                            overflow = TextOverflow.Clip // (optional) show "..." if too small
+                        )
+                    }
                 }
             }
         }
