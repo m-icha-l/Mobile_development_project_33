@@ -10,7 +10,7 @@ import androidx.navigation.navArgument
 import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.ui.screens.AddPointScreen
 import com.example.travel_buddy.ui.screens.BrowseCitiesScreen
-import com.example.travel_buddy.ui.screens.BrowseHotelsScreen
+import com.example.travel_buddy.ui.screens.BrowsePOIsScreen
 import com.example.travel_buddy.ui.screens.DetailsScreen
 import com.example.travel_buddy.ui.screens.HourlyForecastScreen
 import com.example.travel_buddy.ui.screens.PointDetailsScreen
@@ -64,7 +64,9 @@ fun MainApp(viewModel: DataEntryViewModel, weatherViewModel: WeatherViewModel, n
             val pointIndex = backStackEntry.arguments?.getInt("pointIndex")
             PointDetailsScreen(viewModel, navController, tempDataViewModel, modifier, tripName, pointIndex)
         }
-        composable("HotelBrowser") { BrowseHotelsScreen(navController,tempDataViewModel,modifier) }
+        composable("POIsBrowser/{searchType}",
+            arguments = listOf(navArgument("searchType") { type = NavType.StringType}))
+        { BrowsePOIsScreen(navController,tempDataViewModel,modifier,it.arguments?.getString("searchType")) }
     }
 }
 

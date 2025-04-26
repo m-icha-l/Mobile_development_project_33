@@ -26,7 +26,7 @@ import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BrowseHotelsScreen(navController: NavController,tempDataViewModel: TempDataViewModel,modifier: Modifier) {
+fun BrowsePOIsScreen(navController: NavController,tempDataViewModel: TempDataViewModel,modifier: Modifier, searchType: String?) {
     var searchQuery by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
     Box(
@@ -40,8 +40,26 @@ fun BrowseHotelsScreen(navController: NavController,tempDataViewModel: TempDataV
                 .fillMaxWidth(),
             query = searchQuery,
             onQueryChange = { searchQuery = it },
-            onSearch = { active = false
-                tempDataViewModel.getPlacesList("poiSearch",searchQuery,10,categorySet="7314")},
+            onSearch = {
+                if (searchType == "Hotel") {
+                    tempDataViewModel.getPlacesList(
+                        "poiSearch",
+                        searchQuery,
+                        10,
+                        categorySet = "7314"
+                    )
+                } else {
+                    if (searchType == "Attraction") {
+                        tempDataViewModel.getPlacesList(
+                            "poiSearch",
+                            searchQuery,
+                            10,
+                            categorySet = "7376"
+                        )
+                    }
+                }
+                active = false
+            },
             active = active,
             onActiveChange = { active = it },
 
@@ -67,7 +85,12 @@ fun BrowseHotelsScreen(navController: NavController,tempDataViewModel: TempDataV
             tonalElevation = 3.dp,
         )
         {
-            POIsUiState(tempDataViewModel,tempDataViewModel.placesUiState,navController, modifier, "column")
+            if (searchType != null) {
+                POIsUiState(tempDataViewModel,tempDataViewModel.placesUiState,navController, modifier, "column",searchType)
+            }
+            else {
+                Text("null search type!")
+            }
         }
     }
 }

@@ -90,6 +90,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import com.example.travel_buddy.classes_res.Date
 import com.example.travel_buddy.functions.parseLocation
+import com.example.travel_buddy.ui.ui_elements.AttractionCards
+import com.example.travel_buddy.ui.ui_elements.AttractionInput
+import com.example.travel_buddy.ui.ui_elements.AttractionSuggestionsSection
 import com.example.travel_buddy.ui.ui_elements.DateTimeInputSection
 import com.example.travel_buddy.ui.ui_elements.HotelCards
 import com.example.travel_buddy.ui.ui_elements.HotelInputSection
@@ -511,29 +514,17 @@ fun AddHotelPoint(navController: NavController, tempDataViewModel: TempDataViewM
 }
 
 @Composable
-fun POIsUiState(tempDataViewModel: TempDataViewModel, uiState: PlacesUiState, navController: NavController, modifier: Modifier, mode: String = "row") {
+fun POIsUiState(tempDataViewModel: TempDataViewModel, uiState: PlacesUiState, navController: NavController, modifier: Modifier, mode: String = "row", searchType: String = "hotel") {
     when (uiState) {
         is PlacesUiState.NoRequest -> EmptyScreen()
-        is PlacesUiState.Success -> HotelCards(tempDataViewModel,uiState.searchResponse, navController, modifier, mode)
+        is PlacesUiState.Success -> if(searchType == "hotel") { HotelCards(tempDataViewModel,uiState.searchResponse, navController, modifier, mode) }
+        else { AttractionCards(tempDataViewModel,uiState.searchResponse, navController, modifier, mode) }
         is PlacesUiState.Error -> ErrorScreen(modifier)
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddAttractionPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row {
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(0.65f),
-                value = tempDataViewModel.startingPoint,
-                onValueChange = { tempDataViewModel.startingPoint = it },
-                label = { Text(text = "Enter starting point") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-            )
-        }
-    }
+        AttractionInput(navController, tempDataViewModel, modifier, travelManager, tripName)
 }

@@ -67,25 +67,9 @@ import com.example.travel_buddy.ui.screens.POIsUiState
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
-class TriangleShape : Shape {
-    override fun createOutline(
-        size: Size,
-        layoutDirection: LayoutDirection,
-        density: Density
-    ): Outline {
-        val path = Path().apply {
-            moveTo(size.width / 2f, 0f)
-            lineTo(size.width, size.height)
-            lineTo(0f, size.height)
-            close()
-        }
-        return Outline.Generic(path)
-    }
-}
-
 @Composable
-fun HotelSuggestionsSection(tempDataViewModel: TempDataViewModel,modifier: Modifier,cityName: String, navController: NavController) {
-    tempDataViewModel.getPlacesList("categorySearch","hotel",20,lat = tempDataViewModel.lastLatitude, lon = tempDataViewModel.lastLongitude, radius = 20000)
+fun AttractionSuggestionsSection(tempDataViewModel: TempDataViewModel,modifier: Modifier, navController: NavController) {
+    tempDataViewModel.getPlacesList("categorySearch","important tourist attraction",20,lat = tempDataViewModel.lastLatitude, lon = tempDataViewModel.lastLongitude, radius = 20000)
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -100,19 +84,19 @@ fun HotelSuggestionsSection(tempDataViewModel: TempDataViewModel,modifier: Modif
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Suggested hotels for: ${tempDataViewModel.lastDestCityName}",
+                text = "Suggested attractions for: ${tempDataViewModel.lastDestCityName}",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
             )
         }
 
-        POIsUiState(tempDataViewModel,tempDataViewModel.placesUiState, navController, modifier)
+        POIsUiState(tempDataViewModel,tempDataViewModel.placesUiState, navController, modifier,"row","attraction")
     }
 }
 
 @Composable
-fun HotelCards(tempDataViewModel: TempDataViewModel, response: TomTomSearchResponse, navController: NavController, modifier: Modifier, mode: String = "row") {
+fun AttractionCards(tempDataViewModel: TempDataViewModel, response: TomTomSearchResponse, navController: NavController, modifier: Modifier, mode: String = "row") {
     if(response.results[0].poi != null) {
         if (mode == "row") {
             LazyRow(
@@ -120,13 +104,12 @@ fun HotelCards(tempDataViewModel: TempDataViewModel, response: TomTomSearchRespo
                 modifier = Modifier.fillMaxWidth()
             ) {
                 items(response.results) { result ->
-                    HotelCard(
-                        hotelName = result.poi.name,
+                    AttractionCard(
+                        attractionName = result.poi.name,
                         municipality = result.address.municipality,
                         neighborhood = result.address.municipalitySubdivision,
                         score = result.score,
                         phone = result.poi.phone,
-                        url = result.poi.url,
                         freeFormAddress = result.address.freeformAddress,
                         lat = result.position.lat,
                         lon = result.position.lon,
@@ -144,13 +127,12 @@ fun HotelCards(tempDataViewModel: TempDataViewModel, response: TomTomSearchRespo
                 modifier = Modifier.fillMaxWidth()
             ) {
                 items(response.results) { result ->
-                    HotelCard(
-                        hotelName = result.poi.name,
+                    AttractionCard(
+                        attractionName = result.poi.name,
                         municipality = result.address.municipality,
                         neighborhood = result.address.municipalitySubdivision,
                         score = result.score,
                         phone = result.poi.phone,
-                        url = result.poi.url,
                         freeFormAddress = result.address.freeformAddress,
                         lat = result.position.lat,
                         lon = result.position.lon,
@@ -168,13 +150,12 @@ fun HotelCards(tempDataViewModel: TempDataViewModel, response: TomTomSearchRespo
 }
 
 @Composable
-private fun HotelCard(
-    hotelName: String?,
+private fun AttractionCard(
+    attractionName: String?,
     municipality: String?,
     neighborhood: String?,
     score: Double?,
     phone: String?,
-    url: String?,
     freeFormAddress: String?,
     navController: NavController,
     lat: Double,
@@ -240,9 +221,9 @@ private fun HotelCard(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                if (hotelName != null) {
+                if (attractionName != null) {
                     Text(
-                        text = hotelName,
+                        text = attractionName,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -317,60 +298,27 @@ private fun HotelCard(
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Button(
-                    onClick = {
-                        if (url != null) {
-                            uriHandler.openUri(url)
-                        }
-                    },
-                    modifier = Modifier.border(width = 4.dp,MaterialTheme.colorScheme.primary, RoundedCornerShape(24.dp)),
-                    shape = RoundedCornerShape(24.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.onPrimary
-                    )
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowOutward,
-                            contentDescription = "Website redirect",
-                            modifier = Modifier.size(20.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = "Website",
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
 
 
                 Button(
                     onClick = {
-                        if (hotelName != null) {
-                            tempDataViewModel.selectedHotel = hotelName
-                        }
-                        tempDataViewModel.hotelLatitude = lat
-                        tempDataViewModel.hotelLongitude = lon
-                        if (municipality != null) {
-                            tempDataViewModel.hotelMunicipality = municipality
-                        }
-                        if (neighborhood != null) {
-                            tempDataViewModel.hotelNeighborhood = neighborhood
-                        }
-                        if (phone != null) {
-                            tempDataViewModel.hotelPhone = phone
-                        }
-                        if (url != null) {
-                            tempDataViewModel.hotelUrl = url
-                        }
-                        if (freeFormAddress != null) {
-                            tempDataViewModel.hotelFreeFormAddress = freeFormAddress
-                        }
+                            if (attractionName != null) {
+                                tempDataViewModel.selectedAttraction = attractionName
+                            }
+                            tempDataViewModel.attractionLatitude = lat
+                            tempDataViewModel.attractionLongitude = lon
+                            if (municipality != null) {
+                                tempDataViewModel.attractionMunicipality = municipality
+                            }
+                            if (neighborhood != null) {
+                                tempDataViewModel.attrNeighborhood = neighborhood
+                            }
+                            if (phone != null) {
+                                tempDataViewModel.attrPhone = phone
+                            }
+                            if (freeFormAddress != null) {
+                                tempDataViewModel.attrFreeFormAddress = freeFormAddress
+                            }
                         if(mode == "column") {
                             navController.popBackStack()
                         }
@@ -395,7 +343,7 @@ private fun HotelCard(
                             modifier = Modifier.size(18.dp)
                         )
                         Text(
-                            text = "Choose hotel",
+                            text = "Choose attraction",
                             fontSize = 12.sp,
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Medium,

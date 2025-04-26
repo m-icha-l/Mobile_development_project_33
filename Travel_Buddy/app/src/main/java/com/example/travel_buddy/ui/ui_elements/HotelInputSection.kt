@@ -93,7 +93,7 @@ fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataV
             modifier = Modifier
                 .size(54.dp)
                 .clickable(onClick = {
-                    navController.navigate("HotelBrowser")
+                    navController.navigate("POIsBrowser/Hotel")
                 })
         ) {
             Image(
@@ -108,12 +108,13 @@ fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataV
             )
         }
     }
-    if(tempDataViewModel.freeFormAddress != "") {
+    if(tempDataViewModel.hotelFreeFormAddress != "") {
         Text(
             modifier = Modifier.padding(start = 8.dp),
-            text = "Address: ${tempDataViewModel.freeFormAddress}")
+            text = "Address: ${tempDataViewModel.hotelFreeFormAddress}")
     }
     if(tempDataViewModel.checkInDateTime != null && tempDataViewModel.checkOutDateTime != null && tempDataViewModel.selectedHotel != "")
+    {
     Button(
         modifier = Modifier.padding(top=16.dp),
         onClick = {
@@ -128,13 +129,13 @@ fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataV
                 travelManager.add_Point(tripName, Hotel_point(
                     name = tempDataViewModel.selectedHotel,
                     location = hotelLoc,
-                    date = Date(endDate.format(outputFormat)),
+                    date = Date(startDate.format(outputFormat)),
                     end_date = Date(endDate.format(outputFormat)),
                     city = tempDataViewModel.hotelMunicipality,
-                    neighborhood = tempDataViewModel.neighborhood,
-                    phone = tempDataViewModel.phone,
-                    url = tempDataViewModel.url,
-                    freeFormAddress = tempDataViewModel.freeFormAddress,
+                    neighborhood = tempDataViewModel.hotelNeighborhood,
+                    phone = tempDataViewModel.hotelPhone,
+                    url = tempDataViewModel.hotelUrl,
+                    freeFormAddress = tempDataViewModel.hotelFreeFormAddress,
                     travel_plan_name = tripName,
                     notes = ""
                 )
@@ -145,5 +146,6 @@ fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataV
     ) {
         Text("Add")
     }
+        }
 
 }

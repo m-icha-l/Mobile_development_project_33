@@ -111,11 +111,23 @@ class TempDataViewModel : ViewModel() {
     // HOTEL DATA
 
     var selectedHotel by mutableStateOf("")
-    var freeFormAddress by mutableStateOf("")
+    var hotelFreeFormAddress by mutableStateOf("")
     var hotelLatitude by mutableStateOf(0.0)
     var hotelLongitude by mutableStateOf(0.0)
     var hotelMunicipality by mutableStateOf("")
-    var neighborhood by mutableStateOf("")
-    var phone by mutableStateOf("")
-    var url by mutableStateOf("")
+    var hotelNeighborhood by mutableStateOf("")
+    var hotelPhone by mutableStateOf("")
+    var hotelUrl by mutableStateOf("")
+
+    // ATTRACTION DATA
+
+    var selectedAttraction by mutableStateOf("")
+    var meetingPoint by mutableStateOf("")
+    var selectedAttractionDateTime by mutableStateOf<LocalDateTime?>(null)
+    var attrFreeFormAddress by mutableStateOf("")
+    var attractionLatitude by mutableStateOf(0.0)
+    var attractionLongitude by mutableStateOf(0.0)
+    var attractionMunicipality by mutableStateOf("")
+    var attrNeighborhood by mutableStateOf("")
+    var attrPhone by mutableStateOf("")
 }
