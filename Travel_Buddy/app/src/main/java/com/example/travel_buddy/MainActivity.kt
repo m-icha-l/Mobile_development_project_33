@@ -5,6 +5,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,7 +13,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
@@ -57,15 +60,18 @@ class MainActivity : ComponentActivity() {
                     val names = travelManager.display_all_trips()
                     if(names == null) {
                         var name = "Hotel Point"
-                        var date = Date("01/05/2025 10:00")
-                        var end_date = Date("06/05/2025 17:00")
-                        var notes: String = "Hotel *****"
+                        var date = Date("01/05/2025 10:20")
+                        var end_date = Date("06/05/2025 17:20")
+                        var notes = "Hotel *****"
                         var location = null
+                        val neighborhood = "neighborhood"
+                        val phone = "phone"
+                        val url = "url"
+                        val freeFormAddress = "freeFormAddress"
                         var newId = 0
                         var travelPlanName = "Demo travel plan"
                         var time: Duration = end_date - date
                         val city = "Oulu"
-                        /*
                         val newHotel = Hotel_point(
                             name,
                             city,
@@ -73,30 +79,52 @@ class MainActivity : ComponentActivity() {
                             end_date,
                             time,
                             location,
+                            neighborhood,
+                            phone,
+                            url,
+                            freeFormAddress,
                             newId,
                             travelPlanName,
                             notes
                         )
 
-                         */
-
                         name = "Attraction Point"
-                        date = Date("02/05/2025 14:00")
-                        end_date = Date("02/05/2025 16:00")
+                        date = Date("02/05/2025 14:20")
+                        end_date = Date("02/05/2025 16:20")
                         notes = "Cathedral"
+                        var meetingPoint = "Entrance"
+
                         val newAttra = Attraction_point(
-                            name,
-                            date,
-                            end_date,
-                            time,
-                            location,
-                            newId,
-                            travelPlanName
+                            name = name,
+                            date = date,
+                            end_date = end_date,
+                            time = time,
+                            location = location,
+                            travel_plan_name =  travelPlanName,
+                            city = city,
+                            neighborhood = neighborhood,
+                            meetingPoint = meetingPoint
                         )
 
+                        /*
+                            name: String = "No name point",
+                            date: Date = Date(),
+                            end_date: Date = date,
+                            time: Duration = end_date - date,
+                            location: Location? = null,
+                            newId: Int = 0, // Nowe pole ID
+                            travel_plan_name: String = "No travel plan name",
+                            var city: String = "",
+                            var neighborhood: String = "",
+                            var phone: String = "",
+                            var freeFormAddress: String = "",
+                            var meetingPoint: String = "",
+                            notes: String = ""
+                        * */
+
                         name = "Trip Point"
-                        date = Date("01/05/2025 5:00")
-                        end_date = Date("01/05/2025 10:00")
+                        date = Date("01/05/2025 10:10")
+                        end_date = Date("01/05/2025 15:15")
                         notes = "Stop in Jyvaskyla"
                         var start_subdivision = "No subdivision"
                         var start_country = "Finland"
@@ -123,9 +151,10 @@ class MainActivity : ComponentActivity() {
                             distance,
                             urlToPhoto
                         )
-                        //travelManager.add_Point(travelPlanName, newHotel)
+                        travelManager.add_Point(travelPlanName, newHotel)
                         travelManager.add_Point(travelPlanName, newAttra)
                         travelManager.add_Point(travelPlanName, newTrip)
+
                     }
                     DrawerApp(
                         travelPointViewModel,

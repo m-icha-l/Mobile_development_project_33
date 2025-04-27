@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
@@ -33,7 +34,9 @@ fun DrawerApp(dataViewModel: DataEntryViewModel, weatherViewModel: WeatherViewMo
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(
+              drawerContainerColor = MaterialTheme.colorScheme.primary
+            ) {
                 Column (
                     modifier = Modifier
                     .fillMaxSize()
@@ -101,6 +104,7 @@ fun DrawerApp(dataViewModel: DataEntryViewModel, weatherViewModel: WeatherViewMo
             }
         },
         gesturesEnabled = true
+
     ) {
         Scaffold(
             topBar = { TopAppBar(navController, drawerState, tempDataViewModel) },

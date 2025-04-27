@@ -35,8 +35,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
     val currentRoute = navBackStackEntry?.destination?.route
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary,
         ),
 /*        title = {
 
@@ -69,7 +69,7 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
             }
             Text(
                 text = text,
-                color = Color.White
+                style = MaterialTheme.typography.titleMedium
             )
         },
         navigationIcon = {
@@ -83,7 +83,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
             }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
 
@@ -98,7 +99,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
 
@@ -116,7 +118,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
@@ -131,7 +134,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
-                        contentDescription = "Edit"
+                        contentDescription = "Edit",
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -139,7 +143,8 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                 IconButton(onClick = {  }) {
                     Icon(
                         imageVector = Icons.Filled.MoreVert,
-                        contentDescription = "Idk"
+                        contentDescription = "Idk",
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
