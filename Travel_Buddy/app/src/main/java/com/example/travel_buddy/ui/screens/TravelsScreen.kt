@@ -14,8 +14,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.travel_buddy.classes_res.Date
 import com.example.travel_buddy.classes_res.Duration
@@ -64,8 +67,25 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
 
 
     Column(
-        modifier = modifier
+        modifier = modifier.padding(start = 8.dp, end = 8.dp)
     ){
+        Column (
+            modifier = Modifier.fillMaxWidth()
+        ){
+            Text(
+                text = "Welcome",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onTertiary,
+                fontSize = 80.sp,
+                modifier = Modifier.padding(bottom = 25.dp).align(Alignment.CenterHorizontally)
+            )
+            Text(
+                text = "Where are we going?",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.5f),
+                modifier = Modifier.padding(bottom = 25.dp).align(Alignment.CenterHorizontally)
+            )
+        }
 
         if(names != null)
         {
@@ -91,12 +111,14 @@ fun TravelPlanItem(trip : Trip, onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(bottom = 4.dp)
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(30.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row (
@@ -110,8 +132,8 @@ fun TravelPlanItem(trip : Trip, onClick: () -> Unit) {
                 if(hours != "0:0")
                     daysInt++
 
-                Text(text = trip.trip_name, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(4.dp))
-                Text(text = "Length: $daysInt days", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(4.dp))
+                Text(text = trip.trip_name, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(4.dp))
+                Text(text = "$daysInt days", style = MaterialTheme.typography.titleMedium   , modifier = Modifier.padding(4.dp))
             }
         }
     }

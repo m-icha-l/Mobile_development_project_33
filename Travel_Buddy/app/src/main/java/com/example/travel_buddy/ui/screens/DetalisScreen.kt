@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.travel_buddy.R
 import com.example.travel_buddy.classes_res.Travel_Point_Manager
@@ -39,7 +40,7 @@ fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, t
     val points = travelManager.display_trip(Index.toString())
 
     LazyColumn (
-        modifier = modifier
+        modifier = modifier.padding(start = 8.dp, end = 8.dp)
     ){
         items (points?.points_list!!){ point ->
             when (point) {
@@ -121,7 +122,7 @@ fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
 
             Text(
                 text = point.name,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp, bottom = 10.dp)
             )
             Card (
@@ -139,31 +140,44 @@ fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
                 {
                     Column (
                         modifier = Modifier
-                            .width(100.dp)
+                            .width(80.dp)
                     ){
-                        Text(text = point.start_country, style = MaterialTheme.typography.bodyLarge)
+                        Text(text = point.start_country, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
                         if(point.start_subdivision != "No subdivision")
-                            Text(text = point.start_subdivision, style = MaterialTheme.typography.bodyLarge)
+                            Text(text = point.start_subdivision, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
+                    }
+                    Card (
+                        modifier = Modifier.padding(5.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
+                    ){
+                        Text("A",modifier = Modifier.padding(12.dp), fontSize = 20.sp)
                     }
                     Column (
                         modifier = Modifier
-                            .width(100.dp)
+                            .width(80.dp)
                     ){
-                        Text(text = point.distance, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
+                        Text(text = point.distance +"km", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                             contentDescription = "Arrow",
                             modifier = Modifier.width(100.dp)
                         )
                     }
+                    Card (
+                        modifier = Modifier.padding(5.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
+                    ){
+                        Text("B",modifier = Modifier.padding(12.dp), fontSize = 20.sp)
+                    }
                     Column (
                         modifier = Modifier
-                            .width(100.dp)
+                            .width(80.dp)
+                            .padding(start = 5.dp)
                     ){
-                        Text(text = point.dest_country, style = MaterialTheme.typography.bodyLarge)
+                        Text(text = point.dest_country, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
                         if(point.dest_subdivision != "No subdivision")
-                            Text(text = point.dest_subdivision, style = MaterialTheme.typography.bodyLarge)
-                        Text(text = point.dest_name, style = MaterialTheme.typography.bodyLarge)
+                            Text(text = point.dest_subdivision, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
+                        Text(text = point.dest_name, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
                     }
                 }
             }
@@ -188,12 +202,12 @@ fun TravelAttractionDetailItem(point: Attraction_point, onClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(8.dp),
         ) {
 
             Text(
                 text = point.name,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp)
             )
             Row(
@@ -205,24 +219,26 @@ fun TravelAttractionDetailItem(point: Attraction_point, onClick: () -> Unit) {
             {
                 Card(
                     modifier = Modifier
-                        .width(280.dp)
+                        .width(260.dp)
                         .padding(end = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
-                    Column {
+                    Column (
+                        modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth()
+                    ){
                         Text(
                             text = "Meeting point: ",
                             style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(6.dp)
+                            modifier = Modifier.padding(5.dp).align(Alignment.CenterHorizontally)
                         )
                         Card (
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-                            modifier = Modifier.padding(8.dp)
+                            modifier = Modifier.padding(5.dp).align(Alignment.CenterHorizontally)
                         ){
                             Text(
-                                text = point.location.toString(),
+                                text = point.meetingPoint,
                                 style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.padding(6.dp)
+                                modifier = Modifier.padding(6.dp).align(Alignment.CenterHorizontally)
                             )
 
                         }
@@ -231,18 +247,18 @@ fun TravelAttractionDetailItem(point: Attraction_point, onClick: () -> Unit) {
 
                 Card (
                     modifier = Modifier
-                        .width(120.dp)
+                        .width(100.dp)
                         .padding(start = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ){
                         Card (
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-                            modifier = Modifier.padding(6.dp)
+                            modifier = Modifier.padding(8.dp)
                         ){
                             Text(
                                 text = point.date.toString(),
                                 style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.padding(6.dp)
+                                modifier = Modifier.padding(8.dp)
                             )
 
                         }
@@ -266,12 +282,12 @@ fun TravelHotelDetailItem(point: Hotel_point, onClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(8.dp),
         ) {
 
             Text(
                 text = point.name,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp, bottom = 5.dp)
             )
             Text(
@@ -279,51 +295,7 @@ fun TravelHotelDetailItem(point: Hotel_point, onClick: () -> Unit) {
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.align(Alignment.CenterHorizontally).padding(4.dp)
             )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            )
-            {
-                Card(
-                    modifier = Modifier
-                        .width(190.dp)
-                        .padding(end = 2.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
-                ) {
-                    Row {
-                        Text(text = "Check in: ", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(6.dp))
-                        Card (
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-                            modifier = Modifier.padding(2.dp).fillMaxWidth()
-                        ){
-                            Text(text = point.date.toString(), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(2.dp))
-
-                        }
-                    }
-//                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(6.dp))
-                }
-
-                Card (
-                    modifier = Modifier
-                        .width(190.dp)
-                        .padding(start = 2.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
-                ){
-                    Row {
-                        Text(text = "Check out: ", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(6.dp))
-                        Card (
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-                            modifier = Modifier.padding(2.dp).fillMaxWidth()
-                        ){
-                            Text(text = point.end_date.toString(), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(2.dp))
-
-                        }
-                    }
-//                    Text(text = "Hotel", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(6.dp))
-                }
-            }
+            DateDisplay(point, "Check in: ", "Check out: ")
         }
     }
 }
