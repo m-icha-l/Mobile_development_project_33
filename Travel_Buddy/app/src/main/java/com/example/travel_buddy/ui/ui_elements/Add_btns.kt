@@ -19,6 +19,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
@@ -28,8 +30,10 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,11 +51,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.travel_buddy.R
+import com.example.travel_buddy.classes_res.Travel_Point_Manager
+import com.example.travel_buddy.classes_res.heritage_points.TravelPlanName
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 
 @Composable
-fun Add_btn(tempDataViewModel: TempDataViewModel, navController: NavController, Index: String?) {
+fun Add_btn(tempDataViewModel: TempDataViewModel, navController: NavController, Index: String?, travelPointManager: Travel_Point_Manager, adderType: String = "travel point") {
     var open_popup by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -81,7 +87,13 @@ fun Add_btn(tempDataViewModel: TempDataViewModel, navController: NavController, 
             )
         }
     }
-    adder_opup(open_popup,{open_popup = false},"works",navController,tempDataViewModel, Index)
+    if(adderType == "travel point") {
+        adder_opup(open_popup,{open_popup = false},"works",navController,tempDataViewModel, Index)
+    } else if(adderType == "travel plan") {
+        PlanAdderPopup(open_popup,{open_popup = false},navController,tempDataViewModel, travelPointManager)
+    } else {
+        Text("Adder type error")
+    }
 }
 
 @Composable
@@ -176,6 +188,45 @@ fun TravelPointDropdown(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun PlanAdderPopup(isDialogOpen: Boolean, onDismiss: () -> Unit, navController: NavController, tempDataViewModel: TempDataViewModel, travelPointManager: Travel_Point_Manager) {
+    var planName by remember { mutableStateOf("")}
+    if (isDialogOpen) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("Add new travel plan", style = MaterialTheme.typography.titleLarge) },
+            text = {
+                Spacer(modifier = Modifier.height(24.dp))
+
+                OutlinedTextField(
+                    value = planName,
+                    onValueChange = { planName = it},
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("New plan name") },
+                    trailingIcon = {
+                        IconButton(onClick = { planName = "" }) {
+                            Icon(Icons.Default.Clear, contentDescription = "Clear text")
+                        }
+                    },
+                    supportingText = { Text("Choose a name...") })
+            },
+            confirmButton = {
+                Button(onClick = {
+                    if(planName != "") {
+                        travelPointManager.add_new_plan(planName)
+                        tempDataViewModel.lastTravel = planName
+                        navController.navigate("DetailsScreen/$planName")
+                    }
+                }) {
+                    Text("OK")
+                }
+            },
+            modifier = Modifier,
+            shape = MaterialTheme.shapes.medium
+        )
     }
 }
 

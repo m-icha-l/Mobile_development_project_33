@@ -28,6 +28,7 @@ import com.example.travel_buddy.classes_res.Trip
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
 import com.example.travel_buddy.classes_res.heritage_points.Trip_point
+import com.example.travel_buddy.ui.ui_elements.Add_btn
 import com.example.travel_buddy.viewmodel.DataEntryViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 
@@ -101,6 +102,8 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
             }
         }
     }
+
+    Add_btn(tempDataViewModel,navController,"", travelManager,"travel plan")
 
 }
 

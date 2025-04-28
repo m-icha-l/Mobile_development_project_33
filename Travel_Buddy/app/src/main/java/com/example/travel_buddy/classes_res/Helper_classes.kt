@@ -333,6 +333,11 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
         return duration
     }
 
+    fun add_new_plan(trip_name: String) {
+        dataEntryViewModel.insertName(TravelPlanName(name = trip_name))
+        travelPointsMap.put(trip_name, mutableListOf())
+    }
+
 /*    override fun toString(): String {
         return display_all_trips()
     }*/

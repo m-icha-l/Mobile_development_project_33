@@ -39,44 +39,49 @@ fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, t
 
     val points = travelManager.display_trip(Index.toString())
 
-    LazyColumn (
-        modifier = modifier.padding(start = 8.dp, end = 8.dp)
-    ){
-        items (points?.points_list!!){ point ->
-            when (point) {
-                is Hotel_point -> {
-                    TravelHotelDetailItem(point)
-                    {
-                        tempDataViewModel.lastTravel = Index + " -> " + point.name
-                        navController.navigate("PointDetailsScreen/$Index/${point.newId}/Hotel")
+    if(points != null) {
+        LazyColumn(
+            modifier = modifier.padding(start = 8.dp, end = 8.dp)
+        ) {
+            items(points?.points_list!!) { point ->
+                when (point) {
+                    is Hotel_point -> {
+                        TravelHotelDetailItem(point)
+                        {
+                            tempDataViewModel.lastTravel = Index + " -> " + point.name
+                            navController.navigate("PointDetailsScreen/$Index/${point.newId}/Hotel")
+                        }
                     }
-                }
-                is Trip_point -> {
-                    TravelTripDetailItem(point)
-                    {
-                        tempDataViewModel.lastTravel = Index + " -> " + point.name
-                        navController.navigate("PointDetailsScreen/$Index/${point.newId}/Trip")
+
+                    is Trip_point -> {
+                        TravelTripDetailItem(point)
+                        {
+                            tempDataViewModel.lastTravel = Index + " -> " + point.name
+                            navController.navigate("PointDetailsScreen/$Index/${point.newId}/Trip")
+                        }
                     }
-                }
-                is Attraction_point -> {
-                    TravelAttractionDetailItem(point)
-                    {
-                        tempDataViewModel.lastTravel = Index + " -> " + point.name
-                        navController.navigate("PointDetailsScreen/$Index/${point.newId}/Attraction")
+
+                    is Attraction_point -> {
+                        TravelAttractionDetailItem(point)
+                        {
+                            tempDataViewModel.lastTravel = Index + " -> " + point.name
+                            navController.navigate("PointDetailsScreen/$Index/${point.newId}/Attraction")
+                        }
                     }
-                }
-                else -> {
-                    TravelDetailItem(point)
-                    {
-                        tempDataViewModel.lastTravel = Index + " -> " + point.name
-                        navController.navigate("PointDetailsScreen/$Index/${point.newId}/Travel")
+
+                    else -> {
+                        TravelDetailItem(point)
+                        {
+                            tempDataViewModel.lastTravel = Index + " -> " + point.name
+                            navController.navigate("PointDetailsScreen/$Index/${point.newId}/Travel")
+                        }
                     }
                 }
             }
         }
     }
 
-    Add_btn(tempDataViewModel,navController, Index)
+    Add_btn(tempDataViewModel,navController, Index, travelManager)
 }
 
 @Composable
