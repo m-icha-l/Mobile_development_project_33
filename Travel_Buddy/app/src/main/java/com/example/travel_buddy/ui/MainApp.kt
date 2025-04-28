@@ -49,7 +49,7 @@ fun MainApp(viewModel: DataEntryViewModel, weatherViewModel: WeatherViewModel, n
         composable("AddPointScreen/{type}/{tripName}/{editPointIndex}",
             arguments = listOf(navArgument("type") { type = NavType.StringType },
                 navArgument("tripName") { type = NavType.StringType },
-                navArgument("editPointIndex") { type = NavType.IntType})
+                navArgument("editPointIndex") { type = NavType.IntType},),
             ) { AddPointScreen(viewModel, navController, tempDataViewModel, modifier,travelManager,it.arguments?.getString("type"),it.arguments?.getString("tripName"),it.arguments?.getInt("editPointIndex")) }
         composable("Browser/{type}",
             arguments = listOf(navArgument("type") { type = NavType.StringType })

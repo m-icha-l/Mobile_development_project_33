@@ -61,6 +61,10 @@ import com.example.travel_buddy.classes_res.Date
 import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
 import com.example.travel_buddy.classes_res.heritage_points.Trip_point
+import com.example.travel_buddy.ui.screens.EditHotelPoint
+import com.example.travel_buddy.ui.screens.EditTripPoint
+import com.example.travel_buddy.ui.screens.clearHotelPointData
+import com.example.travel_buddy.ui.screens.clearTripPointData
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import java.time.LocalDateTime
@@ -68,7 +72,7 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager,tripName: String?) {
+fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager,tripName: String?, editPointIndex: Int? = -1) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -100,6 +104,7 @@ fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataV
             modifier = Modifier
                 .size(54.dp)
                 .clickable(onClick = {
+                    tempDataViewModel.redirectFromBrowser = true
                     navController.navigate("POIsBrowser/Hotel")
                 })
         ) {
@@ -147,26 +152,37 @@ fun HotelInputSection(navController: NavController, tempDataViewModel: TempDataV
                         longitude = tempDataViewModel.hotelLongitude
                     }
                     if (tripName != null) {
-                        travelManager.add_Point(
-                            tripName, Hotel_point(
-                                name = tempDataViewModel.selectedHotel,
-                                location = hotelLoc,
-                                date = Date(startDate.format(outputFormat)),
-                                end_date = Date(endDate.format(outputFormat)),
-                                city = tempDataViewModel.hotelMunicipality,
-                                neighborhood = tempDataViewModel.hotelNeighborhood,
-                                phone = tempDataViewModel.hotelPhone,
-                                url = tempDataViewModel.hotelUrl,
-                                freeFormAddress = tempDataViewModel.hotelFreeFormAddress,
-                                travel_plan_name = tripName,
-                                notes = tempDataViewModel.hotelNote
+                        if (editPointIndex == -1) {
+                            travelManager.add_Point(
+                                tripName, Hotel_point(
+                                    name = tempDataViewModel.selectedHotel,
+                                    location = hotelLoc,
+                                    date = Date(startDate.format(outputFormat)),
+                                    end_date = Date(endDate.format(outputFormat)),
+                                    city = tempDataViewModel.hotelMunicipality,
+                                    neighborhood = tempDataViewModel.hotelNeighborhood,
+                                    phone = tempDataViewModel.hotelPhone,
+                                    url = tempDataViewModel.hotelUrl,
+                                    freeFormAddress = tempDataViewModel.hotelFreeFormAddress,
+                                    travel_plan_name = tripName,
+                                    notes = tempDataViewModel.hotelNote
+                                )
                             )
-                        )
+                        } else {
+                            if (editPointIndex != null) {
+                                EditHotelPoint(travelManager,tempDataViewModel,startDate,endDate,hotelLoc,tripName,editPointIndex,outputFormat)
+                            }
+                        }
                     }
+                    clearHotelPointData(tempDataViewModel)
                     navController.popBackStack()
                 }
             ) {
-                Text("Add")
+                if(editPointIndex == -1) {
+                    Text("Add")
+                } else {
+                    Text("Edit")
+                }
             }
         }
     }

@@ -145,13 +145,35 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
     fun replace_point_from(trip_name: String, index: Int, newPoint: Travel_point): Boolean {
         val list = travelPointsMap[trip_name]
 
+        val toReplaceIndex = list?.indexOfFirst { it.newId == index }
+
         deleteAnyPoint(index,trip_name)
 
-        return if (list != null && index in list.indices) {
+        return if (list != null) {
 
             insertAnyPoint(index,trip_name,newPoint)
 
-            list[index] = newPoint
+            /*
+            list.forEachIndexed { listIndex, point ->
+                if(point.newId == index)
+                {
+                    Log.d("display_trip_point", "Found good ID")
+                    Log.d("display_trip_point", "${point.name} ${point.newId}")
+                    list[listIndex] = newPoint
+                    //point = newPoint ?
+                }
+            }
+
+             */
+
+
+            if (toReplaceIndex != -1) {
+                Log.d("display_trip_point", "Found good ID")
+                Log.d("display_trip_point", "${list[toReplaceIndex!!].name} ${list[toReplaceIndex].newId}")
+                //list[toReplaceIndex] = newPoint
+                list.add(toReplaceIndex,newPoint)
+            }
+
             lastIndexMap[trip_name] = lastIndexMap[trip_name]!! + 1
             true
 
@@ -262,7 +284,29 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
 
     fun deleteAnyPoint(index: Int, trip_name: String) {
 
-        travelPointsMap[trip_name]?.removeAt(index)
+        val list = travelPointsMap[trip_name]
+
+        if (list != null) {
+            /*
+            list.forEachIndexed { listIndex, point ->
+                if(point.newId == index)
+                {
+                    Log.d("display_trip_point", "Found good ID")
+                    Log.d("display_trip_point", "${point.name} ${point.newId}")
+                    list.removeAt(listIndex)
+                    //point = newPoint ?
+                    Log.d("display_trip_point", "Debug")
+                }
+            }
+             */
+            val toRemoveIndex = list.indexOfFirst { it.newId == index }
+            if (toRemoveIndex != -1) {
+                Log.d("display_trip_point", "Found good ID")
+                Log.d("display_trip_point", "${list[toRemoveIndex].name} ${list[toRemoveIndex].newId}")
+                list.removeAt(toRemoveIndex)
+            }
+        }
+
         lastIndexMap[trip_name] = lastIndexMap[trip_name]!! - 1
 
         dataEntryViewModel.deleteTravelPoint(trip_name,index)

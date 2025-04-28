@@ -94,10 +94,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.TextField
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.travel_buddy.classes_res.Date
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
@@ -184,7 +186,7 @@ fun EditAttractionPoint(travelManager: Travel_Point_Manager, tempDataViewModel: 
 
 fun getEditedTripPointData(travelManager: Travel_Point_Manager, tempDataViewModel: TempDataViewModel,tripName: String?, editPointIndex: Int?) { //Data is stored in tempDataViewModel
     if(tripName != null && editPointIndex != null) {
-        val editedTripPoint = travelManager.get_point_from(tripName,editPointIndex)
+        val editedTripPoint = travelManager.display_trip_point(tripName,editPointIndex)
         val st = editedTripPoint?.date
         val e = editedTripPoint?.end_date
         when(editedTripPoint) {
@@ -243,6 +245,57 @@ fun getEditedTripPointData(travelManager: Travel_Point_Manager, tempDataViewMode
             }
         }
     }
+}
+
+fun clearTripPointData(tempDataViewModel: TempDataViewModel) {
+    tempDataViewModel.startingPoint = ""
+    tempDataViewModel.destinationPoint = ""
+    tempDataViewModel.start_isSet = false
+    tempDataViewModel.dest_isSet = false
+    tempDataViewModel.start_city_name = ""
+    tempDataViewModel.start_latitude = 0.0
+    tempDataViewModel.start_longtitude = 0.0
+    tempDataViewModel.dest_latitude = 0.0
+    tempDataViewModel.dest_longtitude = 0.0
+    tempDataViewModel.selectedDateTime = null
+    tempDataViewModel.endDateTime = null
+    tempDataViewModel.start_subdivision = ""
+    tempDataViewModel.start_country =  ""
+    tempDataViewModel.dest_city_name = ""
+    tempDataViewModel.dest_subdivision = ""
+    tempDataViewModel.dest_country = ""
+    tempDataViewModel.distance = ""
+    tempDataViewModel.tripNote = ""
+    tempDataViewModel.redirectFromBrowser = false
+}
+
+fun clearHotelPointData(tempDataViewModel: TempDataViewModel) {
+    tempDataViewModel.selectedHotel = ""
+    tempDataViewModel.hotelLatitude = 0.0
+    tempDataViewModel.hotelLongitude = 0.0
+    tempDataViewModel.checkInDateTime = null
+    tempDataViewModel.checkOutDateTime = null
+    tempDataViewModel.hotelMunicipality = ""
+    tempDataViewModel.hotelNeighborhood = ""
+    tempDataViewModel.hotelPhone = ""
+    tempDataViewModel.hotelUrl = ""
+    tempDataViewModel.hotelFreeFormAddress = ""
+    tempDataViewModel.hotelNote = ""
+    tempDataViewModel.redirectFromBrowser = false
+}
+
+fun clearAttractionPointData(tempDataViewModel: TempDataViewModel) {
+    tempDataViewModel.selectedAttraction = ""
+    tempDataViewModel.attractionLatitude = 0.0
+    tempDataViewModel.attractionLongitude = 0.0
+    tempDataViewModel.selectedAttractionDateTime = null
+    tempDataViewModel.attractionMunicipality = ""
+    tempDataViewModel.attrNeighborhood = ""
+    tempDataViewModel.attrPhone = ""
+    tempDataViewModel.attrFreeFormAddress = ""
+    tempDataViewModel.meetingPoint = ""
+    tempDataViewModel.attractionNote = ""
+    tempDataViewModel.redirectFromBrowser = false
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -404,9 +457,28 @@ fun TripInfoCard(routeResponse: RouteResponse, tempDataViewModel: TempDataViewMo
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?,  editPointIndex: Int? = -1, navigationViewModel: NavigationViewModel = viewModel()) {
-    if(editPointIndex != -1 && tripName != null && editPointIndex != null) {
-        getEditedTripPointData(travelManager, tempDataViewModel, tripName, editPointIndex)
+    val currentBackStackEntry = navController.currentBackStackEntryAsState()
+
+    var fromBrowser: Boolean by remember { mutableStateOf(false)}
+
+    val cameFromBrowser = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.get<Boolean>("cameFromBrowser") == true
+
+    LaunchedEffect(currentBackStackEntry.value) {
+
+        if(!cameFromBrowser && !fromBrowser) {
+            if (editPointIndex != -1 && tripName != null && editPointIndex != null) {
+                getEditedTripPointData(travelManager, tempDataViewModel, tripName, editPointIndex)
+            }
+        } else {
+            fromBrowser = false
+        }
     }
+
+    //navController.currentBackStackEntry
+        //?.savedStateHandle
+        //?.remove<Boolean>("cameFromBrowser")
     var noteExpanded: Boolean by remember { mutableStateOf(false)}
     if(tempDataViewModel.start_isSet) {
         tempDataViewModel.startingPoint = tempDataViewModel.start_city_name + ", " + tempDataViewModel.start_subdivision + ", " + tempDataViewModel.start_country
@@ -456,6 +528,8 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                 modifier = Modifier
                     .size(54.dp)
                     .clickable(onClick = {
+                        navController.currentBackStackEntry?.savedStateHandle?.set("cameFromBrowser", true)
+                        fromBrowser = true
                         tempDataViewModel.browserType = "Select starting point"
                         navController.navigate("Browser/trip_start_point")
                     })
@@ -504,6 +578,8 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                 modifier = Modifier
                     .size(54.dp)
                     .clickable(onClick = {
+                        navController.currentBackStackEntry?.savedStateHandle?.set("cameFromBrowser", true)
+                        fromBrowser = true
                         tempDataViewModel.browserType = "Select travel destination"
                         navController.navigate("Browser/trip_travel_destination")
                     })
@@ -614,10 +690,15 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                     tempDataViewModel.lastLatitude = tempDataViewModel.dest_latitude.toDouble()
                     tempDataViewModel.lastLongitude = tempDataViewModel.dest_longtitude.toDouble()
                     tempDataViewModel.lastDestCityName = tempDataViewModel.dest_city_name
+                    clearTripPointData(tempDataViewModel)
                     navController.popBackStack()
                     }
             ) {
-                Text("Add")
+                if(editPointIndex == -1) {
+                    Text("Add")
+                } else {
+                    Text("Edit")
+                }
             }
         }
     }
@@ -660,11 +741,16 @@ fun ErrorCard() {
 
 @Composable
 fun AddHotelPoint(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?, editPointIndex: Int? = -1) {
-    if(editPointIndex != -1 && tripName != null && editPointIndex != null) {
-        getEditedTripPointData(travelManager, tempDataViewModel, tripName, editPointIndex)
+    val currentBackStackEntry = navController.currentBackStackEntryAsState()
+    LaunchedEffect(currentBackStackEntry.value) {
+        if(!tempDataViewModel.redirectFromBrowser) {
+            if (editPointIndex != -1 && tripName != null && editPointIndex != null) {
+                getEditedTripPointData(travelManager, tempDataViewModel, tripName, editPointIndex)
+            }
+        }
     }
     Column {
-        HotelInputSection(navController,tempDataViewModel,modifier,travelManager, tripName)
+        HotelInputSection(navController,tempDataViewModel,modifier,travelManager, tripName, editPointIndex)
         DateTimeInputSection(tempDataViewModel,modifier)
         HotelSuggestionsSection(tempDataViewModel = tempDataViewModel,
             modifier = modifier,
@@ -689,5 +775,5 @@ fun AddAttractionPoint(navController: NavController, tempDataViewModel: TempData
     if(editPointIndex != -1 && tripName != null && editPointIndex != null) {
         getEditedTripPointData(travelManager, tempDataViewModel, tripName, editPointIndex)
     }
-        AttractionInput(navController, tempDataViewModel, modifier, travelManager, tripName)
+        AttractionInput(navController, tempDataViewModel, modifier, travelManager, tripName, editPointIndex)
 }

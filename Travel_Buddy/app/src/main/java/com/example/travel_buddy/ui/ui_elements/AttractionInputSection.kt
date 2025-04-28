@@ -62,6 +62,9 @@ import com.example.travel_buddy.classes_res.Date
 import com.example.travel_buddy.classes_res.Travel_Point_Manager
 import com.example.travel_buddy.classes_res.heritage_points.Attraction_point
 import com.example.travel_buddy.classes_res.heritage_points.Hotel_point
+import com.example.travel_buddy.ui.screens.EditAttractionPoint
+import com.example.travel_buddy.ui.screens.EditTripPoint
+import com.example.travel_buddy.ui.screens.clearAttractionPointData
 import com.example.travel_buddy.viewmodel.NavigationViewModel
 import com.example.travel_buddy.viewmodel.TempDataViewModel
 import java.time.LocalDateTime
@@ -69,7 +72,7 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AttractionInput(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?, navigationViewModel: NavigationViewModel = viewModel()) {
+fun AttractionInput(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?, editPointIndex: Int? = -1, navigationViewModel: NavigationViewModel = viewModel()) {
     var noteExpanded: Boolean by remember { mutableStateOf(false)}
     val context = LocalContext.current
     val url = "https://www.google.pl/maps/search/attractions/@${tempDataViewModel.lastLatitude},${tempDataViewModel.lastLongitude},20840m"
@@ -170,25 +173,36 @@ fun AttractionInput(navController: NavController, tempDataViewModel: TempDataVie
                         longitude = tempDataViewModel.attractionLongitude
                     }
                     if (tripName != null) {
-                        travelManager.add_Point(
-                            tripName, Attraction_point(
-                                name = tempDataViewModel.selectedAttraction,
-                                location = attrLoc,
-                                date = Date(attrDate.format(outputFormat)),
-                                city = tempDataViewModel.attractionMunicipality,
-                                neighborhood = tempDataViewModel.attrNeighborhood,
-                                phone = tempDataViewModel.attrPhone,
-                                freeFormAddress = tempDataViewModel.attrFreeFormAddress,
-                                meetingPoint = tempDataViewModel.meetingPoint,
-                                travel_plan_name = tripName,
-                                notes = tempDataViewModel.attractionNote
+                        if(editPointIndex == -1) {
+                            travelManager.add_Point(
+                                tripName, Attraction_point(
+                                    name = tempDataViewModel.selectedAttraction,
+                                    location = attrLoc,
+                                    date = Date(attrDate.format(outputFormat)),
+                                    city = tempDataViewModel.attractionMunicipality,
+                                    neighborhood = tempDataViewModel.attrNeighborhood,
+                                    phone = tempDataViewModel.attrPhone,
+                                    freeFormAddress = tempDataViewModel.attrFreeFormAddress,
+                                    meetingPoint = tempDataViewModel.meetingPoint,
+                                    travel_plan_name = tripName,
+                                    notes = tempDataViewModel.attractionNote
+                                )
                             )
-                        )
+                        } else {
+                            if (editPointIndex != null) {
+                                EditAttractionPoint(travelManager,tempDataViewModel,attrDate,attrLoc,tripName,editPointIndex,outputFormat)
+                            }
+                        }
                     }
+                    clearAttractionPointData(tempDataViewModel)
                     navController.popBackStack()
                 }
             ) {
-                Text(text = "Add")
+                if(editPointIndex == -1) {
+                    Text("Add")
+                } else {
+                    Text("Edit")
+                }
             }
         }
 

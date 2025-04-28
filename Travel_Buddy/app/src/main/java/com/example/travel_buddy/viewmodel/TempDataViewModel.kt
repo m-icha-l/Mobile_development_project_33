@@ -133,4 +133,6 @@ class TempDataViewModel : ViewModel() {
     var attrNeighborhood by mutableStateOf("")
     var attrPhone by mutableStateOf("")
     var attractionNote by mutableStateOf("")
+
+    var redirectFromBrowser by mutableStateOf(false)
 }
