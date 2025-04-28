@@ -146,11 +146,10 @@ fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
                     Column (
                         modifier = Modifier
                             .width(80.dp)
+                            .align(Alignment.CenterVertically)
                     ){
                         Text(text = point.start_country, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
-                        if(point.start_subdivision != "No subdivision")
-                            Text(text = point.start_subdivision, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
-                    }
+                        }
                     Card (
                         modifier = Modifier.padding(5.dp),
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
@@ -161,7 +160,7 @@ fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
                         modifier = Modifier
                             .width(80.dp)
                     ){
-                        Text(text = point.distance +"km", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
+                        Text(text = point.distance, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                             contentDescription = "Arrow",
@@ -178,10 +177,9 @@ fun TravelTripDetailItem(point: Trip_point, onClick: () -> Unit) {
                         modifier = Modifier
                             .width(80.dp)
                             .padding(start = 5.dp)
+                            .align(Alignment.CenterVertically)
                     ){
                         Text(text = point.dest_country, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
-                        if(point.dest_subdivision != "No subdivision")
-                            Text(text = point.dest_subdivision, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
                         Text(text = point.dest_name, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
                     }
                 }
@@ -261,9 +259,14 @@ fun TravelAttractionDetailItem(point: Attraction_point, onClick: () -> Unit) {
                             modifier = Modifier.padding(8.dp)
                         ){
                             Text(
-                                text = point.date.toString(),
+                                text = point.date.toString().substringBefore(" ").trim(),
                                 style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.padding(8.dp)
+                                modifier =  Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp).align(Alignment.CenterHorizontally)
+                            )
+                            Text(
+                                text = point.date.toString().substringAfter(" ").trim(),
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier =  Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp).align(Alignment.CenterHorizontally)
                             )
 
                         }

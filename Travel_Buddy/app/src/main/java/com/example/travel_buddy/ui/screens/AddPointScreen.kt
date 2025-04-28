@@ -512,13 +512,6 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                 singleLine = true,
                 leadingIcon = {
                     Icon(Icons.Default.LocationOn, contentDescription = "StartLocation")
-                },
-                trailingIcon = {
-                    if (tempDataViewModel.startingPoint.isNotEmpty()) {
-                        IconButton(onClick = { tempDataViewModel.startingPoint = "" }) {
-                            Icon(Icons.Default.Close, contentDescription = "Clear")
-                        }
-                    }
                 }
             )
 
@@ -563,13 +556,6 @@ fun AddTripPoint(navController: NavController, tempDataViewModel: TempDataViewMo
                 singleLine = true,
                 leadingIcon = {
                     Icon(Icons.Default.LocationOn, contentDescription = "StartLocation")
-                },
-                trailingIcon = {
-                    if (tempDataViewModel.destinationPoint.isNotEmpty()) {
-                        IconButton(onClick = { tempDataViewModel.destinationPoint = "" }) {
-                            Icon(Icons.Default.Close, contentDescription = "Clear")
-                        }
-                    }
                 }
             )
             Spacer(modifier = Modifier.width(8.dp)) // Add space between the TextField and the button

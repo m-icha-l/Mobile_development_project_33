@@ -51,6 +51,12 @@ class Date(dateString: String? = null) {
     override fun toString(): String {
         return "$day/$month/$year $hour:$minute"
     }
+
+    operator fun compareTo(other: Date): Int {
+        val period = Period(other.dateTime, this.dateTime)
+        Log.d("Comparing dates", "$this $other ${period.days.toInt()}")
+        return if(period.days.toInt() > 0) 1 else -1
+    }
 }
 
 data class Duration(
@@ -65,7 +71,8 @@ data class Duration(
 
 data class Trip(
     var trip_name: String = "",
-    var points_list: MutableList<Travel_point>
+    var points_list: MutableList<Travel_point>,
+    var end_date: Date
 )
 
 //          MIKOLAJ PLS MAPA MA PRZECHOWYWAC TRAVEL_POINT ZEBY FUNKCJE DZIALALY DO KAZDEJ KLASY DOPISALEM CI FUNKCJE DO
@@ -98,7 +105,7 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
             for(attraction in attractions) {
                 travelsList.add(attraction.translateFromDb())
             }
-            travelsList.sortBy { it.newId }
+            travelsList.sortBy { it.date.toString() }
             travelPointsMap.put(list_name.name,travelsList)
             lastIndexMap.put(list_name.name,travelsList.lastIndex+1)
             Log.d("LAST INDEX",(travelsList.lastIndex+1).toString())
@@ -199,6 +206,8 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
         var _tripName: String = ""
         var _pointsList: MutableList<Travel_point> = mutableListOf()
         var tripArray = mutableListOf<Trip>()
+        var end_date = Date()
+
         if (travelPointsMap.isEmpty()) {
 
             str = "No travel plans available"
@@ -213,8 +222,13 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
             points.forEachIndexed { index, point ->
                 str += "  ${index + 1}. $point\n"
                 _pointsList.add(point)
+                if(end_date < point.end_date)
+                {
+                    Log.d("Comparing dates 2", "True")
+                    end_date = point.end_date
+                }
             }
-            tripArray.add(Trip(_tripName, _pointsList))
+            tripArray.add(Trip(_tripName, _pointsList, end_date))
             str += "\n"
         }
 
@@ -239,7 +253,7 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
                 _pointsList.add(point)
             }
         }
-        return Trip(_tripName, _pointsList)
+        return Trip(_tripName, _pointsList, Date())
     }
 
     // Display one travel point under a specific trip_name

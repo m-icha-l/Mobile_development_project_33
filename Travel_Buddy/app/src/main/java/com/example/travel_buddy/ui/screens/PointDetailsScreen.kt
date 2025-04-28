@@ -126,12 +126,12 @@ fun TravelTripDetailPoint(point: Trip_point) {
             Text(
                 text = point.name,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp, bottom = 10.dp)
+                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp, bottom = 16.dp)
             )
             Card (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 4.dp),
+                    .padding(bottom = 16.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
             ){
                 Row(
@@ -144,9 +144,10 @@ fun TravelTripDetailPoint(point: Trip_point) {
                     Column (
                         modifier = Modifier
                             .width(80.dp)
+                            .align(Alignment.CenterVertically)
                     ){
                         Text(text = point.start_country, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
-                        if(point.start_subdivision != "No subdivision")
+                        if(point.start_subdivision != "No subdivision" && point.start_subdivision != "null")
                             Text(text = point.start_subdivision, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
                     }
                     Card (
@@ -159,7 +160,7 @@ fun TravelTripDetailPoint(point: Trip_point) {
                         modifier = Modifier
                             .width(80.dp)
                     ){
-                        Text(text = point.distance +"km", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
+                        Text(text = point.distance, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                             contentDescription = "Arrow",
@@ -176,28 +177,39 @@ fun TravelTripDetailPoint(point: Trip_point) {
                         modifier = Modifier
                             .width(80.dp)
                             .padding(start = 5.dp)
+                            .align(Alignment.CenterVertically)
                     ){
                         Text(text = point.dest_country, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
-                        if(point.dest_subdivision != "No subdivision")
+                        if(point.dest_subdivision != "No subdivision" && point.dest_subdivision != "null")
                             Text(text = point.dest_subdivision, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
                         Text(text = point.dest_name, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.align(Alignment.CenterHorizontally))
                     }
                 }
             }
-            DateDisplay(point, "Start: ", "End: ")
-            Card (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, bottom = 16.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
-            ){
-                Column (
-                    modifier = Modifier.padding(6.dp)
-                ){
-                    if(point.urlToPhoto != "")
-                        Text(text = point.urlToPhoto , style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(2.dp))
-                    if(point.notes != "")
-                        Text(text = point.notes , style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(2.dp))
+            DateDisplay(point, "Start: ", "End: ", 0, 0)
+            if(point.urlToPhoto != "" || point.notes != "") {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp, bottom = 16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(6.dp)
+                    ) {
+                        if (point.urlToPhoto != "")
+                            Text(
+                                text = point.urlToPhoto,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(2.dp)
+                            )
+                        if (point.notes != "")
+                            Text(
+                                text = point.notes,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(2.dp)
+                            )
+                    }
                 }
             }
         }
@@ -361,9 +373,14 @@ fun TravelAttractionDetailPoint(point: Attraction_point) {
                             modifier = Modifier.padding(5.dp).align(Alignment.CenterHorizontally)
                         ){
                             Text(
-                                text = point.meetingPoint,
+                                text = point.date.toString().substringBefore(" ").trim(),
                                 style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.padding(6.dp).align(Alignment.CenterHorizontally)
+                                modifier =  Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp).align(Alignment.CenterHorizontally)
+                            )
+                            Text(
+                                text = point.date.toString().substringAfter(" ").trim(),
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier =  Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp).align(Alignment.CenterHorizontally)
                             )
 
                         }
@@ -505,18 +522,18 @@ fun TravelHotelDetailPoint(point: Hotel_point) {
 
 
 @Composable
-fun DateDisplay(point: Travel_point, firstText: String, secondText: String, modifier: Modifier = Modifier) {
+fun DateDisplay(point: Travel_point, firstText: String, secondText: String, padding:Int = 8, cardPadding:Int = 2) {
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 16.dp, start = 8.dp, end = 8.dp),
+            .padding(bottom = 16.dp, start = padding.dp, end = padding.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     )
     {
         Card(
             modifier = Modifier
                 .width(180.dp)
-                .padding(start = 2.dp),
+                .padding(start = cardPadding.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
         ) {
             Column(

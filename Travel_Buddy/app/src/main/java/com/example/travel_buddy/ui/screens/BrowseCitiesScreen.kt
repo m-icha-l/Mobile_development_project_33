@@ -36,7 +36,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
+import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.MaterialTheme
@@ -115,14 +117,15 @@ fun BrowseCitiesScreen(
         modifier = modifier
             .fillMaxSize()
     ) {
-        SearchBar(
+        DockedSearchBar(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(start = 12.dp, top = 2.dp, end = 12.dp, bottom = 12.dp)
                 .fillMaxWidth(),
             query = searchQuery,
-            onQueryChange = { searchQuery = it },
-            onSearch = { active = false
+            onQueryChange = { searchQuery = it
+                tempDataViewModel.getPlacesList("search", searchQuery, entityType = "Municipality")},
+            onSearch = { /*active = false*/
                 tempDataViewModel.getPlacesList("search", searchQuery, entityType = "Municipality")},
             active = active,
             onActiveChange = { active = it },
@@ -142,10 +145,14 @@ fun BrowseCitiesScreen(
             },
             trailingIcon = {
                 if (active)
-                    Icon(
-                        imageVector = Icons.Rounded.Close,
-                        contentDescription = null
-                    )
+                    IconButton(onClick = {
+                        searchQuery = ""
+                    }){
+                        Icon(
+                            imageVector = Icons.Rounded.Close,
+                            contentDescription = null
+                        )
+                    }
             },
             colors = SearchBarDefaults.colors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
@@ -153,7 +160,7 @@ fun BrowseCitiesScreen(
             tonalElevation = 3.dp,
         )
         {
-            Text("This is $type")
+            BrowseCitiesUiState(tempDataViewModel,tempDataViewModel.placesUiState,navController,modifier,type)
             /*
             // Display search results in a scrollable column
             LazyColumn(Modifier.verticalScroll(rememberScrollState())) {
@@ -172,7 +179,7 @@ fun BrowseCitiesScreen(
 
              */
         }
-        BrowseCitiesUiState(tempDataViewModel,tempDataViewModel.placesUiState,navController,modifier,type)
+
     }
 }
 
@@ -188,11 +195,11 @@ fun BrowseCitiesUiState(tempDataViewModel: TempDataViewModel,uiState: PlacesUiSt
 
 @Composable
 fun CitiesCards(tempDataViewModel: TempDataViewModel,response: TomTomSearchResponse, navController: NavController, modifier: Modifier,type: String?) {
-    LazyColumn(modifier = modifier.fillMaxWidth()) {
+    LazyColumn(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
         items(response.results) { result ->
             if (result.type == "Geography") {
                 Card(
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp)
                         .clickable(onClick = {
                             if(type == "trip_start_point") {
                                 tempDataViewModel.start_city_name =
@@ -245,10 +252,10 @@ fun CitiesCards(tempDataViewModel: TempDataViewModel,response: TomTomSearchRespo
 
 @Composable
 fun EmptyScreen() {
-    Text(
+/*    Text(
         modifier = Modifier.padding(vertical = 260.dp, horizontal = 10.dp),
         text = "test"
-    )
+    )*/
 }
 
 @Composable

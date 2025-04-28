@@ -14,9 +14,9 @@ import androidx.compose.ui.platform.LocalContext
 import com.example.travel_buddy.ui.theme.Purple40
 
 private val DarkColorScheme = darkColorScheme(
-        primary = Purple40,
-        secondary = PurpleGrey40,
-        tertiary = Pink40,
+        primary = Color(0xFF413FF3),
+        secondary = Color(0xFF4A47C7),
+        tertiary = Color(0xFF6562DF),
         background = Color(0xFF1e1d6d),
         surface = Color(0xFF464E6E),
         onPrimary = Color.White,

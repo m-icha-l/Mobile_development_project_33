@@ -38,31 +38,6 @@ fun TravelsScreen(viewModel: DataEntryViewModel, navController: NavController, t
     var index = 1
     DataEntryViewModel.TopBarName.updateText(index.toString())
 
-/*    //var travelManager = Travel_Point_Manager(viewModel)
-
-    //Temporary for testing purposes
-    var name = "Hotel Point"
-    var date = Date("01/05/2025 10:00")
-    var end_date = Date("06/05/2025 17:00")
-    var notes: String = "Hotel *****"
-    var location: Location? = null
-    var newId = 0
-    var travelPlanName = "Demo travel plan"
-    var time: Duration = end_date - date
-    val city: String = "Oulu"
-    val newHotel = Hotel_point(name, city, date, end_date, time,  location, newId, travelPlanName, notes)
-
-    name = "Attraction Point"
-    date = Date("02/05/2025 14:00")
-    end_date = Date("02/05/2025 16:00")
-    notes = "Cathedral"
-    val newAttra = Attraction_point(name, date, end_date, time, location, newId, travelPlanName )
-
-    name = "Trip Point"
-    date = Date("01/05/2025 5:00")
-    end_date = Date("01/05/2025 10:00")
-    notes = "Stop in Jyvaskyla"
-    val newTrip = Trip_point(newId, name, location,date, end_date, time, location, travelPlanName)*/
     val names = travelManager.display_all_trips()
 
 
@@ -128,15 +103,14 @@ fun TravelPlanItem(trip : Trip, onClick: () -> Unit) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
-                val trip_duration = trip.points_list[trip.points_list.lastIndex].end_date - trip.points_list[0].date
-                val days = trip_duration.toString().substringBefore(",").trim()
-                val hours = trip_duration.toString().substringAfter(",").trim()
-                var daysInt = days.toInt()
+                val tripDuration = trip.end_date - trip.points_list[0].date
+                var days = tripDuration.toString().substringBefore(",").trim().toInt()
+                val hours = tripDuration.toString().substringAfter(",").trim()
                 if(hours != "0:0")
-                    daysInt++
+                    days++
 
                 Text(text = trip.trip_name, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(4.dp))
-                Text(text = "$daysInt days", style = MaterialTheme.typography.titleMedium   , modifier = Modifier.padding(4.dp))
+                Text(text = "$days days", style = MaterialTheme.typography.titleMedium   , modifier = Modifier.padding(4.dp))
             }
         }
     }

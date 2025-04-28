@@ -131,7 +131,7 @@ class MainActivity : ComponentActivity() {
                         var dest_name = "Oulu"
                         var dest_subdivision = "No subdivision"
                         var dest_country = "Finland"
-                        var distance = "608"
+                        var distance = "608 km"
                         var urlToPhoto = ""
                         val newTrip = Trip_point(
                             newId,
