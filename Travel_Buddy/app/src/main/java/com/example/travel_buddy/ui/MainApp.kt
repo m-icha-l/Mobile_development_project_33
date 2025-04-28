@@ -46,22 +46,25 @@ fun MainApp(viewModel: DataEntryViewModel, weatherViewModel: WeatherViewModel, n
             HourlyForecastScreen(weatherViewModel, navController, dayIndex, modifier)
         }
 
-        composable("AddPointScreen/{type}/{tripName}",
+        composable("AddPointScreen/{type}/{tripName}/{editPointIndex}",
             arguments = listOf(navArgument("type") { type = NavType.StringType },
-                navArgument("tripName") { type = NavType.StringType })
-            ) { AddPointScreen(viewModel, navController, tempDataViewModel, modifier,travelManager,it.arguments?.getString("type"),it.arguments?.getString("tripName")) }
+                navArgument("tripName") { type = NavType.StringType },
+                navArgument("editPointIndex") { type = NavType.IntType})
+            ) { AddPointScreen(viewModel, navController, tempDataViewModel, modifier,travelManager,it.arguments?.getString("type"),it.arguments?.getString("tripName"),it.arguments?.getInt("editPointIndex")) }
         composable("Browser/{type}",
             arguments = listOf(navArgument("type") { type = NavType.StringType })
         ) { BrowseCitiesScreen(viewModel, navController, tempDataViewModel, modifier,it.arguments?.getString("type")) }
 
-        composable("PointDetailsScreen/{tripName}/{pointIndex}",
+        composable("PointDetailsScreen/{tripName}/{pointIndex}/{pointType}",
             arguments = listOf(
                 navArgument("tripName") { type = NavType.StringType },
-                navArgument("pointIndex") { type = NavType.IntType }
+                navArgument("pointIndex") { type = NavType.IntType } ,
+                navArgument("pointType") { type = NavType.StringType }
             )
         ) { backStackEntry ->
             val tripName = backStackEntry.arguments?.getString("tripName")
             val pointIndex = backStackEntry.arguments?.getInt("pointIndex")
+            //val pointType = backStackEntry.arguments?.getInt("pointType")
             PointDetailsScreen(viewModel, navController, tempDataViewModel, modifier, tripName, pointIndex)
         }
         composable("POIsBrowser/{searchType}",

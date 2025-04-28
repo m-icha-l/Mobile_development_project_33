@@ -29,6 +29,7 @@ class TempDataViewModel : ViewModel() {
     var lastTravel by mutableStateOf("")
     var browserType by mutableStateOf("")
     var selectedDateTime by mutableStateOf<LocalDateTime?>(null)
+    var endDateTime by mutableStateOf<LocalDateTime?>(null) //only for editing
     var arrivalDate by mutableStateOf("")
     var distance by mutableStateOf("")
     var tripNote by mutableStateOf("")
@@ -90,15 +91,15 @@ class TempDataViewModel : ViewModel() {
     var start_city_name by mutableStateOf("")
     var start_subdivision by mutableStateOf("")
     var start_country by mutableStateOf("")
-    var start_latitude by mutableStateOf("")
-    var start_longtitude by mutableStateOf("")
+    var start_latitude by mutableStateOf(0.0)
+    var start_longtitude by mutableStateOf(0.0)
     var start_isSet by mutableStateOf(false)
 
     var dest_city_name by mutableStateOf("")
     var dest_subdivision by mutableStateOf("")
     var dest_country by mutableStateOf("")
-    var dest_latitude by mutableStateOf("")
-    var dest_longtitude by mutableStateOf("")
+    var dest_latitude by mutableStateOf(0.0)
+    var dest_longtitude by mutableStateOf(0.0)
     var dest_isSet by mutableStateOf(false)
 
     var lastLatitude by mutableStateOf(52.4058917)
@@ -106,11 +107,10 @@ class TempDataViewModel : ViewModel() {
     var lastDestCityName by mutableStateOf("Poznań")
 
 
-    var checkInDateTime by mutableStateOf<LocalDateTime?>(null)
-    var checkOutDateTime by mutableStateOf<LocalDateTime?>(null)
-
     // HOTEL DATA
 
+    var checkInDateTime by mutableStateOf<LocalDateTime?>(null)
+    var checkOutDateTime by mutableStateOf<LocalDateTime?>(null)
     var selectedHotel by mutableStateOf("")
     var hotelFreeFormAddress by mutableStateOf("")
     var hotelLatitude by mutableStateOf(0.0)

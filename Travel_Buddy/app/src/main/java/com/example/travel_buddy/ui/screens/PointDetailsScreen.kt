@@ -70,12 +70,15 @@ fun PointDetailsScreen(viewModel: DataEntryViewModel, navController: NavControll
         when (point) {
             is Hotel_point -> {
                 TravelHotelDetailPoint(point)
+                tempDataViewModel.updateText("Hotel point")
             }
             is Trip_point -> {
                 DisplayTripPoint(point)
+                tempDataViewModel.updateText("Trip point")
             }
             is Attraction_point -> {
                 TravelAttractionDetailPoint(point)
+                tempDataViewModel.updateText("Attraction point")
             }
             else -> {
                 TravelDetailPoint(point)
@@ -179,6 +182,7 @@ fun TravelTripDetailPoint(point: Trip_point) {
 fun DisplayTripPoint(point: Trip_point) {
 
     var startText = point.location.toString()
+
 
     var destText = point.end_location.toString()
 

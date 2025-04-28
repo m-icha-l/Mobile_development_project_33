@@ -33,6 +33,10 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
     val scope = rememberCoroutineScope()
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentRoute = navBackStackEntry?.destination?.route
+    val arguments = navBackStackEntry?.arguments
+    if (currentRoute != null) {
+        Log.d("CURRENT ROUTE", currentRoute)
+    }
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -54,7 +58,13 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                     Log.d("TOP BAR NAME", tempDataViewModel.lastTravel)
                     tempDataViewModel.lastTravel
                 }
-                "AddPointScreen/{type}/{tripName}" -> "Add " + tempDataViewModel.text
+                "AddPointScreen/{type}/{tripName}/{editPointIndex}" -> {
+                    if(arguments?.getInt("editPointIndex") == -1) {
+                        "Add " + tempDataViewModel.text
+                    } else {
+                        "Edit " + tempDataViewModel.text
+                    }
+                }
                 "PointDetailsScreen/{tripName}/{pointIndex}" -> {
                     Log.d("TOP BAR NAME", tempDataViewModel.lastTravel)
                     tempDataViewModel.lastTravel
@@ -104,7 +114,7 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
 
                 }
             }
-            if (currentRoute == "PointDetailsScreen/{tripName}/{pointIndex}") {
+            if (currentRoute == "PointDetailsScreen/{tripName}/{pointIndex}/{pointType}") {
                 Box(
                     modifier = Modifier.padding(start = 40.dp)
                 )
@@ -124,10 +134,10 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
         },
         actions = {
             //to do: change to actually edit when possible
-            if(currentRoute == "PointDetailsScreen/{tripName}/{pointIndex}"){
+            if(currentRoute == "PointDetailsScreen/{tripName}/{pointIndex}/{pointType}"){
                 IconButton(onClick = {
                     tempDataViewModel.lastTravel = tempDataViewModel.lastTravel.substringBefore("->").trim()
-                    navController.popBackStack()
+                    navController.navigate("AddPointScreen/${arguments?.getString("pointType")} Point/${arguments?.getString("tripName")}/${arguments?.getInt("pointIndex")}")
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
@@ -135,7 +145,7 @@ fun TopAppBar(navController: NavController, drawerState: DrawerState, tempDataVi
                     )
                 }
             }
-            if(currentRoute == "AddPointScreen/{type}/{tripName}"){
+            if(currentRoute == "AddPointScreen/{type}/{tripName}/{editPointIndex}"){
                 IconButton(onClick = {  }) {
                     Icon(
                         imageVector = Icons.Filled.MoreVert,

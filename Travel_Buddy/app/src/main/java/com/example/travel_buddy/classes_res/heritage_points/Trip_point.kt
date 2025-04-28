@@ -78,7 +78,7 @@ class Trip_point(
     var distance: String = "",
     var urlToPhoto: String = ""
 
-) : Travel_point(name, date,end_date,time, location,notes) {
+) : Travel_point(name, date,end_date,time, location,notes,newId,plan_name) {
     init {
         if (location == null) {
 

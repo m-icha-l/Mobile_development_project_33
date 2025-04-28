@@ -200,8 +200,8 @@ fun CitiesCards(tempDataViewModel: TempDataViewModel,response: TomTomSearchRespo
                                 tempDataViewModel.start_subdivision =
                                     result.address.countrySubdivisionName.toString()
                                 tempDataViewModel.start_country = result.address.country.toString()
-                                tempDataViewModel.start_latitude = result.position.lat.toString()
-                                tempDataViewModel.start_longtitude = result.position.lon.toString()
+                                tempDataViewModel.start_latitude = result.position.lat
+                                tempDataViewModel.start_longtitude = result.position.lon
                                 tempDataViewModel.start_isSet = true
                                 navController.popBackStack()
                             }
@@ -211,8 +211,8 @@ fun CitiesCards(tempDataViewModel: TempDataViewModel,response: TomTomSearchRespo
                                 tempDataViewModel.dest_subdivision =
                                     result.address.countrySubdivisionName.toString()
                                 tempDataViewModel.dest_country = result.address.country.toString()
-                                tempDataViewModel.dest_latitude = result.position.lat.toString()
-                                tempDataViewModel.dest_longtitude = result.position.lon.toString()
+                                tempDataViewModel.dest_latitude = result.position.lat
+                                tempDataViewModel.dest_longtitude = result.position.lon
                                 tempDataViewModel.dest_isSet = true
                                 navController.popBackStack()
                             }

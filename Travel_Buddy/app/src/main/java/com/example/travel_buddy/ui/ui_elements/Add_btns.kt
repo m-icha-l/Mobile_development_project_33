@@ -102,9 +102,9 @@ fun adder_opup(isDialogOpen: Boolean, onDismiss: () -> Unit, text: String,navCon
                    },
             confirmButton = {
                 Button(onClick = {
-                    navController.navigate("AddPointScreen/$selectedPoint/$index")
+                    val num = -1
+                    navController.navigate("AddPointScreen/$selectedPoint/$index/$num")
                     tempDataViewModel.updateText(selectedPoint)
-                    onDismiss
                 }) {
                     Text("OK")
                 }

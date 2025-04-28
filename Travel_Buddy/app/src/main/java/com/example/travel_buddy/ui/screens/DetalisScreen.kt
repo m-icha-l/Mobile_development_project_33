@@ -47,28 +47,28 @@ fun DetailsScreen(viewModel: DataEntryViewModel, navController: NavController, t
                     TravelHotelDetailItem(point)
                     {
                         tempDataViewModel.lastTravel = Index + " -> " + point.name
-                        navController.navigate("PointDetailsScreen/$Index/${point.newId}")
+                        navController.navigate("PointDetailsScreen/$Index/${point.newId}/Hotel")
                     }
                 }
                 is Trip_point -> {
                     TravelTripDetailItem(point)
                     {
                         tempDataViewModel.lastTravel = Index + " -> " + point.name
-                        navController.navigate("PointDetailsScreen/$Index/${point.newId}")
+                        navController.navigate("PointDetailsScreen/$Index/${point.newId}/Trip")
                     }
                 }
                 is Attraction_point -> {
                     TravelAttractionDetailItem(point)
                     {
                         tempDataViewModel.lastTravel = Index + " -> " + point.name
-                        navController.navigate("PointDetailsScreen/$Index/${point.newId}")
+                        navController.navigate("PointDetailsScreen/$Index/${point.newId}/Attraction")
                     }
                 }
                 else -> {
                     TravelDetailItem(point)
                     {
                         tempDataViewModel.lastTravel = Index + " -> " + point.name
-                        navController.navigate("PointDetailsScreen/$Index/${point.newId}")
+                        navController.navigate("PointDetailsScreen/$Index/${point.newId}/Travel")
                     }
                 }
             }

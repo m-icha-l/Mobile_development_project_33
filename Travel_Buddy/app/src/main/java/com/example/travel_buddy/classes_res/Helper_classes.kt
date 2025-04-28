@@ -126,7 +126,7 @@ class Travel_Point_Manager(val dataEntryViewModel: DataEntryViewModel) {
 
     // Get a specific Travel_point by index
     fun get_point_from(trip_name: String, index: Int): Travel_point? {
-        return travelPointsMap[trip_name]?.getOrNull(index)
+        return travelPointsMap[trip_name]?.getOrNull(index-1)
     }
     // Replace the entire list of Travel_points for a trip_name
 
