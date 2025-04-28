@@ -65,7 +65,6 @@ import androidx.core.net.toUri
 
 @Composable
 fun DateTimeInputSection(tempDataViewModel: TempDataViewModel,modifier: Modifier) {
-    var noteExpanded: Boolean by remember { mutableStateOf(false) }
     val rainbowColors: List<Color> = listOf(Color.Red, Color.Yellow, Color.Green, Color.Blue, Color(0xFF19002E), Color.Magenta)
     val brush = remember {
         Brush.linearGradient(
@@ -138,7 +137,7 @@ fun DateTimeInputSection(tempDataViewModel: TempDataViewModel,modifier: Modifier
             }
 
             Button(
-                onClick = { noteExpanded = !noteExpanded },
+                onClick = { tempDataViewModel.hotelNoteExpanded = !tempDataViewModel.hotelNoteExpanded },
                 modifier = Modifier
                     .clip(RoundedCornerShape(24.dp))
                 .padding(start = 8.dp),
@@ -169,7 +168,7 @@ fun DateTimeInputSection(tempDataViewModel: TempDataViewModel,modifier: Modifier
         }
 
         AnimatedVisibility(
-            visible = noteExpanded,
+            visible = tempDataViewModel.hotelNoteExpanded,
             enter = fadeIn(animationSpec = tween(500)) + expandVertically(animationSpec = tween(500)),
             exit = fadeOut(animationSpec = tween(300)) + shrinkVertically(animationSpec = tween(300))
         ) {

@@ -311,97 +311,107 @@ private fun HotelCard(
 
             val uriHandler = LocalUriHandler.current
 
-            Row(
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Button(
-                    onClick = {
-                        if (url != null) {
-                            uriHandler.openUri(url)
-                        }
-                    },
-                    modifier = Modifier.border(width = 4.dp,MaterialTheme.colorScheme.primary, RoundedCornerShape(24.dp)),
-                    shape = RoundedCornerShape(24.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.onPrimary
-                    )
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowOutward,
-                            contentDescription = "Website redirect",
-                            modifier = Modifier.size(20.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = "Website",
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
+            if(!tempDataViewModel.hotelNoteExpanded) {
 
-
-                Button(
-                    onClick = {
-                        if (hotelName != null) {
-                            tempDataViewModel.selectedHotel = hotelName
-                        }
-                        tempDataViewModel.hotelLatitude = lat
-                        tempDataViewModel.hotelLongitude = lon
-                        if (municipality != null) {
-                            tempDataViewModel.hotelMunicipality = municipality
-                        }
-                        if (neighborhood != null) {
-                            tempDataViewModel.hotelNeighborhood = neighborhood
-                        }
-                        if (phone != null) {
-                            tempDataViewModel.hotelPhone = phone
-                        }
-                        if (url != null) {
-                            tempDataViewModel.hotelUrl = url
-                        }
-                        if (freeFormAddress != null) {
-                            tempDataViewModel.hotelFreeFormAddress = freeFormAddress
-                        }
-                        if(mode == "column") {
-                            navController.popBackStack()
-                        }
-                    },
-                    //modifier = Modifier.widthIn(min = 120.dp),
-                    shape = RoundedCornerShape(24.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    ),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp), // Small internal padding
+                Row(
                     modifier = Modifier
-                        .defaultMinSize(minHeight = 48.dp) // Button height looks professional
-                        .padding(horizontal = 4.dp)         // Outer padding between buttons
+                        .align(Alignment.End)
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    Button(
+                        onClick = {
+                            if (url != null) {
+                                uriHandler.openUri(url)
+                            }
+                        },
+                        modifier = Modifier.border(
+                            width = 4.dp,
+                            MaterialTheme.colorScheme.primary,
+                            RoundedCornerShape(24.dp)
+                        ),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.onPrimary
+                        )
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add",
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Text(
-                            text = "Choose hotel",
-                            fontSize = 12.sp,
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Medium,
-                            maxLines = 1, // Force 1 line only
-                            overflow = TextOverflow.Clip // (optional) show "..." if too small
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowOutward,
+                                contentDescription = "Website redirect",
+                                modifier = Modifier.size(20.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = "Website",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+
+
+                    Button(
+                        onClick = {
+                            if (hotelName != null) {
+                                tempDataViewModel.selectedHotel = hotelName
+                            }
+                            tempDataViewModel.hotelLatitude = lat
+                            tempDataViewModel.hotelLongitude = lon
+                            if (municipality != null) {
+                                tempDataViewModel.hotelMunicipality = municipality
+                            }
+                            if (neighborhood != null) {
+                                tempDataViewModel.hotelNeighborhood = neighborhood
+                            }
+                            if (phone != null) {
+                                tempDataViewModel.hotelPhone = phone
+                            }
+                            if (url != null) {
+                                tempDataViewModel.hotelUrl = url
+                            }
+                            if (freeFormAddress != null) {
+                                tempDataViewModel.hotelFreeFormAddress = freeFormAddress
+                            }
+                            if (mode == "column") {
+                                navController.popBackStack()
+                            }
+                        },
+                        //modifier = Modifier.widthIn(min = 120.dp),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
+                        contentPadding = PaddingValues(
+                            horizontal = 12.dp,
+                            vertical = 6.dp
+                        ), // Small internal padding
+                        modifier = Modifier
+                            .defaultMinSize(minHeight = 48.dp) // Button height looks professional
+                            .padding(horizontal = 4.dp)         // Outer padding between buttons
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Add",
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Text(
+                                text = "Choose hotel",
+                                fontSize = 12.sp,
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Medium,
+                                maxLines = 1, // Force 1 line only
+                                overflow = TextOverflow.Clip // (optional) show "..." if too small
+                            )
+                        }
                     }
                 }
             }

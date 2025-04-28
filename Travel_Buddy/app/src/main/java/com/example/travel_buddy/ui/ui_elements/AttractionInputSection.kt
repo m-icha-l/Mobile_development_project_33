@@ -73,7 +73,6 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AttractionInput(navController: NavController, tempDataViewModel: TempDataViewModel, modifier: Modifier, travelManager: Travel_Point_Manager, tripName: String?, editPointIndex: Int? = -1, navigationViewModel: NavigationViewModel = viewModel()) {
-    var noteExpanded: Boolean by remember { mutableStateOf(false)}
     val context = LocalContext.current
     val url = "https://www.google.pl/maps/search/attractions/@${tempDataViewModel.lastLatitude},${tempDataViewModel.lastLongitude},20840m"
     Column(
@@ -246,7 +245,7 @@ fun AttractionInput(navController: NavController, tempDataViewModel: TempDataVie
             //Spacer(modifier.width(8.dp))
 
             Button(
-                onClick = { noteExpanded = !noteExpanded },
+                onClick = { tempDataViewModel.attractionNoteExpanded = !tempDataViewModel.attractionNoteExpanded },
                 modifier = Modifier
                     .clip(RoundedCornerShape(24.dp))
                     .padding(start = 8.dp),
@@ -263,7 +262,7 @@ fun AttractionInput(navController: NavController, tempDataViewModel: TempDataVie
                 ) {
                     Icon(
                         imageVector = Icons.Default.AddBox,
-                        contentDescription = "Location",
+                        contentDescription = "Note",
                         tint = MaterialTheme.colorScheme.primary
                     )
                     Text(
@@ -277,7 +276,7 @@ fun AttractionInput(navController: NavController, tempDataViewModel: TempDataVie
         }
 
         AnimatedVisibility(
-            visible = noteExpanded,
+            visible = tempDataViewModel.attractionNoteExpanded,
             enter = fadeIn(animationSpec = tween(500)) + expandVertically(animationSpec = tween(500)),
             exit = fadeOut(animationSpec = tween(300)) + shrinkVertically(animationSpec = tween(300))
         ) {

@@ -282,6 +282,7 @@ fun clearHotelPointData(tempDataViewModel: TempDataViewModel) {
     tempDataViewModel.hotelFreeFormAddress = ""
     tempDataViewModel.hotelNote = ""
     tempDataViewModel.redirectFromBrowser = false
+    tempDataViewModel.hotelNoteExpanded = false
 }
 
 fun clearAttractionPointData(tempDataViewModel: TempDataViewModel) {
@@ -296,6 +297,7 @@ fun clearAttractionPointData(tempDataViewModel: TempDataViewModel) {
     tempDataViewModel.meetingPoint = ""
     tempDataViewModel.attractionNote = ""
     tempDataViewModel.redirectFromBrowser = false
+    tempDataViewModel.attractionNoteExpanded = false
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

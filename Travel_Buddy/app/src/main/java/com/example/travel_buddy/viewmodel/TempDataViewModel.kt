@@ -120,6 +120,7 @@ class TempDataViewModel : ViewModel() {
     var hotelPhone by mutableStateOf("")
     var hotelUrl by mutableStateOf("")
     var hotelNote by mutableStateOf("")
+    var hotelNoteExpanded by mutableStateOf(false)
 
     // ATTRACTION DATA
 
@@ -133,6 +134,7 @@ class TempDataViewModel : ViewModel() {
     var attrNeighborhood by mutableStateOf("")
     var attrPhone by mutableStateOf("")
     var attractionNote by mutableStateOf("")
+    var attractionNoteExpanded by mutableStateOf(false)
 
     var redirectFromBrowser by mutableStateOf(false)
 }

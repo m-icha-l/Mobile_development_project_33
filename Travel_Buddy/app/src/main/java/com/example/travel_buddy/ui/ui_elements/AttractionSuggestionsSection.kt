@@ -292,16 +292,18 @@ private fun AttractionCard(
 
             val uriHandler = LocalUriHandler.current
 
-            Row(
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
+            if(!tempDataViewModel.attractionNoteExpanded) {
+
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
 
 
-                Button(
-                    onClick = {
+                    Button(
+                        onClick = {
                             if (attractionName != null) {
                                 tempDataViewModel.selectedAttraction = attractionName
                             }
@@ -319,37 +321,41 @@ private fun AttractionCard(
                             if (freeFormAddress != null) {
                                 tempDataViewModel.attrFreeFormAddress = freeFormAddress
                             }
-                        if(mode == "column") {
-                            navController.popBackStack()
-                        }
-                    },
-                    //modifier = Modifier.widthIn(min = 120.dp),
-                    shape = RoundedCornerShape(24.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    ),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp), // Small internal padding
-                    modifier = Modifier
-                        .defaultMinSize(minHeight = 48.dp) // Button height looks professional
-                        .padding(horizontal = 4.dp)         // Outer padding between buttons
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            if (mode == "column") {
+                                navController.popBackStack()
+                            }
+                        },
+                        //modifier = Modifier.widthIn(min = 120.dp),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
+                        contentPadding = PaddingValues(
+                            horizontal = 12.dp,
+                            vertical = 6.dp
+                        ), // Small internal padding
+                        modifier = Modifier
+                            .defaultMinSize(minHeight = 48.dp) // Button height looks professional
+                            .padding(horizontal = 4.dp)         // Outer padding between buttons
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add",
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Text(
-                            text = "Choose attraction",
-                            fontSize = 12.sp,
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Medium,
-                            maxLines = 1, // Force 1 line only
-                            overflow = TextOverflow.Clip // (optional) show "..." if too small
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Add",
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Text(
+                                text = "Choose attraction",
+                                fontSize = 12.sp,
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Medium,
+                                maxLines = 1, // Force 1 line only
+                                overflow = TextOverflow.Clip // (optional) show "..." if too small
+                            )
+                        }
                     }
                 }
             }
